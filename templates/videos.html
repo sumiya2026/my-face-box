@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MY FACE BOX - Watch Videos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f0f2f5; color: #1c1e21; padding-bottom: 20px; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px 12px; border-bottom: 1px solid #e4e6eb; position: sticky; top:0; z-index:100; }
+        .logo-text { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #FF6B00; letter-spacing: 1px; }
+        .back-btn { background: #e4e6eb; border: none; font-size: 18px; color: #050505; cursor: pointer; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none; }
+        .video-container { max-width: 600px; margin: 0 auto; }
+        .video-card { background: white; margin-bottom: 8px; padding: 12px 0; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .video-header { display: flex; align-items: center; justify-content: space-between; padding: 0 12px 10px 12px; }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .page-avatar { width: 40px; height: 40px; background: #ddd; border-radius: 50%; background-size: cover; }
+        .page-name { font-weight: bold; font-size: 15px; color: #050505; }
+        .video-time { font-size: 12px; color: #65676b; margin-top: 2px; }
+        .follow-btn { color: #FF6B00; font-weight: bold; font-size: 14px; cursor: pointer; }
+        .video-desc { font-size: 14px; padding: 0 12px 10px 12px; line-height: 1.4; }
+        .video-player-box { width: 100%; height: 230px; background: #000; position: relative; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; overflow:hidden; }
+        .play-icon { font-size: 50px; color: rgba(255, 255, 255, 0.8); position: absolute; transition: transform 0.2s; z-index:2; }
+        .video-player-box:hover .play-icon { transform: scale(1.1); color: #FF6B00; }
+        .video-thumbnail { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+        .video-stats { display: flex; justify-content: space-between; font-size: 13px; color: #65676b; padding: 10px 12px; border-bottom: 1px solid #e4e6eb; }
+        .video-actions { display: flex; justify-content: space-around; padding: 8px 0 0 0; }
+        .video-actions button { background: none; border: none; color: #65676b; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; flex: 1; justify-content: center; padding: 6px 0; }
+        .video-actions button:hover { color: #FF6B00; }
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+        <div class="logo-text">Watch Videos</div>
+        <div style="width: 36px;"></div>
+    </div>
+    <div class="video-container">
+        <div class="video-card">
+            <div class="video-header">
+                <div class="user-info">
+                    <div class="page-avatar" style="background-image: url('https://i.pravatar.cc/150?img=11');"></div>
+                    <div>
+                        <div class="page-name">SL Tech Media <span class="follow-btn">· Follow</span></div>
+                        <div class="video-time">2h • <i class="fas fa-globe"></i></div>
+                    </div>
+                </div>
+                <i class="fas fa-ellipsis-h" style="color: #65676b;"></i>
+            </div>
+            <div class="video-desc">මෙන්න 2026 වසරේ නිකුත් වුණු සුපිරිම තාක්ෂණික මෙවලම්! බලන්න ඔයාලත් මේවට කැමතිද කියලා...</div>
+            <div class="video-player-box" onclick="alert('Video Playing...')">
+                <img class="video-thumbnail" src="https://picsum.photos/600/400?random=1" alt="Thumbnail">
+                <i class="fas fa-play play-icon"></i>
+            </div>
+            <div class="video-stats">
+                <div><i class="fas fa-heart" style="color:#e41e3f;"></i><i class="fas fa-thumbs-up" style="color:#FF6B00; margin-left:-4px;"></i> 1.5K</div>
+                <div>240 Comments • 85K Views</div>
+            </div>
+            <div class="video-actions">
+                <button onclick="this.style.color='#FF6B00'"><i class="far fa-thumbs-up"></i> Like</button>
+                <button><i class="far fa-comment"></i> Comment</button>
+                <button><i class="far fa-share-square"></i> Share</button>
+            </div>
+        </div>
+        <div class="video-card">
+            <div class="video-header">
+                <div class="user-info">
+                    <div class="page-avatar" style="background-image: url('https://i.pravatar.cc/150?img=22');"></div>
+                    <div>
+                        <div class="page-name">Travel Sri Lanka <span class="follow-btn">· Follow</span></div>
+                        <div class="video-time">5h • <i class="fas fa-globe"></i></div>
+                    </div>
+                </div>
+                <i class="fas fa-ellipsis-h" style="color: #65676b;"></i>
+            </div>
+            <div class="video-desc">ලංකාවේ සැඟවුණු සුපිරිම දියඇල්ලක් සොයා ගිය අපූරු චාරිකාව 🌧️🍃</div>
+            <div class="video-player-box" onclick="alert('Video Playing...')">
+                <img class="video-thumbnail" src="https://picsum.photos/600/400?random=2" alt="Thumbnail">
+                <i class="fas fa-play play-icon"></i>
+            </div>
+            <div class="video-stats">
+                <div><i class="fas fa-thumbs-up" style="color:#FF6B00;"></i> 840</div>
+                <div>95 Comments • 32K Views</div>
+            </div>
+            <div class="video-actions">
+                <button onclick="this.style.color='#FF6B00'"><i class="far fa-thumbs-up"></i> Like</button>
+                <button><i class="far fa-comment"></i> Comment</button>
+                <button><i class="far fa-share-square"></i> Share</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

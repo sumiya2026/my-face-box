@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <title>My Face BOX - Manual Registration</title>
+    <style>
+        body { background: #f0f2f5; font-family: Arial, sans-serif; padding: 20px; }
+        .form-container { max-width: 450px; margin: 30px auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #0b2265 !important; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #0b2265 !important; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccd0d5; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+        .btn { width: 100%; background: #FF6B00; color: #0b2265 !important; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn:hover { background: #166fe5; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>My Face BOX ලියාපදිංචිය</h2>
+    <form action="/register" method="POST">
+        <div class="form-group">
+            <label>දුරකතන අංකය (Phone Number):</label>
+            <input type="text" name="phone" placeholder="0712345678" required>
+        </div>
+        <div class="form-group">
+            <label>සම්පූර්ණ නම (Full Name):</label>
+            <input type="text" name="fullname" placeholder="ඔබගේ නම මෙහි ලියන්න" required>
+        </div>
+        <div class="form-group">
+            <label>ලිපිනය (Address):</label>
+            <textarea name="address" rows="2" placeholder="ලිපිනය මෙහි ලියන්න" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>උපන් දිනය (Date of Birth):</label>
+            <input type="date" name="dob" required>
+        </div>
+        <div class="form-group">
+            <label>වයස (Age):</label>
+            <input type="number" name="age" placeholder="වයස" required>
+        </div>
+        <div class="form-group">
+            <label>ස්ත්‍රී/පුරුෂ භාවය (Gender):</label>
+            <select name="gender" required>
+                <option value="">තෝරන්න</option>
+                <option value="Male">පිරිමි (Male)</option>
+                <option value="Female">කාන්තා (Female)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>ජාතික හැඳුනුම්පත් අංකය (ID Number):</label>
+            <input type="text" name="id_number" placeholder="ID Number" required>
+        </div>
+        <button type="submit" class="btn">ඉදිරියට යන්න (Proceed to OTP)</button>
+    </form>
+</div>
+
+</body>
+</html>
+

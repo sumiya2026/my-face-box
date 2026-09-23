@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MY FACE BOX - Friends</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body{font-family:Arial,sans-serif;margin:0;background:#f0f2f5;color:#1c1e21;padding-bottom:20px;-webkit-text-size-adjust:100%}
+        .top-nav{display:flex;justify-content:space-between;align-items:center;background:white;padding:8px 12px;position:sticky;top:0;z-index:100;border-bottom:1px solid #e4e6eb}
+        .logo-area{display:flex;align-items:center;gap:8px}
+        .logo-icon{width:38px;height:38px;background:#FF6B00;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:22px;font-weight:bold}
+        .logo-text{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:bold;color:#FF6B00;letter-spacing:-0.5px}
+        .top-icons{display:flex;gap:10px}
+        .top-icons button{width:40px;height:40px;background:#e4e6eb;border:none;border-radius:50%;font-size:18px;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center}
+        .badge-red{position:absolute;top:-4px;right:-4px;background:#e41e3f;color:white;font-size:11px;font-weight:bold;padding:2px 6px;border-radius:10px}
+        .nav-tabs{display:flex;background:white;border-bottom:1px solid #e4e6eb;position:sticky;top:56px;z-index:99}
+        .tab-btn{flex:1;text-align:center;background:none;border:none;padding:12px 0;font-size:24px;color:#65676b;cursor:pointer;position:relative}
+        .tab-btn.active{color:#FF6B00}
+        .tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:#FF6B00}
+        .tab-badge{position:absolute;top:4px;right:22%;background:#e41e3f;color:white;font-size:10px;font-weight:bold;padding:2px 5px;border-radius:10px}
+        .friends-container{max-width:100%;margin:0 auto;background:white;padding:12px;min-height:100vh;box-sizing:border-box}
+        .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+        .section-title{font-size:20px;font-weight:bold;color:#050505}
+        .see-all{color:#FF6B00;font-size:15px;cursor:pointer}
+        .request-card{display:flex;gap:12px;margin-bottom:16px;align-items:center}
+        .req-avatar{width:75px;height:75px;border-radius:50%;background-size:cover;background-position:center;background-color:#ddd;flex-shrink:0}
+        .req-info{flex:1}
+        .req-name{font-weight:bold;font-size:16px;color:#050505;margin-bottom:2px}
+        .req-meta{font-size:13px;color:#65676b;margin-bottom:8px}
+        .req-buttons{display:flex;gap:8px}
+        .btn-confirm{flex:1;background:#FF6B00;color:white;border:none;padding:8px 0;border-radius:6px;font-weight:bold;font-size:14px;cursor:pointer}
+        .btn-delete{flex:1;background:#e4e6eb;color:#050505;border:none;padding:8px 0;border-radius:6px;font-weight:bold;font-size:14px;cursor:pointer}
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <div class="logo-area"><div class="logo-icon">f</div><div class="logo-text">MY FACE BOX</div></div>
+        <div class="top-icons">
+            <button onclick="location.href='/add-post'"><i class="fas fa-plus"></i></button>
+            <button onclick="location.href='/search'"><i class="fas fa-search"></i></button>
+            <button onclick="location.href='/messages'"><i class="fab fa-facebook-messenger"></i><span class="badge-red">2</span></button>
+        </div>
+    </div>
+    <div class="nav-tabs">
+        <button class="tab-btn" onclick="location.href='/'"><i class="fas fa-home"></i></button>
+        <button class="tab-btn" onclick="location.href='/videos'"><i class="fas fa-tv"></i></button>
+        <button class="tab-btn active" onclick="location.href='/friends'"><i class="fas fa-user-friends"></i><span class="tab-badge">9+</span></button>
+        <button class="tab-btn" onclick="location.href='/marketplace'"><i class="fas fa-store"></i></button>
+        <button class="tab-btn" onclick="location.href='/notifications'"><i class="fas fa-bell"></i><span class="tab-badge">9+</span></button>
+        <button class="tab-btn" onclick="location.href='/menu'"><i class="fas fa-bars"></i></button>
+    </div>
+
+    <div class="friends-container">
+        <div class="section-header">
+            <div class="section-title">Friend Requests <span style="color:#e41e3f"> (9+)</span></div>
+            <div class="see-all">See all</div>
+        </div>
+        <div class="request-card">
+            <div class="req-avatar" style="background-image:url('https://i.pravatar.cc/150?img=5')"></div>
+            <div class="req-info">
+                <div class="req-name">Kasun Perera</div>
+                <div class="req-meta">3 mutual friends - Dummy</div>
+                <div class="req-buttons">
+                    <button class="btn-confirm" onclick="alert('Confirmed!')">Confirm</button>
+                    <button class="btn-delete" onclick="this.closest('.request-card').style.display='none'">Delete</button>
+                </div>
+            </div>
+        </div>
+        <div class="request-card">
+            <div class="req-avatar" style="background-image:url('https://i.pravatar.cc/150?img=8')"></div>
+            <div class="req-info">
+                <div class="req-name">Shanika Fernando</div>
+                <div class="req-meta">12 mutual friends - Dummy</div>
+                <div class="req-buttons">
+                    <button class="btn-confirm" onclick="alert('Confirmed!')">Confirm</button>
+                    <button class="btn-delete" onclick="this.closest('.request-card').style.display='none'">Delete</button>
+                </div>
+            </div>
+        </div>
+        <div class="request-card">
+            <div class="req-avatar" style="background-image:url('https://i.pravatar.cc/150?img=12')"></div>
+            <div class="req-info">
+                <div class="req-name">Nuwan Silva</div>
+                <div class="req-meta">Direct Follower - Real එකක් ආවම මෙතනට Add වෙනවා</div>
+                <div class="req-buttons">
+                    <button class="btn-confirm" onclick="alert('Confirmed!')">Confirm</button>
+                    <button class="btn-delete" onclick="this.closest('.request-card').style.display='none'">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
