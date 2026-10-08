@@ -627,7 +627,8 @@ function renderFeed(posts) {
           <i class="fa-solid fa-trash" style="color:#65676b; cursor:pointer; padding:8px;" onclick="deletePost(${p.id})" title="Delete Post"></i>
         </div>
         ${p.text ? `<div class="post-text" style="margin-top:8px; font-size:14px;">${escapeHtml(p.text)}</div>` : ''}
-        ${mediaUrl ? `<div class="post-media">\${mediaContent}</div>` : ''}
+        ${mediaUrl ? `<div class="post-media">${mediaContent}</div>` : ''}
+
         <div class="post-stats" style="display:flex; justify-content:space-between; margin-top:12px; font-size:13px; color:#65676B; padding-bottom:8px; border-bottom:1px solid #E4E6EB;">
           <div style="display:flex; align-items:center; gap:5px;">
             <div class="reaction-icons-group">${miniHtml}</div>
