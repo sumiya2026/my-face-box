@@ -652,7 +652,7 @@ function renderFeed(posts) {
           <input id="c-input-${p.id}" style="flex:1; background:#F0F2F5; border:none; padding:8px 12px; border-radius:18px; font-size:13px; outline:none;" placeholder="Write a comment..." onkeydown="if(event.key==='Enter') addComment(${p.id})">
         </div>
         <div style="padding:0 12px 10px" id="comments-list-${p.id}">
-          ${commentsList.map(c => `<div style="background:#f0f2f5; border-radius:12px; padding:6px 10px; margin:4px 0; font-size:13px"><b>\${escapeHtml(c.user || 'User')}:</b> \${escapeHtml(c.text || c)}</div>`).join('')}
+          \${commentsList.map(c => `<div style="background:#f0f2f5; border-radius:12px; padding:6px 10px; margin:4px 0; font-size:13px"><b>${escapeHtml(c.user || 'User')}:</b> ${escapeHtml(c.text || c)}</div>`).join('')}
         </div>
       </div>
     `;
