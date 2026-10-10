@@ -1,19 +1,146 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MY FACE BOX</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"><style>*{margin:0;padding:0;box-sizing:border-box;font-family:Helvetica,Arial}body{background:#f0f2f5}.header{background:#ff6a00;color:#fff;height:56px;display:flex;justify-content:space-between;align-items:center;padding:0 12px;position:sticky;top:0;z-index:100}.side{position:fixed;top:0;left:-280px;width:320px;height:100%;background:#f0f2f5;z-index:200;transition:.3s;box-shadow:2px 0 10px rgba(0,0,0,.3);padding:12px;overflow:auto}.side.open{left:0}.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:150}.overlay.show{display:block}.tab{background:#ff6a00;display:flex;height:52px;color:#fff}.tab div{flex:1;text-align:center;padding:8px 0;font-size:12px;font-weight:600;opacity:.8}.tab div.active{opacity:1;border-bottom:3px solid #fff}.card{background:#fff;border-radius:16px;margin:10px;padding:12px;box-shadow:0 2px 5px rgba(0,0,0,.1)}.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #ddd}.bottom div.active{color:#ff6a00}</style></head><body>
-<div class="overlay" id="ov" onclick="toggle()"></div>
-<div class="side" id="side">
-<div style="background:#fff3e8;border:1px solid #ffcc80;border-radius:12px;padding:10px"><b>🌐 භාෂාව / Language / மொழி</b><br><span style="color:#ff6a00">සිංහල | English | Tamil</span></div>
-<div style="background:#ff6a00;color:#fff;border-radius:12px;padding:12px;margin-top:10px"><b>👑 නිර්මාත: M.R.A. සුමිංද රණවීර</b><br>📞 0767391892 | 24/7 Unlimited Edition</div>
-<div style="background:#fff;border-radius:12px;padding:12px;margin-top:10px"><i class="fas fa-id-card" style="color:#ff6a00"></i> අංගසම්පූර්ණ ලියාපදිංචිය (Profile)</div>
-<div style="background:#fff;border-radius:12px;padding:12px;margin-top:10px"><i class="fas fa-shield" style="color:#ff6a00"></i> SQLite Database Engine Active ✅</div>
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MY FACE BOX - ULTRA PRO 24H LIVE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,sans-serif}
+html,body{width:100%;height:100%;overflow-x:hidden}
+body{background:#f5f5f5;display:flex;justify-content:center}
+.phone{width:100vw;max-width:480px;min-height:100vh;background:#f5f5f5;display:flex;flex-direction:column;box-shadow:0 0 20px rgba(0,0,0,0.1)}
+.status{height:32px;background:#ff7a00;color:#fff;display:flex;justify-content:space-between;padding:0 20px;align-items:center;font-size:13px;font-weight:600}
+.header{height:56px;background:#ff7a00;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px;position:sticky;top:0;z-index:5}
+.header b{font-size:20px;flex:1;margin-left:10px;letter-spacing:0.5px}
+.top-icons{display:flex;gap:14px;align-items:center;font-size:20px}
+.msg{width:26px;height:26px;background:#0084FF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;box-shadow:0 2px 5px rgba(0,132,255,0.4)}
+.quick{background:#fff;display:flex;justify-content:space-around;padding:10px 6px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid #f0f0f0}
+.quick::-webkit-scrollbar{display:none}
+.q{text-align:center;flex:0 0 60px;cursor:pointer;transition:0.2s}
+.q:active{transform:scale(0.9)}
+.ico{width:46px;height:46px;border-radius:50%;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+/* ================= ICONS SEPARATE FOR EASY UPDATE ================= */
+.ico-google{background:conic-gradient(#4285F4 0% 25%,#EA4335 25% 50%,#FBBC05 50% 75%,#34A853 75% 100%)} /* ICON-01 GOOGLE */
+.ico-youtube{background:#FF0000} /* ICON-02 YOUTUBE */
+.ico-facebook{background:#1877F2} /* ICON-03 FACEBOOK */
+.ico-tiktok{background:#000} /* ICON-04 TIKTOK */
+.ico-instagram{background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)} /* ICON-05 INSTAGRAM */
+.ico-whatsapp{background:#25D366} /* ICON-06 WHATSAPP */
+.ico-playstore{background:#fff;border:1.5px solid #ddd;color:#4285F4} /* ICON-07 PLAYSTORE */
+.ico-search{background:#e0e0e0;color:#333} /* ICON-08 SEARCH */
+/* ================= END ICONS ================= */
+.main-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.composer{background:#fff;margin:12px 10px;border-radius:16px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.ctop{display:flex;gap:10px;align-items:center}
+.ava{width:40px;height:40px;border-radius:50%;background:linear-gradient(45deg,#ff7a00,#ffaa00)}
+.share{margin-left:auto;background:#ff7a00;color:#fff;border:none;padding:8px 14px;border-radius:20px;font-weight:600;cursor:pointer}
+.div{height:1px;background:#eee;margin:12px 0}
+.acts{display:flex;justify-content:space-around;font-size:14px;color:#555}
+.shead{display:flex;justify-content:space-between;padding:10px 14px;font-size:14px}
+.shead a{color:#ff7a00;text-decoration:none;font-weight:600}
+.stories{display:flex;gap:8px;padding:0 10px 6px;overflow-x:auto;scrollbar-width:none}
+.stories::-webkit-scrollbar{display:none}
+.story{min-width:115px;height:195px;border-radius:14px;overflow:hidden;position:relative;background:#ddd;flex-shrink:0;cursor:pointer}
+.story img{width:100%;height:100%;object-fit:cover}
+.plus{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);width:36px;height:36px;background:#1976D2;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;border:2px solid #fff}
+.lab{position:absolute;bottom:6px;left:0;right:0;text-align:center;color:#fff;font-size:11px;font-weight:600;text-shadow:0 1px 3px #000}
+.badge{position:absolute;bottom:6px;left:4px;right:4px;display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+.badge span{font-size:9px;padding:4px 6px;border-radius:6px;color:#fff;font-weight:600}
+.post{background:#fff;margin:12px 10px;border-radius:16px;padding:12px;font-size:14px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.bnav{height:66px;background:#fff;border-top:1px solid #eee;display:flex;justify-content:space-around;align-items:center;color:#888;position:sticky;bottom:0;z-index:10;font-size:11px;text-align:center}
+.active{color:#ff7a00}
+.plusb{width:48px;height:48px;background:#ff7a00;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;margin-top:-18px;border:3px solid #fff;box-shadow:0 4px 10px rgba(255,122,0,0.4)}
+#sideMenu{position:fixed;top:0;right:-100%;width:88%;max-width:380px;height:100%;background:#fff;z-index:9999;transition:0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;box-shadow:-5px 0 25px rgba(0,0,0,0.3)}
+#sideMenu.open{right:0}
+#over{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);backdrop-filter:blur(2px);z-index:9998;display:none}
+#over.show{display:block}
+.mHead{height:56px;background:#ff7a00;color:#fff;display:flex;align-items:center;padding:0 12px;font-weight:700;justify-content:space-between;gap:6px}
+.mBody{flex:1;overflow-y:auto;padding:14px}
+.uItem{background:#f5f5f5;border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;animation:slideIn 0.3s}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.regInput{width:100%;padding:11px;margin:5px 0;border:1.5px solid #ddd;border-radius:10px;font-size:14px;transition:0.2s;outline:none}
+.regInput:focus{border-color:#7C4DFF;box-shadow:0 0 0 3px rgba(124,77,255,0.15)}
+.regBtn{width:100%;padding:13px;background:linear-gradient(135deg,#7C4DFF,#5E35B1);color:#fff;border:none;border-radius:10px;font-weight:700;margin-top:8px;cursor:pointer;transition:0.2s}
+.regBtn:active{transform:scale(0.98)}
+.reg-banner{background:linear-gradient(135deg,#7C4DFF,#5E35B1);color:#fff;border-radius:16px;padding:16px;text-align:center;margin-bottom:12px;box-shadow:0 4px 12px rgba(124,77,255,0.3)}
+</style>
+</head>
+<body>
+<div class="phone">
+<!-- LIVE STATUS BAR -->
+<div class="status"><span id="liveTime">9:41</span><span>5G <span id="liveBattery">85%</span> 🔋 LIVE</span></div>
+<div class="header"><span style="font-size:22px">‹</span><b>MY FACE BOX</b><div class="top-icons"><span style="cursor:pointer">🔍</span><span style="cursor:pointer">🔔</span><div class="msg">💬</div><span onclick="openMenu()" style="cursor:pointer;font-size:26px">☰</span></div></div>
+<!-- ICONS ROW - EASY TO UPDATE SEPARATELY -->
+<div class="quick">
+<div class="q"><div class="ico ico-google">G</div><span style="font-size:10px">Google</span></div>
+<div class="q"><div class="ico ico-youtube">▶</div><span style="font-size:10px">YouTube</span></div>
+<div class="q"><div class="ico ico-facebook">f</div><span style="font-size:10px">Facebook</span></div>
+<div class="q"><div class="ico ico-tiktok">♪</div><span style="font-size:10px">TikTok</span></div>
+<div class="q"><div class="ico ico-instagram">◎</div><span style="font-size:10px">Instagram</span></div>
+<div class="q"><div class="ico ico-whatsapp">W</div><span style="font-size:10px">WhatsApp</span></div>
+<div class="q"><div class="ico ico-playstore">▶</div><span style="font-size:10px">PlayStore</span></div>
+<div class="q"><div class="ico ico-search">🔍</div><span style="font-size:10px">Search</span></div>
 </div>
-
-<div class="header"><div style="display:flex;gap:12px;align-items:center"><i class="fas fa-bars" style="font-size:22px" onclick="toggle()"></i><b style="font-size:20px">MY FACE BOX</b></div><div style="display:flex;gap:8px"><div style="width:36px;height:36px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="fas fa-search"></i></div><div style="width:36px;height:36px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="fas fa-bell"></i></div><div style="width:36px;height:36px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="fas fa-comment-dots"></i></div></div></div>
-<div class="tab"><div class="active"><i class="fas fa-house" style="font-size:20px;display:block"></i>Home</div><div><i class="fas fa-tv" style="font-size:20px;display:block"></i>TV</div><div><i class="fas fa-users" style="font-size:20px;display:block"></i>Groups</div><div><i class="fas fa-store" style="font-size:20px;display:block"></i>Store</div><div><i class="fas fa-user" style="font-size:20px;display:block"></i>Profile</div></div>
-<div style="max-width:600px;margin:auto;padding-bottom:70px">
-<div class="card"><div style="display:flex;gap:10px;align-items:center"><img src="https://i.pravatar.cc/150?img=12" style="width:40px;height:40px;border-radius:50%"><input placeholder="What's on your mind? (Unlimited SQLite Edition)" style="flex:1;background:#f0f2f5;border:none;padding:12px;border-radius:20px"></div><div style="display:flex;gap:8px;margin-top:10px"><div style="flex:1;background:#e7f3e8;padding:10px;border-radius:10px;text-align:center;color:#2e7d32;font-weight:700"><i class="fas fa-image"></i> Photos</div><div style="flex:1;background:#fde8e9;padding:10px;border-radius:10px;text-align:center;color:#c62828;font-weight:700"><i class="fas fa-video"></i> Videos</div><div style="flex:1;background:#e0f2f1;padding:10px;border-radius:10px;text-align:center;color:#00695c;font-weight:700"><i class="fas fa-music"></i> Music</div></div></div>
-<div class="card"><div style="display:flex;justify-content:space-between"><b>Stories</b><span style="color:#ff6a00">See all</span></div><div style="width:120px;height:170px;margin-top:10px;position:relative;border-radius:12px;overflow:hidden"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:30px;right:5px;width:32px;height:32px;background:#ff6a00;border-radius:50%;border:3px solid #fff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold">+</div><div style="position:absolute;bottom:0;left:0;right:0;background:#fff;padding:6px;font-size:12px;font-weight:bold">Create story</div></div></div>
-<div class="card"><div style="display:flex;justify-content:space-between"><div style="display:flex;gap:8px"><img src="https://i.pravatar.cc/150?img=5" style="width:40px;height:40px;border-radius:50%"><div><b>Dasatha Lanka News</b><div style="font-size:12px;color:gray">6h • 🌍</div></div></div><i class="fas fa-trash" style="color:gray"></i></div><div style="margin:10px 0">Welcome to MY FACE BOX Live!</div><div style="font-size:13px;color:#555">👍❤️😂 115 Likes · 1 Comment · 32 Shares</div><div style="display:flex;justify-content:space-around;border-top:1px solid #eee;margin-top:8px;padding-top:8px;color:#555;font-weight:600"><div><i class="far fa-thumbs-up"></i> Like</div><div><i class="far fa-comment"></i> Comment</div><div><i class="fas fa-share"></i> Share</div></div></div>
+<div class="main-content">
+<div class="composer"><div class="ctop"><div class="ava"></div><div style="font-size:14px;color:#555">What's on your mind?</div><button class="share">↗ Share</button></div><div class="div"></div><div class="acts"><span>🖼️ Photos</span><span>▶️ Videos</span><span>🎵 Music</span></div></div>
+<div class="shead"><b>Stories</b><a href="#">See all</a></div>
+<div class="stories">
+<div class="story"><img loading="lazy" src="https://picsum.photos/seed/sunrise/200/300"><div class="plus">+</div><div class="lab">Create story</div></div>
+<div class="story"><img loading="lazy" src="https://picsum.photos/seed/blueSaree2/200/300"><div class="badge"><span style="background:#D32F2F">📹 Videos</span><span style="background:#1976D2">🎵 Music</span></div></div>
+<div class="story"><img loading="lazy" src="https://picsum.photos/seed/yellowSaree2/200/300"><div class="badge"><span style="background:#FF6F00">✈ Publish</span></div></div>
 </div>
-<div class="bottom"><div class="active"><i class="fas fa-house" style="font-size:20px;display:block"></i>Home</div><div><i class="fas fa-clapperboard" style="font-size:20px;display:block"></i>Reels</div><div><i class="fas fa-store" style="font-size:20px;display:block"></i>Shop</div><div><i class="fas fa-bell" style="font-size:20px;display:block"></i>Alerts</div><div><i class="fas fa-user" style="font-size:20px;display:block"></i>Profile</div></div>
-<script>function toggle(){document.getElementById('side').classList.toggle('open');document.getElementById('ov').classList.toggle('show');}</script>
-</body></html>
+<div class="post"><b>Sumiya M.R.A</b> • 12m ago<br><span style="color:#666">❤️ 128 💬 24 ↗ 6 • Live Now</span></div>
+</div>
+<div class="bnav"><div class="active">🏠<br>Home</div><div>🧭<br>Explore</div><div><div class="plusb">+</div>Add</div><div>🔔<br>Alerts</div><div>👤<br>Profile</div></div>
+</div>
+<div id="over" onclick="closeMenu()"></div>
+<div id="sideMenu">
+    <div class="mHead">
+        <span>☰ MENU</span>
+        <select id="langSelect" onchange="changeLanguage()" style="padding:5px;border-radius:6px;font-size:12px;border:none;outline:none">
+            <option value="si">සිංහල</option>
+            <option value="en">English</option>
+            <option value="ta">தமிழ்</option>
+        </select>
+        <span onclick="closeMenu()" style="cursor:pointer;font-size:26px;font-weight:bold;color:#ff3333;">×</span>
+    </div>
+    <div class="mBody">
+        <div class="reg-banner">
+            <b id="txt_title" style="font-size:18px;">Unlimited Registration</b><br>
+            <small id="txt_subtitle">Shop Deals Products • 24H Live</small><br>
+            <span id="count" style="font-weight:bold;font-size:20px;">0</span> <span id="txt_registered">Registered</span>
+        </div>
+        <div style="text-align:center;margin-bottom:12px;">
+            <div id="photoPreview" style="width:84px;height:84px;border-radius:50%;background:#eee;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#aaa;border:2.5px dashed #7C4DFF;overflow:hidden;">👤</div>
+            <label for="profilePhoto" id="txt_upload_btn" style="background:#7C4DFF;color:white;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;display:inline-block;">පින්තූරයක් තෝරන්න</label>
+            <input type="file" id="profilePhoto" accept="image/*" onchange="previewImage(event)" style="display:none;">
+        </div>
+        <input type="text" id="name" class="regInput" placeholder="සම්පූර්ණ නම / Full Name">
+        <select id="accType" class="regInput"><option>Personal Account (පුද්ගලික)</option><option>Page (පේජ්)</option><option>Business (ව්‍යාපාරික)</option></select>
+        <input type="text" id="accName" class="regInput" placeholder="ගිණුමේ නම / Account Name">
+        <select id="country" onchange="setCode()" class="regInput"><option value="94">🇱🇰 Sri Lanka (+94)</option><option value="91">🇮🇳 India (+91)</option><option value="1">🇺🇸 USA (+1)</option><option value="971">🇦🇪 UAE (+971)</option><option value="44">🇬🇧 UK (+44)</option><option value="964">🇮🇶 Iraq (+964)</option><option value="966">🇸🇦 Saudi (+966)</option><option value="974">🇶🇦 Qatar (+974)</option></select>
+        <div style="display:flex;gap:6px;"><input id="code" value="+94" readonly style="width:70px;text-align:center;background:#eee" class="regInput"><input type="number" id="phone" class="regInput" placeholder="දුරකථන අංකය / Phone" style="flex:1"></div>
+        <select id="type" class="regInput"><option>Agent (නියෝජිත)</option><option>Shop Owner (කඩ හිමි)</option></select>
+        <div style="display:flex;align-items:center;gap:8px;margin:10px 0;background:#f9f9f9;padding:9px;border-radius:8px;"><input type="checkbox" id="publishCheck" checked style="width:18px;height:18px;accent-color:#7C4DFF"><label for="publishCheck" id="txt_publish_label" style="font-size:13px;font-weight:500;cursor:pointer;">තොරතුරු ප්‍රසිද්ධ කරන්න</label></div>
+        <button onclick="register()" class="regBtn" id="btn_register">✅ Register Now</button>
+        <div style="margin:14px 0 6px;font-weight:700" id="txt_list_title">📋 ග්‍රාහකයින් ලැයිස්තුව:</div>
+        <div id="uList"></div>
+    </div>
+</div>
+<script>
+// 24H LIVE TECH + NO ERROR SYSTEM
+const translations={si:{title:"Unlimited Registration",subtitle:"Shop Deals Products • 24H Live",registered:"Registered",upload:"පින්තූරයක් තෝරන්න",name:"සම්පූර්ණ නම / Full Name",accName:"ගිණුමේ නම / Account Name",phone:"දුරකථන අංකය / Phone",publish:"තොරතුරු ප්‍රසිද්ධ කරන්න",register:"✅ Register Now",list:"📋 ග්‍රාහකයින් ලැයිස්තුව:",empty:"තවම කිසිවෙක් නෑ"},en:{title:"Unlimited Registration",subtitle:"Shop Deals Products • 24H Live",registered:"Registered",upload:"Choose Photo",name:"Full Name",accName:"Account Name",phone:"Phone Number",publish:"Publish to List",register:"✅ Register Now",list:"📋 Subscribers List:",empty:"No subscribers yet"},ta:{title:"வரம்பற்ற பதிவு",subtitle:"Shop Deals Products • 24H Live",registered:"பதிவு",upload:"புகைப்படம்",name:"முழு பெயர்",accName:"கணக்கு பெயர்",phone:"தொலைபேசி எண்",publish:"பட்டியலில் வெளியிடு",register:"✅ பதிவு",list:"📋 பட்டியல்:",empty:"யாரும் இல்லை"}};
+let users=JSON.parse(localStorage.getItem('fb_users')||'[]');let photoBase64='';
+function openMenu(){document.getElementById('sideMenu').classList.add('open');document.getElementById('over').classList.add('show');loadU();}
+function closeMenu(){document.getElementById('sideMenu').classList.remove('open');document.getElementById('over').classList.remove('show');}
+function setCode(){document.getElementById('code').value='+'+document.getElementById('country').value;}
+function previewImage(e){let f=e.target.files[0];if(!f)return;if(f.size>2*1024*1024){alert('Photo එක 2MB ට වඩා අඩුවෙන් දාන්න!');return}let r=new FileReader();r.onload=ev=>{let img=new Image();img.onload=()=>{let c=document.createElement('canvas');let s=300/c.width>300/c.height?300/c.width:300/c.height;c.width=300;c.height=300;let ctx=c.getContext('2d');ctx.drawImage(img,(c.width-img.width*s)/2,(c.height-img.height*s)/2,img.width*s,img.height*s);photoBase64=c.toDataURL('image/jpeg',0.8);document.getElementById('photoPreview').innerHTML=`<img src="${photoBase64}" style="width:100%;height:100%;object-fit:cover">`;};img.src=ev.target.result;};r.readAsDataURL(f);}
+function changeLanguage(){let l=document.getElementById('langSelect').value;let t=translations[l];document.getElementById('txt_title').innerText=t.title;document.getElementById('txt_subtitle').innerText=t.subtitle;document.getElementById('txt_registered').innerText=t.registered;document.getElementById('txt_upload_btn').innerText=t.upload;document.getElementById('name').placeholder=t.name;document.getElementById('accName').placeholder=t.accName;document.getElementById('phone').placeholder=t.phone;document.getElementById('txt_publish_label').innerText=t.publish;document.getElementById('btn_register').innerText=t.register;document.getElementById('txt_list_title').innerText=t.list;loadU();}
+function register(){let n=document.getElementById('name').value.trim(),an=document.getElementById('accName').value.trim(),p=document.getElementById('phone').value.trim();if(n.length<3){alert('නම අවම 3 අකුරු දාන්න!');return}if(p.length<7){alert('Phone අවම 7 ඉලක්කම් දාන්න!');return}let u={id:Date.now(),name:n,accName:an,accType:document.getElementById('accType').value,code:document.getElementById('code').value,phone:p,type:document.getElementById('type').value,photo:photoBase64,publish:document.getElementById('publishCheck').checked,time:new Date().toISOString()};users.push(u);try{localStorage.setItem('fb_users',JSON.stringify(users))}catch(e){alert('Storage පිරිලා! පැරණි අය ටිකක් මකන්න');return}document.getElementById('count').innerText=users.length;document.getElementById('name').value='';document.getElementById('accName').value='';document.getElementById('phone').value='';photoBase64='';document.getElementById('photoPreview').innerHTML='👤';loadU();alert('🎉 Registered! '+n);}
+function loadU(){let us=JSON.parse(localStorage.getItem('fb_users')||'[]');document.getElementById('count').innerText=us.length;let d=document.getElementById('uList');let lang=document.getElementById('langSelect').value;let t=translations[lang];if(us.length==0){d.innerHTML=`<small style=color:#888>${t.empty}</small>`;return;}d.innerHTML=us.slice().reverse().map(u=>`<div class="uItem"><div style="display:flex;gap:8px;align-items:center"><div style="width:36px;height:36px;border-radius:50%;background:#eee;overflow:hidden;flex-shrink:0">${u.photo?`<img src="${u.photo}" loading="lazy" style="width:100%;height:100%;object-fit:cover">`:'👤'}</div><div><b style="font-size:13px">${u.name}</b><br><small style="color:#666">${u.code}${u.phone} • ${u.type}</small></div></div><small style="font-size:11px">${new Date(u.time).toLocaleDateString()}</small></div>`).join('');}
+// LIVE CLOCK - 24H
+setInterval(()=>{let now=new Date();document.getElementById('liveTime').innerText=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});},1000);
+loadU();
+</script>
+</body>
+</html>
