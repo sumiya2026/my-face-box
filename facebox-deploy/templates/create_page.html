@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Create Page</title>
+<style>*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}body{background:#f0f2f5}.top{background:white;padding:12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #ccc}.box{background:white;margin:10px;border-radius:8px;padding:16px}.box input,.box textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:8px;background:#f0f2f5}.btn{width:100%;padding:12px;background:#ff7a00;color:white;border:none;border-radius:8px;font-weight:bold;font-size:16px;margin-top:10px}</style>
+</head><body>
+<div class="top"><button onclick="history.back()" style="width:36px;height:36px;border-radius:50%;border:none">←</button><b>Create Facebook Page</b></div>
+<div class="box">
+<h3>Create Your Page</h3><small>ඔයාගේ Business / Fan Page එක හදන්න</small><br><br>
+<input id="pname" placeholder="Page Name *">
+<input id="pcat" placeholder="Category ex: Musician, Business">
+<textarea id="pbio" placeholder="Bio"></textarea>
+<input type="file" id="pimg" accept="image/*">
+<p id="msg" style="color:red;margin-top:8px"></p>
+<button class="btn" onclick="createPage()">Create Page</button>
+</div>
+<script>
+async function createPage(){
+let fd=new FormData();
+fd.append('name',document.getElementById('pname').value);
+fd.append('category',document.getElementById('pcat').value);
+fd.append('bio',document.getElementById('pbio').value);
+let f=document.getElementById('pimg'); if(f.files[0]) fd.append('file',f.files[0]);
+let r=await fetch('/api/page/create',{method:'POST',body:fd});
+let d=await r.json();
+if(d.status=='ok'){alert('Page Created! '+d.page.name); location.href='/';} else document.getElementById('msg').innerText=d.msg;
+}
+</script>
+</body></html>

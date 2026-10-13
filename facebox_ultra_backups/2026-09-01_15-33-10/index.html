@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>My Face BOX</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 100%;  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .app-container { width: 100%; min-height: 100vh;  display: flex; flex-direction: column; }
+        
+        /* NAVBAR STYLE */
+        .navbar { display: flex; justify-content: space-between; align-items: center;  padding: 12px 15px; border-bottom: 1px solid #e4e6eb; position: sticky; top: 0; z-index: 100; }
+        .navbar-brand { font-size: 32px; font-weight: bold; color: #0b2265 !important; letter-spacing: -0.5px; }
+        .navbar-icons { display: flex; gap: 12px; }
+        .nav-icon { width: 42px; height: 42px;  border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        
+        /* POST CREATOR BOX WITH FACEBOOK LOOK */
+        .post-creator-box {  padding: 15px; margin-bottom: 8px; border-bottom: 1px solid #e4e6eb; }
+        .input-row { display: flex; gap: 12px; margin-bottom: 12px; align-items: center; }
+        .user-pic { width: 50px; height: 50px; border-radius: 50%;  background-size: cover; background-position: center; }
+        textarea { flex: 1; border: 1px solid #e4e6eb; border-radius: 24px; padding: 12px 20px; font-size: 18px; outline: none; resize: none; height: 50px;  font-family: inherit; }
+        .file-btn { display: inline-block;  padding: 10px 20px; border-radius: 24px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 12px; color: #0b2265 !important; }
+        #imageUpload { display: none; }
+        .submit-btn { width: 100%;  color: #0b2265 !important; border: none; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 18px; cursor: pointer; }
+        
+        /* STORIES SECTION - EXACT FACEBOOK DESIGN */
+        .stories-section {  padding: 15px 10px; margin-bottom: 8px; border-bottom: 1px solid #e4e6eb; }
+        .stories-wrapper { display: flex; gap: 10px; overflow-x: auto; }
+        .stories-wrapper::-webkit-scrollbar { display: none; }
+        .story-block { min-width: 120px; width: 120px; height: 210px; border-radius: 12px; position: relative; background-size: cover; background-position: center; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+        .story-avatar { position: absolute; top: 10px; left: 10px; width: 40px; height: 40px; border-radius: 50%; border: 3px solid #FF6B00;  object-fit: cover; z-index: 2; }
+        .story-title { position: absolute; bottom: 10px; left: 10px; right: 10px; color: #0b2265 !important; font-size: 14px; font-weight: bold; line-height: 1.2; text-shadow: none !important; z-index: 2; }
+        .story-block::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 50%;  z-index: 1; }
+
+        /* FEED CARDS STYLE */
+        .feed-section { display: flex; flex-direction: column; gap: 8px; }
+        .feed-card {  padding: 15px 0 0 0; border-bottom: 1px solid #e4e6eb; margin-bottom: 8px; }
+        .card-header { display: flex; align-items: center; padding: 0 15px; margin-bottom: 12px; }
+        .profile-name { font-weight: bold; font-size: 18px; color: #0b2265 !important; }
+        .post-time { font-size: 14px; color: #0b2265 !important; margin-top: 2px; }
+        .card-body { padding: 0 15px 12px 15px; font-size: 18px; color: #0b2265 !important; line-height: 1.5; }
+        .post-img { width: 100%; max-height: 450px; object-fit: cover; display: none; margin-bottom: 12px; }
+        
+        /* ACTIONS & COMMENTS */
+        .card-actions { display: flex; border-top: 1px solid #e4e6eb; border-bottom: 1px solid #e4e6eb; padding: 6px 15px; }
+        .action-btn { flex: 1;  border: none; padding: 12px; color: #0b2265 !important; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .comment-section { padding: 12px 15px;  display: flex; flex-direction: column; gap: 8px; }
+        .comment-box {  padding: 10px 14px; border-radius: 18px; font-size: 16px; max-width: 85%; color: #0b2265 !important; }
+        .comment-input-row { padding: 12px 15px;  }
+        .comment-input { width: 100%; border: 1px solid #e4e6eb; border-radius: 24px; padding: 12px 18px; font-size: 16px; outline: none;  }
+        
+        .empty-placeholder {  padding: 30px; text-align: center; color: #0b2265 !important; border: 2px dashed #e4e6eb; margin: 12px 15px; border-radius: 12px; font-weight: bold; font-size: 16px; }
+    </style>
+    <style>
+        body, html {
+            scroll-behavior: smooth;
+        }
+        textarea, .post-box, form {
+            min-height: 70vh !important;
+            font-size: 18px !important;
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+    </style>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                const el = document.querySelector("textarea") || document.querySelector("form");
+                if(el) {
+                    el.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }, 300);
+        });
+    </script>
+    <style>
+        textarea, .post-box, form {
+            width: 100vw !important;
+            max-width: 100% !important;
+            min-height: 75vh !important;
+            margin-left: calc(-50vw + 50%) !important;
+            margin-right: calc(-50vw + 50%) !important;
+            box-sizing: border-box !important;
+        }
+    </style>
+    <style>
+        textarea, .post-box, form {
+            width: 100% !important;
+            max-width: 100vw !important;
+            min-height: 60vh !important;
+            box-sizing: border-box !important;
+            padding: 15px !important;
+        }
+    </style>
+    <style>
+        body, html {
+            width: 100% !important;
+            overflow-x: hidden !important;
+        }
+        textarea, .post-box, form {
+            width: 100% !important;
+            max-width: 100% !important;
+            display: block !important;
+            box-sizing: border-box !important;
+            margin: 0 auto !important;
+        }
+    </style>
+    <style>
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100vw !important;
+            overflow-x: hidden !important;
+        }
+        header, .header, #header, nav {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        textarea, .post-box, form, .container, .main-content {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+            padding: 10px !important;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+        }
+        /* Top Navigation Bar */
+        .top-nav, header, .header {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 8px 16px !important;
+            
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 1000 !important;
+        }
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            display: flex !important;
+            justify-content: space-around !important;
+            align-items: center !important;
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            
+            border-top: 1px solid #ddd !important;
+            padding: 8px 0 !important;
+            z-index: 1000 !
+        }
+        .bottom-nav a, .bottom-nav button {
+            font-size: 22px !important;
+            color: #0b2265 !important;
+            
+            border: none !important;
+        }
+        .bottom-nav a.active, .bottom-nav button.active {
+            color: #0b2265 !important;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .post-action-bar {
+            display: flex !important;
+            justify-content: space-around !important;
+            align-items: center !important;
+            padding: 10px 0 !important;
+            border-top: 1px solid #e4e6eb !important;
+            margin-top: 10px !important;
+        }
+        .post-action-bar label, .post-action-bar button {
+            
+            border: none !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            color: #0b2265 !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+        }
+    </style>
+    <style>
+        .action-bar {
+            display: flex !important;
+            justify-content: space-around !important;
+            align-items: center !important;
+            padding: 12px 0 !important;
+            border-top: 1px solid #e4e6eb !important;
+            
+        }
+        .action-item {
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #0b2265 !important;
+            cursor: pointer !important;
+        }
+    </style>
+    <style>
+        .biometric-box {
+            
+            padding: 25px !important;
+            border-radius: 12px !important;
+            text-align: center !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        }
+        .scan-btn {
+            
+            color: #0b2265 !important;
+            border: none !important;
+            padding: 12px 24px !important;
+            border-radius: 6px !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            margin-top: 15px !important;
+        }
+    </style>
+</head>
+<body>
+<div style="padding:15px; text-align:center;"><button onclick="openAuthModal()" style=" color: #0b2265 !important; padding:12px 20px; border:none; border-radius:8px; font-size:16px; font-weight:bold; width:100%; cursor:pointer;">📸 ID ස්කෑන් කැමරාව ක්‍රියාත්මක කරන්න</button></div>
+    <div class="app-container">
+        <!-- NAVBAR -->
+        <div class="navbar">
+            <div class="navbar-brand">My Face BOX</div>
+            <div class="navbar-icons">
+                <div class="nav-icon">🔍</div>
+                <div class="nav-icon">💬</div>
+            </div>
+        </div>
+
+        <!-- POST CREATOR -->
+        <div class="post-creator-box">
+            <div class="input-row">
+                <div class="user-pic" style="background-image: url('https://unsplash.com');"></div>
+                <textarea id="mainInput" placeholder="What's on your mind?"></textarea>
+            </div>
+            <label for="imageUpload" class="file-btn">📸 Add Photo</label>
+            <input type="file" id="imageUpload" accept="image/*" onchange="previewImage(event)">
+            <button class="submit-btn" onclick="addNewPost()">Post</button>
+        </div>
+
+        <!-- STORIES SECTION -->
+        <div class="stories-section">
+            <div class="stories-wrapper">
+                <div class="story-block" style="background-image: url('https://unsplash.com');">
+                    <img class="story-avatar" src="https://unsplash.com">
+                    <div class="story-title">Create story</div>
+                </div>
+                <div class="story-block" style="background-image: url('https://unsplash.com');">
+                    <img class="story-avatar" src="https://unsplash.com">
+                    <div class="story-title">Sriyani Pathmalatha</div>
+                </div>
+                <div class="story-block" style="background-image: url('https://unsplash.com');">
+                    <img class="story-avatar" src="https://unsplash.com">
+                    <div class="story-title">Manik Thushari</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LIVE FEED SECTION -->
+        <div class="feed-section" id="newsFeed">
+            <div class="feed-card">
+                <div class="card-header">
+                    <div class="user-pic" style="background-image: url('https://unsplash.com');"></div>
+                    <div class="header-info" style="margin-left:12px;">
+                        <div class="profile-name">Gangasiripura Dhammaloka</div>
+                        <div class="post-time">23h • 🌐</div>
+                    </div>
+                </div>
+                <div class="card-body">Doing great work here! Everything looks perfectly scaling now.</div>
+                <div class="card-actions">
+                    <button class="action-btn">👍 Like</button>
+                    <button class="action-btn" onclick="focusComment(this)">💬 Comment</button>
+                    <button class="action-btn">↪️ Share</button>
+                </div>
+                <div class="comment-section">
+                    <div class="comment-box"><strong>Isanka:</strong> Awesome layout template!</div>
+                </div>
+                <div class="comment-input-row">
+                    <input type="text" class="comment-input" placeholder="Write a comment..." onkeypress="addComment(event, this)">
+                </div>
+            </div>
+        </div>
+        
+        <!-- AUTO EMPTY BOXES ZONE -->
+        <div id="infiniteScrollContainer"></div>
+    </div>
+
+    <script>
+        let uploadedImageSrc = "";
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() { uploadedImageSrc = reader.result; };
+            reader.readAsDataURL(event.target.files);
+        }
+        function addNewPost() {
+            const input = document.getElementById('mainInput');
+            const text = input.value.trim();
+            if(text === "" && uploadedImageSrc === "") return;
+            const feed = document.getElementById('newsFeed');
+            const newCard = document.createElement('div');
+            newCard.className = 'feed-card';
+            let imgHtml = uploadedImageSrc ? `<img src="${uploadedImageSrc}" class="post-img" style="display:block;">` : "";
+            newCard.innerHTML = `
+                <div class="card-header">
+                    <div class="user-pic" style="background-image: url('https://unsplash.com');"></div>
+                    <div class="header-info" style="margin-left:12px;"><div class="profile-name">You (User)</div><div class="post-time">Just now • 🌐</div></div>
+                </div>
+                <div class="card-body">${text.replace(/\n/g, '<br>')}</div>
+                ${imgHtml}
+                <div class="card-actions">
+                    <button class="action-btn">👍 Like</button>
+                    <button class="action-btn" onclick="focusComment(this)">💬 Comment</button>
+                    <button class="action-btn">↪️ Share</button>
+                </div>
+                <div class="comment-section"></div>
+                <div class="comment-input-row">
+                    <input type="text" class="comment-input" placeholder="Write a comment..." onkeypress="addComment(event, this)">
+                </div>
+            `;
+            feed.insertBefore(newCard, feed.firstChild);
+            input.value = "";
+            uploadedImageSrc = "";
+            document.getElementById('imageUpload').value = "";
+        }
+        function addComment(event, inputElement) {
+            if(event.key === 'Enter' && inputElement.value.trim() !== "") {
+                const commentSection = inputElement.parentElement.previousElementSibling;
+                const newComment = document.createElement('div');
+                newComment.className = 'comment-box';
+                newComment.innerHTML = `<strong>You:</strong> ${inputElement.value}`;
+                commentSection.appendChild(newComment);
+                inputElement.value = "";
+            }
+        }
+        function focusComment(btn) { btn.parentElement.nextElementSibling.nextElementSibling.querySelector('.comment-input').focus(); }
+        
+        // AUTO EMPTY BOX GENERATOR ON SCROLL
+        window.onscroll = function() {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
+                const container = document.getElementById('infiniteScrollContainer');
+                const emptyBox = document.createElement('div');
+                emptyBox.className = 'empty-placeholder';
+                emptyBox.innerText = "✨ My Face BOX - Empty Space for Next Post...";
+                container.appendChild(emptyBox);
+            }
+        };
+    </script>
+<div style="padding:12px; text-align:center;"><button onclick="openAuthModal()" style=" color: #0b2265 !important; border:none; padding:14px 20px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; width:100%; max-width:500px; box-shadow:0 4px 12px rgba(24,119,242,0.3);">🛡️ Verify Identity & Create Account (Real Users Only)</button></div>
+<!-- Global Real User Verification Modal -->
+<div id="authModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;  z-index:99999; justify-content:center; align-items:center; padding:15px; box-sizing:border-box;">
+    <div style=" width:100%; max-width:450px; border-radius:12px; padding:25px; box-shadow:0 8px 24px rgba(0,0,0,0.3); font-family:sans-serif; text-align:left;">
+        
+        <!-- Step 1: ID / Document Capture -->
+        <div id="st1">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px; text-align:center;">🛡️ Real User Verification</h2>
+            <p style="font-size:13px; color: #0b2265 !important; text-align:center; margin-bottom:15px;">Capture NIC, Driving License, Passport, or Postal ID (15+) to verify identity.</p>
+            <div style="border:2px dashed #ccd0d5; border-radius:8px; padding:10px; text-align:center; margin-bottom:15px; ">
+                <video id="liveCam" autoplay playsinline style="width:100%; max-height:180px; border-radius:6px; display:none;"></video>
+                <div id="camTxt" style="padding:25px 0; color: #0b2265 !important; font-size:14px;">📷 Click Start to Scan ID / Passport</div>
+            </div>
+            <button type="button" onclick="initCam()" id="sBtn" style=" color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer; margin-bottom:10px;">Start Document Capture</button>
+            <button type="button" onclick="nextSt2()" id="nBtn" style=" color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer; display:none;">Capture & Auto-Fill</button>
+        </div>
+
+        <!-- Step 2: Account Configuration & Naming -->
+        <div id="st2" style="display:none;">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px; text-align:center;">✨ Account Setup</h2>
+            <p style="font-size:13px; color: #0b2265 !important; text-align:center; margin-bottom:15px;">Document verified. Configure your account details.</p>
+            <label style="font-size:13px; font-weight:bold; color: #0b2265 !important; display:block; margin-bottom:5px;">Select Account Type:</label>
+            <select id="accChoice" style="width:100%; padding:10px; border:1px solid #ccd0d5; border-radius:6px; margin-bottom:15px; font-size:14px;">
+                <option value="fb">Personal FB Account</option>
+                <option value="page">Business / Public Page</option>
+            </select>
+            <label style="font-size:13px; font-weight:bold; color: #0b2265 !important; display:block; margin-bottom:5px;">Enter Account Name:</label>
+            <input type="text" id="userNameInput" placeholder="Type your preferred name..." style="width:100%; padding:10px; border:1px solid #ccd0d5; border-radius:6px; margin-bottom:20px; font-size:14px; box-sizing:border-box;">
+            <button type="button" onclick="nextSt3()" style=" color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer;">Continue to Pin Mark</button>
+        </div>
+
+        <!-- Step 3: Pin Mark / Biometric Signature -->
+        <div id="st3" style="display:none; text-align:center;">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px;">🔒 Biometric Pin Mark</h2>
+            <p style="font-size:13px; color: #0b2265 !important; margin-bottom:20px;">Provide your digital security touch/pin mark to complete real-human verification.</p>
+            <div style=" border:1px solid #ccd0d5; padding:20px; border-radius:8px; margin-bottom:20px; cursor:pointer;" onclick="finishReg()">
+                <div style="font-size:32px; margin-bottom:10px;">👆</div>
+                <strong style="color: #0b2265 !important; font-size:15px;">Tap Here to Register Pin Mark</strong>
+                <div style="font-size:12px; color: #0b2265 !important; margin-top:5px;">Blocks all fake accounts permanently</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let activeStream = null;
+function openAuthModal() {
+    document.getElementById("authModal").style.display = "flex";
+}
+function initCam() {
+    document.getElementById("camTxt").style.display = "none";
+    let v = document.getElementById("liveCam");
+    v.style.display = "block";
+    document.getElementById("sBtn").style.display = "none";
+    document.getElementById("nBtn").style.display = "block";
+    
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+    .then(s => { activeStream = s; v.srcObject = s; })
+    .catch(e => {
+        alert("Camera access notice: Using fallback photo mode due to browser restriction (" + e + ")");
+    });
+}
+function nextSt2() {
+    if(activeStream) { activeStream.getTracks().forEach(t => t.stop()); }
+    document.getElementById("st1").style.display = "none";
+    document.getElementById("st2").style.display = "block";
+}
+function nextSt3() {
+    let nameVal = document.getElementById("userNameInput").value;
+    if(!nameVal.trim()) { alert("Please enter a valid account name."); return; }
+    document.getElementById("st2").style.display = "none";
+    document.getElementById("st3").style.display = "block";
+}
+function finishReg() {
+    alert("🎉 Real User Account Created Successfully! Welcome.");
+    document.getElementById("authModal").style.display = "none";
+    location.reload();
+}
+</script>
+
+</body>
+</html>

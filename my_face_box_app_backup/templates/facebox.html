@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MY FACEBOX - International LocalStorage Edition</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif}
+body{background:#121212;color:#fff;padding-top:115px;padding-bottom:20px}
+
+/* Header & Top Nav */
+header{background:#1e1e1e;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;position:fixed;width:100%;top:0;z-index:100;border-bottom:1px solid #333}
+.logo{font-size:28px;font-weight:900;color:#ff5722;letter-spacing:-1px}
+.header-icons{display:flex;gap:8px}
+.icon-btn{background:#2d2d2d;border:none;width:40px;height:40px;border-radius:50%;color:#ff5722;font-weight:bold;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:0.2s}
+.icon-btn:hover{background:#3d3d3d}
+
+/* Main Tab Bar */
+nav{background:#1e1e1e;display:flex;justify-content:space-around;position:fixed;width:100%;top:60px;z-index:99;border-bottom:1px solid #333}
+.nav-item{color:#888;padding:12px 0;width:16%;text-align:center;font-size:20px;cursor:pointer;border-bottom:3px solid transparent;transition:0.2s}
+.nav-item.active{color:#ff5722;border-bottom:3px solid #ff5722}
+
+.container{max-width:500px;margin:0 auto;padding:10px}
+
+/* Create Post Box */
+.create-post{background:#1e1e1e;padding:12px;border-radius:12px;margin-bottom:12px;border:1px solid #333}
+.input-row{display:flex;gap:10px;align-items:flex-start}
+.avatar{width:40px;height:40px;border-radius:50%;background:#ff5722;display:flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0;color:#fff;overflow:hidden;cursor:pointer;object-fit:cover;}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+.create-post textarea{flex:1;padding:12px 15px;border-radius:12px;border:1px solid #444;background:#2d2d2d;color:#fff;outline:none;font-size:14px;resize:vertical;min-height:100px;line-height:1.5;}
+.actions-row{display:flex;justify-content:space-between;margin-top:10px;align-items:center}
+.file-label{background:#2d2d2d;color:#ff5722;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:bold;border:1px solid #444;cursor:pointer;display:flex;align-items:center;gap:5px}
+.post-btn{background:#ff5722;color:#fff;border:none;padding:8px 24px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:14px}
+.preview img{width:100%;border-radius:10px;margin-top:10px;max-height:300px;object-fit:cover;border:1px solid #333}
+
+/* Stories Tray */
+.stories{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;margin-bottom:12px}
+.stories::-webkit-scrollbar{display:none}
+.story{width:110px;height:210px;background:#2d2d2d;border-radius:12px;flex-shrink:0;position:relative;overflow:hidden;border:1px solid #444;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:10px;color:#fff;font-weight:bold;font-size:12px;cursor:pointer;background-size:cover;background-position:center}
+.story.create{background:#1e1e1e;color:#ff5722;justify-content:center;align-items:center;font-size:14px;text-align:center}
+
+/* Post Cards */
+.post-card{background:#1e1e1e;border-radius:12px;padding:12px;margin-bottom:12px;border:1px solid #333;position:relative;}
+.post-head{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.post-content-wrapper{position:relative;}
+.post-text {font-size: 14px; line-height: 1.6; color: #ddd; word-break: break-word; max-height: 120px; overflow: hidden; transition: max-height 0.3s ease;}
+.post-text.expanded { max-height: none; }
+.see-more-btn { background: none; border: none; color: #ff5722; font-weight: bold; cursor: pointer; padding: 4px 0; font-size: 13px; margin-top: 4px; display: inline-block; }
+.post-media{width:100%;border-radius:10px;margin-top:8px;max-height:400px;object-fit:cover;border:1px solid #333}
+
+/* Facebook Style Like & Reactions Hover Box */
+.like-container { position: relative; display: inline-block; }
+.reactions-box {
+    display: none; position: absolute; bottom: 40px; left: 0; background: #242526;
+    border-radius: 30px; padding: 6px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    gap: 8px; z-index: 50; border: 1px solid #3a3b3c;
+}
+.like-container:hover .reactions-box { display: flex; animation: fadeIn 0.2s ease; }
+.reaction-icon { font-size: 22px; cursor: pointer; transition: transform 0.2s; background: none; border: none; }
+.reaction-icon:hover { transform: scale(1.3); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.actions{display:flex;justify-content:space-around;border-top:1px solid #333;margin-top:10px;padding-top:6px}
+.act{background:none;border:none;color:#aaa;font-weight:600;cursor:pointer;padding:8px;font-size:14px;display:flex;align-items:center;gap:6px}
+.act.liked{color:#ff5722}
+
+/* Post Menu Buttons (Edit / Delete) */
+.post-menu { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; }
+.post-menu button { background: #2d2d2d; border: 1px solid #444; color: #aaa; padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; }
+.post-menu button.del { color: #ff5722; }
+
+/* Comments & Interactive Edit/Delete Menu */
+.comment-box { padding: 8px 0; display: flex; flex-direction: column; gap: 6px; }
+.comment-input-area { display: flex; gap: 8px; margin-top: 8px; }
+.comment-input-area textarea { flex: 1; padding: 8px 12px; border: 1px solid #444; border-radius: 10px; background: #2d2d2d; color: white; outline: none; font-size: 13px; resize: vertical; min-height: 60px; }
+.comment-submit-btn { background: #ff5722; color: white; border: none; padding: 4px 14px; border-radius: 15px; font-size: 12px; font-weight: bold; cursor: pointer; height: 35px; align-self: flex-end;}
+
+.single-comment { background: #2d2d2d; padding: 8px 12px; border-radius: 12px; font-size: 13px; margin-bottom: 4px; border: 1px solid #333; position: relative; display: flex; justify-content: space-between; align-items: flex-start; }
+.single-comment .commenter { font-weight: bold; color: #ff5722; margin-bottom: 2px; }
+.comment-actions-trigger { background: none; border: none; color: #aaa; cursor: pointer; font-size: 14px; padding: 0 4px; }
+.comment-dropdown { display: none; position: absolute; right: 10px; top: 30px; background: #1e1e1e; border: 1px solid #444; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); z-index: 10; }
+.comment-dropdown button { display: block; width: 100%; background: none; border: none; color: #fff; padding: 6px 12px; text-align: left; font-size: 12px; cursor: pointer; }
+.comment-dropdown button:hover { background: #333; }
+
+/* Messenger Chat Modal */
+.chat-container { display: none; background: #121212; position: fixed; bottom: 0; left: 0; width: 100%; height: 100vh; z-index: 200; flex-direction: column; }
+.chat-header { background: #1e1e1e; padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #333; }
+.chat-title { font-weight: bold; font-size: 18px; color: #ff5722; display: flex; align-items: center; gap: 10px; }
+.chat-actions-top { display: flex; gap: 12px; }
+.chat-action-btn { background: none; border: none; color: #ff5722; font-size: 20px; cursor: pointer; }
+
+.messenger-active-tray { display: flex; gap: 12px; overflow-x: auto; padding: 10px 15px; background: #181818; border-bottom: 1px solid #333; scrollbar-width: none; }
+.messenger-active-tray::-webkit-scrollbar { display: none; }
+.messenger-active-user { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; cursor: pointer; }
+.messenger-avatar-wrap { position: relative; width: 50px; height: 50px; }
+.messenger-avatar-wrap img, .messenger-avatar-wrap .placeholder-av { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background: #ff5722; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
+.online-dot { position: absolute; bottom: 2px; right: 2px; width: 13px; height: 13px; background: #31a24c; border: 2px solid #181818; border-radius: 50%; }
+.messenger-username { font-size: 11px; color: #ccc; text-align: center; width: 60px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.messenger-search-box { padding: 10px 15px; background: #121212; }
+.messenger-search-input { width: 100%; padding: 10px 15px; background: #2d2d2d; border: 1px solid #444; border-radius: 20px; color: #fff; outline: none; font-size: 14px; }
+.messenger-inbox-list { flex: 1; overflow-y: auto; background: #121212; padding: 5px 0; }
+.inbox-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; cursor: pointer; transition: background 0.2s; }
+.inbox-item:hover { background: #1e1e1e; }
+.inbox-avatar-wrap { position: relative; width: 50px; height: 50px; flex-shrink: 0; }
+.inbox-avatar-wrap img, .inbox-avatar-wrap .inbox-av-placeholder { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background: #333; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #ff5722; }
+.inbox-details { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.inbox-name { font-size: 14px; font-weight: bold; color: #fff; }
+.inbox-preview { font-size: 13px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+
+.chat-conversation-view { display: none; flex: 1; flex-direction: column; background: #121212; height: calc(100vh - 65px); }
+.chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #121212; }
+.msg-bubble { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 15px; }
+.msg-bubble.sent { background: #ff5722; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+.msg-bubble.received { background: #2d2d2d; color: white; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #444; }
+.chat-input-area { padding: 12px; background: #1e1e1e; display: flex; gap: 10px; align-items: center; border-top: 1px solid #333; }
+.chat-input-area input { flex: 1; padding: 11px 15px; border: 1px solid #444; border-radius: 20px; background: #2d2d2d; color: white; outline: none; }
+.send-msg-btn { background: #ff5722; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* Modals */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.8); z-index: 300; justify-content: center; align-items: center; padding: 15px; }
+.modal-content { background: #1e1e1e; width: 100%; max-width: 450px; border-radius: 12px; border: 1px solid #333; padding: 20px; max-height: 90vh; overflow-y: auto; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+.modal-header h3 { color: #ff5722; font-size: 18px; }
+.close-modal { background: none; border: none; color: #aaa; font-size: 20px; cursor: pointer; }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-size: 13px; color: #aaa; margin-bottom: 5px; }
+.form-group input, .form-group textarea { width: 100%; padding: 10px; background: #2d2d2d; border: 1px solid #444; border-radius: 8px; color: white; outline: none; font-size: 14px; }
+.submit-form-btn { width: 100%; background: #ff5722; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
+/* Story Studio Modal */
+.story-studio-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #000; z-index: 400; flex-direction: column; color: #fff; }
+.story-studio-header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #121212; border-bottom: 1px solid #333; }
+.story-studio-tools { display: flex; gap: 10px; overflow-x: auto; padding: 15px; background: #181818; justify-content: center; }
+.story-tool-btn { background: #2d2d2d; border: 1px solid #444; color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+.story-tool-btn:hover { background: #ff5722; border-color: #ff5722; }
+.story-media-grid { flex: 1; overflow-y: auto; padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.story-media-item { aspect-ratio: 1; background: #2d2d2d; border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; border: 2px solid transparent; }
+.story-media-item img, .story-media-item video { width: 100%; height: 100%; object-fit: cover; }
+.story-media-item.selected { border-color: #ff5722; }
+
+/* Profile View Modal */
+.profile-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #121212; z-index: 500; overflow-y: auto; color: #fff; }
+.profile-cover { width: 100%; height: 200px; background: linear-gradient(135deg, #ff5722, #333); position: relative; }
+.profile-header-section { padding: 15px; position: relative; border-bottom: 1px solid #333; }
+.profile-big-avatar { width: 100px; height: 100px; border-radius: 50%; border: 4px solid #121212; background: #ff5722; position: absolute; top: -50px; left: 15px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: white; }
+.profile-big-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-info-content { margin-top: 55px; }
+.profile-name-title { font-size: 22px; font-weight: bold; color: #fff; }
+.profile-bio { font-size: 14px; color: #aaa; margin-top: 5px; }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">myfacebox</div>
+    <div class="header-icons">
+        <button class="icon-btn" title="Create" onclick="document.getElementById('postContent').focus()"><i class="fa-solid fa-plus"></i></button>
+        <button class="icon-btn" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button class="icon-btn" title="Messages" onclick="toggleChat(true)"><i class="fa-solid fa-comment-dots"></i></button>
+    </div>
+</header>
+
+<nav>
+    <div class="nav-item active" title="Home"><i class="fa-solid fa-house"></i></div>
+    <div class="nav-item" title="Watch"><i class="fa-solid fa-tv"></i></div>
+    <div class="nav-item" title="Friends"><i class="fa-solid fa-user-group"></i></div>
+    <div class="nav-item" title="Marketplace"><i class="fa-solid fa-shop"></i></div>
+    <div class="nav-item" title="Notifications"><i class="fa-solid fa-bell"></i></div>
+    <div class="nav-item" title="Menu" onclick="openMenuModal()"><i class="fa-solid fa-bars"></i></div>
+</nav>
+
+<div class="container">
+  <div class="create-post">
+    <div class="input-row">
+      <div class="avatar" id="headerUserAvatar" onclick="openProfileModal()" title="View Profile">Me</div>
+      <textarea id="postContent" placeholder="What's on your mind? පේළි කිහිපයක් එකවර බලා ලියන්න පුළුවන්..."></textarea>
+    </div>
+    <div class="actions-row">
+      <label class="file-label"><i class="fa-solid fa-image"></i> Photo <input type="file" id="postImage" hidden accept="image/*"></label>
+      <button class="post-btn" onclick="createPost()">Post</button>
+    </div>
+    <div class="preview" id="imagePreview"></div>
+  </div>
+
+  <div class="stories">
+    <div class="story create" onclick="openStoryStudio()"><i class="fa-solid fa-plus" style="font-size:24px;margin-bottom:5px"></i>Create story</div>
+    <div class="story" style="background-image:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300')">සුමින්ද රංදිල්</div>
+    <div class="story" style="background-image:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300')">Kavita Tamil</div>
+  </div>
+
+  <div id="feedContainer"></div>
+</div>
+
+<!-- Profile Modal View -->
+<div class="profile-modal" id="profileModal">
+    <div class="story-studio-header">
+        <button class="icon-btn" onclick="closeProfileModal()"><i class="fa-solid fa-arrow-left"></i></button>
+        <h3 style="color:#ff5722; font-size:18px;" id="modalProfileNameTitle">සුමින්ද රංදිල්</h3>
+        <button class="icon-btn" onclick="triggerProfilePicChange()" title="Change Profile Picture"><i class="fa-solid fa-camera"></i></button>
+    </div>
+    <div class="profile-cover"></div>
+    <div class="profile-header-section">
+        <div class="profile-big-avatar" id="modalBigAvatar">සු</div>
+        <div class="profile-info-content">
+            <div class="profile-name-title" id="profileDisplayName">සුමින්ද රංදිල් ✅</div>
+            <div class="profile-bio">Digital Creator · My FaceBox International Master Edition</div>
+            <div style="margin-top: 15px; display:flex; gap:10px;">
+                <button class="post-btn" onclick="triggerProfilePicChange()">Update Profile Picture</button>
+            </div>
+        </div>
+    </div>
+    <input type="file" id="profilePicInput" hidden accept="image/*" onchange="updateProfilePicture(event)">
+</div>
+
+<!-- Story Studio Gallery Modal -->
+<div class="story-studio-modal" id="storyStudioModal">
+    <div class="story-studio-header">
+        <button class="icon-btn" onclick="closeStoryStudio()"><i class="fa-solid fa-xmark"></i></button>
+        <h3 style="color:#ff5722; font-size:18px;">Create story</h3>
+        <button class="post-btn" onclick="publishStory()">Share to Story</button>
+    </div>
+    <div class="story-studio-tools">
+        <button class="story-tool-btn" onclick="triggerStoryFileInput('image/*')"><i class="fa-solid fa-image"></i> Photo</button>
+        <button class="story-tool-btn" onclick="triggerStoryFileInput('video/*')"><i class="fa-solid fa-video"></i> Video</button>
+        <button class="story-tool-btn" onclick="alert('Text Story Editor activated!')"><i class="fa-solid fa-font"></i> Text</button>
+    </div>
+    <input type="file" id="storyFileInput" hidden multiple accept="image/*,video/*" onchange="handleStoryFiles(event)">
+    <div class="story-media-grid" id="storyMediaGrid">
+        <div class="story-media-item" onclick="triggerStoryFileInput('image/*')">
+            <div style="display:flex;align-items:center;justify-content:center;height:100%;background:#1e1e1e;color:#ff5722;font-size:24px;"><i class="fa-solid fa-plus"></i></div>
+        </div>
+    </div>
+</div>
+
+<!-- Messenger Chat Modal -->
+<div class="chat-container" id="chatContainer">
+    <div class="chat-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button class="icon-btn" onclick="closeChatWindow()"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="chat-title" id="chatHeaderTitle">Chats 💬</div>
+        </div>
+        <div class="chat-actions-top" id="chatTopActions" style="display:none;">
+            <button class="chat-action-btn" title="Video Call" onclick="startVideoCall()"><i class="fa-solid fa-video"></i></button>
+            <button class="chat-action-btn" title="Voice Call" onclick="startVoiceCall()"><i class="fa-solid fa-phone"></i></button>
+        </div>
+    </div>
+
+    <div id="messengerMainView" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
+        <div class="messenger-search-box">
+            <input type="text" class="messenger-search-input" placeholder="Search Messenger..." oninput="filterInbox(this.value)">
+        </div>
+        <div class="messenger-active-tray" id="activeTray">
+            <div class="messenger-active-user" onclick="openDirectChat('Sudu Menike', 'Active now')">
+                <div class="messenger-avatar-wrap">
+                    <div class="placeholder-av" style="background:#e91e63;">සු</div>
+                    <div class="online-dot"></div>
+                </div>
+                <div class="messenger-username">Sudu Menike</div>
+            </div>
+            <div class="messenger-active-user" onclick="openDirectChat('Saduni Saduni', 'Active now')">
+                <div class="messenger-avatar-wrap">
+                    <div class="placeholder-av" style="background:#9c27b0;">සා</div>
+                    <div class="online-dot"></div>
+                </div>
+                <div class="messenger-username">Saduni</div>
+            </div>
+        </div>
+        <div class="messenger-inbox-list" id="inboxList">
+            <div class="inbox-item" onclick="openDirectChat('Kalpani Erandi Herath', 'Hi, Kalpani!')">
+                <div class="inbox-avatar-wrap">
+                    <div class="inbox-av-placeholder">ක</div>
+                </div>
+                <div class="inbox-details">
+                    <div class="inbox-name">Kalpani Erandi Herath</div>
+                    <div class="inbox-preview">Hi, Kalpani! · Fri</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-conversation-view" id="chatConversationView">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+            <input type="text" id="messageInput" placeholder="Aa ලෙස ටයිප් කරන්න..." onkeypress="handleChatEnter(event)">
+            <button class="send-msg-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
+
+<!-- Menu Modal -->
+<div class="modal-overlay" id="menuModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>FaceBox මෙනු පාලකය (Menu)</h3>
+            <button class="close-modal" onclick="closeMenuModal()">&times;</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button onclick="openRegModal()" style="background:#2d2d2d; color:#ff5722; border:1px solid #444; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer; text-align:left;"><i class="fa-solid fa-user-plus"></i> ගිණුමක් හෝ පිටුවක් තැනීම</button>
+            <button onclick="openAiPolicyModal()" style="background:#2d2d2d; color:#fff; border:1px solid #444; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer; text-align:left;"><i class="fa-solid fa-shield-halved"></i> AI ආරක්ෂක බාධකය</button>
+            <button onclick="openGuestInfoModal()" style="background:#2d2d2d; color:#fff; border:1px solid #444; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer; text-align:left;"><i class="fa-solid fa-eye"></i> ඇප් ඩවුන්ලෝඩ් රහිතව නැරඹීමේ නිදහස</button>
+        </div>
+    </div>
+</div>
+
+<!-- Registration Modal -->
+<div class="modal-overlay" id="regModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>සරලව ගිණුමක් / පිටුවක් සකසන්න</h3>
+            <button class="close-modal" onclick="closeRegModal()">&times;</button>
+        </div>
+        <form onsubmit="submitRegistration(event)">
+            <div class="form-group">
+                <label>ගිණුමේ හෝ පිටුවේ නම</label>
+                <input type="text" id="regName" placeholder="ඔබේ නම හෝ පිටු නම දෙන්න" required>
+            </div>
+            <div class="form-group">
+                <label>ඊමේල් ලිපිනය</label>
+                <input type="email" id="regEmail" placeholder="example@email.com" required>
+            </div>
+            <div class="form-group">
+                <label>මුරපදය</label>
+                <input type="password" id="regPass" placeholder="රහස් මුරපදයක් දෙන්න" required>
+            </div>
+            <button type="submit" class="submit-form-btn">ගිණුම සාර්ථකව සාදාගන්න</button>
+        </form>
+    </div>
+</div>
+
+<!-- AI Safety Policy Modal -->
+<div class="modal-overlay" id="aiPolicyModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>AI ආරක්ෂක සහ අන්තර්ගත පාලන බාධකය</h3>
+            <button class="close-modal" onclick="closeAiPolicyModal()">&times;</button>
+        </div>
+        <p style="font-size: 14px; color: #ccc; line-height: 1.6;">
+            මෙම යෙදුම තුළ ස්වයංක්‍රීය **AI Moderation Barrier** එකක් ක්‍රියාත්මක වේ. අසබ්‍ය සහ නීතිවිරෝධී අන්තර්ගතයන් ස්වයංක්‍රීයව අවහිර කෙරේ.
+        </p>
+    </div>
+</div>
+
+<!-- Guest Mode Info Modal -->
+<div class="modal-overlay" id="guestInfoModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>නැරඹීමේ නිදහස (Guest Browsing)</h3>
+            <button class="close-modal" onclick="closeGuestInfoModal()">&times;</button>
+        </div>
+        <p style="font-size: 14px; color: #ccc; line-height: 1.6;">
+            ඔබට මෙම ඇප් එක ඩවුන්ලෝඩ් කරගැනීමකින් තොරව වෙබ් බ්‍රව්සරය හරහා පෝස්ට් නැරඹිය හැක.
+        </p>
+    </div>
+</div>
+
+<script>
+let allPosts = JSON.parse(localStorage.getItem('facebox_posts')) || [
+    {
+        id: 1,
+        author: 'සුමින්ද රංදිල්',
+        content: 'স্বාදරයෙන් පිළිගනිමු! My FaceBox International Master Edition දැන් LocalStorage සමඟ 100%ක් සාර්ථකව ක්‍රියාත්මක වේ! ✨',
+        time: 'මිනිත්තු කිහිපයකට පෙර',
+        likes: 5,
+        user_liked: false,
+        selected_reaction: '❤️',
+        comments: [
+            { author: 'Kalpani', text: 'සුපිරියට වැඩ කරනවා මචං!' }
+        ]
+    }
+];
+
+let allMessages = JSON.parse(localStorage.getItem('facebox_messages')) || {
+    'Sudu Menike': [
+        { sender: 'them', text: 'කොහොමද මචං වැඩ ටික?' },
+        { sender: 'me', text: 'ඔක්කොම සුපිරියට යනවා!' }
+    ]
+};
+
+let currentChatUser = null;
+let selectedStoryMediaSrc = '';
+let userProfilePicUrl = localStorage.getItem('facebox_profile_pic') || '';
+let currentUserName = localStorage.getItem('facebox_username') || 'සුමින්ද රංදිල්';
+
+// Initialize Avatar UI
+if(userProfilePicUrl) {
+    document.getElementById('headerUserAvatar').innerHTML = `<img src="${userProfilePicUrl}" alt="Profile">`;
+}
+
+// XSS Sanitizer helper
+function escapeHTML(str) {
+    return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+    );
+}
+
+// Save to LocalStorage
+function saveData() {
+    localStorage.setItem('facebox_posts', JSON.stringify(allPosts));
+    localStorage.setItem('facebox_messages', JSON.stringify(allMessages));
+    localStorage.setItem('facebox_username', currentUserName);
+    if(userProfilePicUrl) {
+        localStorage.setItem('facebox_profile_pic', userProfilePicUrl);
+    }
+}
+
+// Image Preview for Post creation
+document.getElementById('postImage').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if(file) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      document.getElementById('imagePreview').innerHTML = `<img src="${evt.target.result}">`;
+    }
+    reader.readAsDataURL(file);
+  }
+});
+
+// Profile Modal & Picture Functions
+function openProfileModal() {
+    document.getElementById('profileModal').style.display = 'block';
+    document.getElementById('modalProfileNameTitle').innerText = currentUserName;
+    document.getElementById('profileDisplayName').innerText = currentUserName + ' ✅';
+    if(userProfilePicUrl) {
+        document.getElementById('modalBigAvatar').innerHTML = `<img src="${userProfilePicUrl}" alt="Profile">`;
+    }
+}
+
+function closeProfileModal() {
+    document.getElementById('profileModal').style.display = 'none';
+}
+
+function triggerProfilePicChange() {
+    document.getElementById('profilePicInput').click();
+}
+
+function updateProfilePicture(e) {
+    const file = e.target.files[0];
+    if(file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            userProfilePicUrl = evt.target.result;
+            document.getElementById('headerUserAvatar').innerHTML = `<img src="${userProfilePicUrl}" alt="Profile">`;
+            document.getElementById('modalBigAvatar').innerHTML = `<img src="${userProfilePicUrl}" alt="Profile">`;
+            saveData();
+            alert('ප්‍රොෆයිල් පින්තූරය සාර්ථකව යාවත්කාලීන කරන ලදී! ✨');
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+function openStoryStudio() { document.getElementById('storyStudioModal').style.display = 'flex'; }
+function closeStoryStudio() { document.getElementById('storyStudioModal').style.display = 'none'; }
+
+function triggerStoryFileInput(acceptType) {
+    const fileInput = document.getElementById('storyFileInput');
+    fileInput.accept = acceptType;
+    fileInput.click();
+}
+
+function handleStoryFiles(e) {
+    const files = e.target.files;
+    const grid = document.getElementById('storyMediaGrid');
+    for(let i=0; i<files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            const item = document.createElement('div');
+            item.className = 'story-media-item';
+            item.innerHTML = `<img src="${evt.target.result}">`;
+            item.onclick = function() { selectStoryMedia(this, evt.target.result); };
+            grid.prepend(item);
+            selectStoryMedia(item, evt.target.result);
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+function selectStoryMedia(element, src) {
+    document.querySelectorAll('.story-media-item').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedStoryMediaSrc = src;
+}
+
+function publishStory() {
+    if(!selectedStoryMediaSrc) {
+        alert('කරුණාකර ස්ටේටස් එකක් සඳහා ඡායාරූපයක් තෝරන්න!');
+        return;
+    }
+    alert('ඔබේ ස්ටේටස් (Story) එක සාර්ථකව ප්‍රකාශයට පත් කරන ලදී! 🔥');
+    closeStoryStudio();
+    selectedStoryMediaSrc = '';
+}
+
+// Feed Rendering & Actions
+function renderFeed() {
+  const container = document.getElementById('feedContainer');
+  container.innerHTML = '';
+  
+  if(allPosts.length === 0) {
+      container.innerHTML = '<div style="text-align:center;color:#777;padding:20px;">පෝස්ට් කිසිවක් නොමැත. පළමුවැන්න ඔබ ලියන්න!</div>';
+      return;
+  }
+
+  allPosts.forEach(post => {
+    let mediaHtml = post.image ? `<img src="${post.image}" class="post-media">` : '';
+    let commentsHtml = (post.comments || []).map((c, cIdx) => `
+      <div class="single-comment">
+        <div>
+          <div class="commenter">${escapeHTML(c.author)}</div>
+          <div id="comment-text-${post.id}-${cIdx}">${escapeHTML(c.text)}</div>
+        </div>
+        <div>
+          <button class="comment-actions-trigger" onclick="toggleCommentMenu(${post.id}, ${cIdx})"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+          <div class="comment-dropdown" id="comment-menu-${post.id}-${cIdx}">
+            <button onclick="editComment(${post.id}, ${cIdx})">✏️ Edit</button>
+            <button onclick="deleteComment(${post.id}, ${cIdx})" style="color:#ff5722;">🗑️ Delete</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    let card = document.createElement('div');
+    card.className = 'post-card';
+    card.innerHTML = `
+      <div class="post-menu">
+        <button onclick="editPost(${post.id})">Edit</button>
+        <button class="del" onclick="deletePost(${post.id})">Delete</button>
+      </div>
+      <div class="post-head">
+        <div class="avatar">${post.author[0]}</div>
+        <div>
+          <strong>${escapeHTML(post.author)}</strong>
+          <div style="font-size:11px;color:#888">${post.time} · <i class="fa-solid fa-globe"></i></div>
+        </div>
+      </div>
+      <div class="post-content-wrapper">
+        <div class="post-text" id="post-text-${post.id}">${escapeHTML(post.content).replace(/\n/g, '<br>')}</div>
+        <button class="see-more-btn" id="see-btn-${post.id}" onclick="toggleSeeMore(${post.id})" style="display:none;">See More</button>
+      </div>
+      ${mediaHtml}
+      
+      <div style="display:flex;justify-content:space-between;padding:8px 0;color:#aaa;font-size:13px;border-bottom:1px solid #333;margin-top:8px;">
+        <span id="like-count-display-${post.id}">${post.selected_reaction ? post.selected_reaction + ' ' : '👍'} ${post.likes || 0}</span>
+        <span>${post.comments ? post.comments.length : 0} Comments</span>
+      </div>
+
+      <div class="actions">
+        <div class="like-container">
+          <button class="act ${post.user_liked ? 'liked' : ''}" id="like-btn-${post.id}" onclick="toggleLikeMain(${post.id})">
+            ${post.selected_reaction ? post.selected_reaction + ' Liked' : '<i class="fa-regular fa-thumbs-up"></i> Like'}
+          </button>
+          <div class="reactions-box">
+            <button class="reaction-icon" onclick="selectReaction(${post.id}, '👍')">👍</button>
+            <button class="reaction-icon" onclick="selectReaction(${post.id}, '❤️')">❤️</button>
+            <button class="reaction-icon" onclick="selectReaction(${post.id}, '😆')">😆</button>
+            <button class="reaction-icon" onclick="selectReaction(${post.id}, '😮')">😮</button>
+            <button class="reaction-icon" onclick="selectReaction(${post.id}, '😢')">😢</button>
+            <button class="reaction-icon" onclick="selectReaction(${post.id}, '😡')">😡</button>
+          </div>
+        </div>
+        <button class="act"><i class="fa-regular fa-comment"></i> Comment</button>
+        <button class="act" onclick="sharePost()"><i class="fa-solid fa-share"></i> Share</button>
+      </div>
+      <div class="comment-box">
+        <div id="comments-${post.id}">${commentsHtml}</div>
+        <div class="comment-input-area">
+          <textarea id="comment-input-${post.id}" placeholder="Write a comment..."></textarea>
+          <button class="comment-submit-btn" onclick="addComment(${post.id})">Post</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+
+    setTimeout(() => {
+      const textEl = document.getElementById(`post-text-${post.id}`);
+      const btnEl = document.getElementById(`see-btn-${post.id}`);
+      if (textEl && textEl.scrollHeight > 120) {
+        btnEl.style.display = 'inline-block';
+      }
+    }, 50);
+  });
+}
+
+function toggleSeeMore(id) {
+  const textEl = document.getElementById(`post-text-${id}`);
+  const btnEl = document.getElementById(`see-btn-${id}`);
+  if (textEl.classList.contains('expanded')) {
+    textEl.classList.remove('expanded');
+    btnEl.innerText = 'See More';
+  } else {
+    textEl.classList.add('expanded');
+    btnEl.innerText = 'See Less';
+  }
+}
+
+function selectReaction(postId, emoji) {
+  const post = allPosts.find(p => p.id === postId);
+  if(post) {
+      post.selected_reaction = emoji;
+      post.user_liked = true;
+      if(!post.reactedBefore) {
+          post.likes = (post.likes || 0) + 1;
+          post.reactedBefore = true;
+      }
+      saveData();
+      renderFeed();
+  }
+}
+
+function toggleLikeMain(postId) {
+  const post = allPosts.find(p => p.id === postId);
+  if(post) {
+      if(post.user_liked) {
+          post.user_liked = false;
+          post.selected_reaction = null;
+          post.likes = Math.max(0, (post.likes || 1) - 1);
+          post.reactedBefore = false;
+      } else {
+          post.user_liked = true;
+          post.selected_reaction = '👍';
+          post.likes = (post.likes || 0) + 1;
+          post.reactedBefore = true;
+      }
+      saveData();
+      renderFeed();
+  }
+}
+
+function createPost() {
+  const content = document.getElementById('postContent').value;
+  const imagePreviewImg = document.querySelector('#imagePreview img');
+  const image = imagePreviewImg ? imagePreviewImg.src : '';
+
+  if(!content.trim() && !image) return;
+
+  const lowerText = content.toLowerCase();
+  if(lowerText.includes('bad') || lowerText.includes('අසබ්‍ය')) {
+      alert('⚠️ AI ආරක්ෂක බාධකය (AI Barrier) මඟින් මෙම අන්තර්ගතය අවහිර කරන ලදී!');
+      document.getElementById('imagePreview').innerHTML = '';
+      return;
+  }
+
+  const newPost = {
+      id: Date.now(),
+      author: currentUserName,
+      content: content,
+      image: image,
+      time: 'දැන්',
+      likes: 0,
+      user_liked: false,
+      selected_reaction: null,
+      comments: []
+  };
+
+  allPosts.unshift(newPost);
+  saveData();
+  
+  document.getElementById('postContent').value = '';
+  document.getElementById('imagePreview').innerHTML = '';
+  renderFeed();
+}
+
+function addComment(id) {
+  const input = document.getElementById(`comment-input-${id}`);
+  const text = input.value;
+  if(!text.trim()) return;
+
+  const post = allPosts.find(p => p.id === id);
+  if(post) {
+      if(!post.comments) post.comments = [];
+      post.comments.push({ author: currentUserName, text: text });
+      saveData();
+      input.value = '';
+      renderFeed();
+  }
+}
+
+function deletePost(id) {
+  if(confirm('මෙම පෝස්ටුව මකා දැමීමට අවශ්‍යද?')) {
+    allPosts = allPosts.filter(p => p.id !== id);
+    saveData();
+    renderFeed();
+  }
+}
+
+function editPost(id) {
+  const post = allPosts.find(p => p.id === id);
+  if(!post) return;
+  const newContent = prompt('පෝස්ටුව සංස්කරණය කරන්න:', post.content);
+  if(newContent !== null) {
+    post.content = newContent;
+    saveData();
+    renderFeed();
+  }
+}
+
+function toggleCommentMenu(postId, index) {
+  document.querySelectorAll('.comment-dropdown').forEach(d => d.style.display = 'none');
+  const menu = document.getElementById(`comment-menu-${postId}-${index}`);
+  if(menu) {
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  }
+}
+
+function editComment(postId, commentIndex) {
+  const post = allPosts.find(p => p.id === postId);
+  if(post && post.comments[commentIndex]) {
+      const currentText = post.comments[commentIndex].text;
+      const newText = prompt('කමෙන්ට් එක සංස්කරණය කරන්න:', currentText);
+      if(newText !== null && newText.trim() !== '') {
+          post.comments[commentIndex].text = newText;
+          saveData();
+          renderFeed();
+      }
+  }
+}
+
+function deleteComment(postId, commentIndex) {
+  if(confirm('මෙම කමෙන්ට් එක මකා දැමීමට අවශ්‍යද?')) {
+      const post = allPosts.find(p => p.id === postId);
+      if(post && post.comments) {
+          post.comments.splice(commentIndex, 1);
+          saveData();
+          renderFeed();
+      }
+  }
+}
+
+function sharePost() {
+    if (navigator.share) {
+        navigator.share({ title: 'My FaceBox Post', text: 'Check out this post!', url: window.location.href }).catch(() => {});
+    } else {
+        alert('පෝස්ට් එක සාර්ථකව Share කරන ලදී!');
+    }
+}
+
+// Menu Modals
+function openMenuModal() { document.getElementById('menuModal').style.display = 'flex'; }
+function closeMenuModal() { document.getElementById('menuModal').style.display = 'none'; }
+function openRegModal() { closeMenuModal(); document.getElementById('regModal').style.display = 'flex'; }
+function closeRegModal() { document.getElementById('regModal').style.display = 'none'; }
+function openAiPolicyModal() { closeMenuModal(); document.getElementById('aiPolicyModal').style.display = 'flex'; }
+function closeAiPolicyModal() { document.getElementById('aiPolicyModal').style.display = 'none'; }
+function openGuestInfoModal() { closeMenuModal(); document.getElementById('guestInfoModal').style.display = 'flex'; }
+function closeGuestInfoModal() { document.getElementById('guestInfoModal').style.display = 'none'; }
+
+function submitRegistration(e) {
+    e.preventDefault();
+    const name = document.getElementById('regName').value;
+    currentUserName = name;
+    saveData();
+    alert(`සුභ පැතුම්! ${name} ගිණුම සාර්ථකව සාදන ලදී!`);
+    closeRegModal();
+}
+
+// Messenger LocalStorage Integration
+function toggleChat(show) {
+    const chat = document.getElementById('chatContainer');
+    chat.style.display = show ? 'flex' : 'none';
+    if(show) {
+        document.getElementById('messengerMainView').style.display = 'flex';
+        document.getElementById('chatConversationView').style.display = 'none';
+        document.getElementById('chatHeaderTitle').innerText = 'Chats 💬';
+        document.getElementById('chatTopActions').style.display = 'none';
+    }
+}
+
+function closeChatWindow() {
+    const convView = document.getElementById('chatConversationView');
+    if(convView.style.display === 'flex') {
+        convView.style.display = 'none';
+        document.getElementById('messengerMainView').style.display = 'flex';
+        document.getElementById('chatHeaderTitle').innerText = 'Chats 💬';
+        document.getElementById('chatTopActions').style.display = 'none';
+    } else {
+        toggleChat(false);
+    }
+}
+
+function openDirectChat(userName, subtitle) {
+    currentChatUser = userName;
+    document.getElementById('messengerMainView').style.display = 'none';
+    document.getElementById('chatConversationView').style.display = 'flex';
+    document.getElementById('chatHeaderTitle').innerHTML = `<div style="font-size:16px;">${escapeHTML(userName)}</div><div style="font-size:11px;color:#31a24c;font-weight:normal;">Active now</div>`;
+    document.getElementById('chatTopActions').style.display = 'flex';
+    loadMessages();
+}
+
+function loadMessages() {
+    const box = document.getElementById('chatMessages');
+    let messages = allMessages[currentChatUser] || [
+        { sender: 'them', text: 'හායි! කොහොමද?' }
+    ];
+    let html = '';
+    messages.forEach(m => {
+        html += `<div class="msg-bubble ${m.sender === 'me' ? 'sent' : 'received'}">${escapeHTML(m.text)}</div>`;
+    });
+    box.innerHTML = html;
+    box.scrollTop = box.scrollHeight;
+}
+
+function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const text = input.value.trim();
+    if(!text || !currentChatUser) return;
+    
+    if(!allMessages[currentChatUser]) {
+        allMessages[currentChatUser] = [];
+    }
+    
+    allMessages[currentChatUser].push({ sender: 'me', text: text });
+    
+    // Auto reply simulation for realism
+    setTimeout(() => {
+        allMessages[currentChatUser].push({ sender: 'them', text: 'මම මේ පණිවිඩයට ලැබුණා! 👍' });
+        saveData();
+        loadMessages();
+    }, 1000);
+
+    saveData();
+    input.value = '';
+    loadMessages();
+}
+
+function handleChatEnter(e) {
+    if(e.key === 'Enter') sendMessage();
+}
+
+function startVideoCall() { alert(`Connecting video call with ${currentChatUser}... 📹`); }
+function startVoiceCall() { alert(`Calling ${currentChatUser}... 📞`); }
+
+function filterInbox(query) {
+    const filter = query.toLowerCase();
+    const items = document.querySelectorAll('.inbox-item');
+    items.forEach(item => {
+        const name = item.querySelector('.inbox-name').innerText.toLowerCase();
+        item.style.display = name.includes(filter) ? 'flex' : 'none';
+    });
+}
+
+// Initial render
+renderFeed();
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MY FACE BOX - Messenger</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{background:#f0f2f5;height:100vh;overflow:hidden}
+.header{background:white;height:56px;display:flex;align-items:center;padding:0 16px;box-shadow:0 1px 2px rgba(0,0,0,.1);position:sticky;top:0;z-index:10}
+.header a{color:#050505;text-decoration:none;font-size:22px;margin-right:12px}
+.header h2{flex:1;font-size:20px;font-weight:700}
+.header i{width:36px;height:36px;background:#e4e6eb;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-left:8px;cursor:pointer}
+.container{display:flex;height:calc(100vh - 56px)}
+.chat-list{width:100%;max-width:380px;background:white;border-right:1px solid #ddd;overflow-y:auto;display:flex;flex-direction:column}
+@media(min-width:768px){.chat-list{width:380px}}
+.search-box{padding:12px}
+.search-box div{background:#f0f2f5;border-radius:20px;padding:8px 12px;display:flex;align-items:center}
+.search-box input{border:none;background:transparent;outline:none;width:100%;margin-left:8px}
+.chat-item{display:flex;align-items:center;padding:8px 12px;cursor:pointer;transition:.2s}
+.chat-item:hover{background:#f2f2f2}
+.chat-item img{width:56px;height:56px;border-radius:50%;object-fit:cover}
+.chat-info{flex:1;margin-left:12px;overflow:hidden}
+.chat-info b{font-size:15px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-info span{font-size:13px;color:#65676b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.chat-item small{font-size:12px;color:#65676b}
+.chat-view{flex:1;background:white;display:flex;flex-direction:column;position:relative}
+.chat-view-header{height:62px;display:flex;align-items:center;padding:0 12px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.chat-view-header img{width:40px;height:40px;border-radius:50%;margin:0 10px}
+.chat-view-header .name{flex:1}
+.chat-view-header .name b{font-size:16px}
+.chat-view-header .name p{font-size:12px;color:#31a24c}
+.chat-view-header .actions i{font-size:20px;color:#0084ff;margin-left:18px;cursor:pointer}
+.center-profile{text-align:center;padding:30px 20px;overflow-y:auto;flex:1}
+.center-profile img.big{width:100px;height:100px;border-radius:50%;object-fit:cover}
+.center-profile h2{margin-top:12px}
+.center-profile p{color:#65676b;margin:6px 0}
+.btn-profile{background:#e4e6eb;border:none;padding:8px 16px;border-radius:18px;font-weight:600;margin:10px;cursor:pointer}
+.enc{font-size:12px;color:#65676b;padding:10px 20px;background:#f0f2f5;margin:12px;border-radius:8px}
+.quick-hello{padding:12px;border-top:1px solid #eee}
+.quick-hello b{font-size:15px}
+.quick-btns{display:flex;gap:8px;margin-top:8px;overflow-x:auto}
+.quick-btns button{border:1px solid #ddd;background:white;padding:8px 14px;border-radius:18px;white-space:nowrap;cursor:pointer}
+.input-area{display:flex;align-items:center;padding:8px 12px;border-top:1px solid #ddd;gap:10px;background:white}
+.input-area i{font-size:22px;color:#0084ff;cursor:pointer}
+.input-wrap{flex:1;background:#f0f2f5;border-radius:20px;display:flex;align-items:center;padding:6px 12px}
+.input-wrap input{flex:1;border:none;background:transparent;outline:none;font-size:15px}
+.hidden{display:none}
+@media(max-width:768px){.chat-list.active{display:none}.chat-view.hidden-mobile{display:none}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<a href="{{ url_for('home') }}"><i class="fas fa-arrow-left" style="background:none"></i></a>
+<h2>Chats</h2>
+<i class="fas fa-user-plus" onclick="addNewFriend()" title="Add New Friend"></i>
+<i class="fas fa-camera"></i>
+<i class="fas fa-pen-to-square"></i>
+</div>
+
+<div class="container">
+<!-- LEFT LIST -->
+<div class="chat-list" id="chatList">
+<div class="search-box"><div><i class="fas fa-search" style="color:#65676b"></i><input placeholder="Search Messenger"></div></div>
+
+<div class="chat-item" onclick="openChat('Sithara Senavirathna','Active 22 minutes ago','https://i.pravatar.cc/100?img=5')">
+<img src="https://i.pravatar.cc/100?img=5">
+<div class="chat-info"><b>Sithara Senavirathna</b><span>You: Hey 👋 • 22m</span></div><small><i class="fas fa-check-circle" style="color:#0084ff"></i></small>
+</div>
+
+<div class="chat-item" onclick="openChat('Mahesh K Somaratne','Active now','https://i.pravatar.cc/100?img=12')">
+<img src="https://i.pravatar.cc/100?img=12">
+<div class="chat-info"><b>Mahesh K Somaratne</b><span>ඔයා එව්ව photo එක දැක්කා • 1h</span></div><small>1h</small>
+</div>
+
+<div class="chat-item" onclick="openChat('Aluminium Sc...','Seen • 2h ago','https://i.pravatar.cc/100?img=8')">
+<img src="https://i.pravatar.cc/100?img=8">
+<div class="chat-info"><b>Aluminium Sc...</b><span>Voice message • 0:24 • 2h</span></div><small>2h</small>
+</div>
+
+<div class="chat-item" onclick="openChat('Gamini Wijerathne','Online','https://i.pravatar.cc/100?img=15')">
+<img src="https://i.pravatar.cc/100?img=15">
+<div class="chat-info"><b>Gamini Wijerathne</b><span>Video call ended • 3h</span></div><small>3h</small>
+</div>
+
+<!-- Dynamic Custom Added Friends Will Load Here -->
+<div id="dynamicFriendsList"></div>
+</div>
+
+<!-- RIGHT CHAT VIEW -->
+<div class="chat-view hidden-mobile hidden" id="chatView">
+<div class="chat-view-header">
+<i class="fas fa-arrow-left" onclick="closeChat()" style="cursor:pointer;color:#0084ff"></i>
+<img id="cvImg" src="">
+<div class="name"><b id="cvName"></b><p id="cvStatus"></p></div>
+<div class="actions">
+<i class="fas fa-phone" onclick="alert('Voice Call එක ආරම්භ වෙනවා... 📞')"></i>
+<i class="fas fa-video" onclick="alert('Video Call එක ආරම්භ වෙනවා... 🎥')"></i>
+<i class="fas fa-circle-info"></i>
+</div>
+</div>
+
+<div class="center-profile">
+<img id="bigImg" class="big" src="">
+<h2 id="bigName"></h2>
+<p>You're friends on Facebook</p>
+<button class="btn-profile">View Profile</button>
+<div class="enc"><i class="fas fa-lock"></i> Messages and calls are secured with end-to-end encryption. Only people in this chat can read, listen to or share them. <a href="#" style="color:#0064d1;text-decoration:none">Learn more</a><br><br>You're now friends with <span id="friendFirst"></span>.</div>
+<div id="msgArea" style="text-align:left;margin-top:10px"></div>
+</div>
+
+<div class="quick-hello">
+<b>Say hello.</b>
+<div class="quick-btns">
+<button onclick="sendQuick('Hey 👋')">Hey 👋</button>
+<button onclick="sendQuick('Hi!')">Hi, <span class="qname"></span>!</button>
+<button onclick="sendQuick('Hello!')">Hello, <span class="qname"></span>!</button>
+</div>
+</div>
+
+<div class="input-area">
+<i class="fas fa-camera" onclick="document.getElementById('camInput').click()"></i>
+<i class="fas fa-images" onclick="document.getElementById('imgInput').click()"></i>
+<i class="fas fa-microphone" id="micBtn" onclick="toggleVoice()"></i>
+<div class="input-wrap">
+<input id="msgInput" placeholder="Message" onkeypress="if(event.key==='Enter') sendMsg()">
+<i class="far fa-face-smile" style="margin-left:8px"></i>
+</div>
+<i class="fas fa-thumbs-up" style="color:#0084ff" onclick="sendQuick('👍')"></i>
+<input type="file" id="camInput" accept="image/*;capture=camera" hidden onchange="handleFile(this,'📸 Camera photo')">
+<input type="file" id="imgInput" accept="image/*,video/*" multiple hidden onchange="handleFile(this,'File')">
+</div>
+</div>
+</div>
+
+<script>
+let currentName='';
+
+function openChat(name,status,img){
+currentName=name;
+document.getElementById('chatList').classList.add('active');
+document.getElementById('chatView').classList.remove('hidden');
+document.getElementById('cvName').innerText=name;
+document.getElementById('cvStatus').innerText=status;
+document.getElementById('cvImg').src=img;
+document.getElementById('bigImg').src=img;
+document.getElementById('bigName').innerText=name;
+document.getElementById('friendFirst').innerText=name.split(' ')[0];
+document.querySelectorAll('.qname').forEach(e=>e.innerText=name.split(' ')[0]);
+
+// Load saved messages for this chat
+loadMsgs();
+}
+
+function closeChat(){
+document.getElementById('chatList').classList.remove('active');
+document.getElementById('chatView').classList.add('hidden');
+}
+
+function sendQuick(text){
+let area=document.getElementById('msgArea');
+let div=document.createElement('div');
+div.style.cssText='background:#0084ff;color:white;padding:8px 12px;border-radius:18px;max-width:70%;margin:8px 0 8px auto;width:fit-content';
+div.innerText=text;
+area.appendChild(div);
+saveMsg(text);
+area.scrollTop = area.scrollHeight;
+}
+
+function sendMsg(){
+let input=document.getElementById('msgInput');
+if(!input.value.trim()) return;
+sendQuick(input.value);
+input.value='';
+}
+
+function handleFile(input,label){
+if(input.files.length>0){
+let names=Array.from(input.files).map(f=>f.name).join(', ');
+sendQuick(label+': '+names+' (Saved to storage ✓)');
+}
+}
+
+let recording=false;
+function toggleVoice(){
+recording=!recording;
+let btn=document.getElementById('micBtn');
+if(recording){btn.style.color='red';btn.className='fas fa-stop';alert('🎙️ Voice recording... නවත්තන්න Stop ඔබන්න');}
+else{btn.style.color='#0084ff';btn.className='fas fa-microphone';sendQuick('🎤 Voice message 0:12 (Saved)');}
+}
+
+function saveMsg(t){
+let key='fb_msgs_'+currentName;
+let msgs=JSON.parse(localStorage.getItem(key)||'[]');
+msgs.push({t, time:Date.now()});
+localStorage.setItem(key,JSON.stringify(msgs));
+}
+
+function loadMsgs(){
+let key='fb_msgs_'+currentName;
+let msgs=JSON.parse(localStorage.getItem(key)||'[]');
+let area=document.getElementById('msgArea');
+area.innerHTML='';
+msgs.forEach(m=>{
+let div=document.createElement('div');
+div.style.cssText='background:#0084ff;color:white;padding:8px 12px;border-radius:18px;max-width:70%;margin:8px 0 8px auto;width:fit-content';
+div.innerText=m.t;
+area.appendChild(div);
+});
+}
+
+// ✨ අලුත් යාළුවෙක් ඇඩ් කරගැනීමේ විශේෂාංගය (Add Friend Feature)
+function addNewFriend(){
+let friendName = prompt("අලුත් යාළුවාගේ නම (Enter new friend's name):");
+if(!friendName || !friendName.trim()) return;
+let customFriends = JSON.parse(localStorage.getItem('fb_custom_friends') || '[]');
+let randomImg = 'https://i.pravatar.cc/100?img=' + (Math.floor(Math.random() * 50) + 20);
+customFriends.push({name: friendName.trim(), status: 'Active now', img: randomImg});
+localStorage.setItem('fb_custom_friends', JSON.stringify(customFriends));
+renderCustomFriends();
+alert(friendName + ' සාර්ථකව චැට් ලැයිස්තුවට එකතු විය! 🎉');
+}
+
+function renderCustomFriends(){
+let container = document.getElementById('dynamicFriendsList');
+let customFriends = JSON.parse(localStorage.getItem('fb_custom_friends') || '[]');
+container.innerHTML = '';
+customFriends.forEach(f => {
+let div = document.createElement('div');
+div.className = 'chat-item';
+div.setAttribute('onclick', `openChat('${f.name}','${f.status}','${f.img}')`);
+div.innerHTML = `<img src="${f.img}"><div class="chat-info"><b>${f.name}</b><span>New friend added • Tap to chat</span></div><small>Just now</small>`;
+container.appendChild(div);
+});
+}
+
+// Load custom friends on page start
+window.onload=()=>{ 
+renderCustomFriends();
+if(window.innerWidth>768) openChat('Sithara Senavirathna','Active 22 minutes ago','https://i.pravatar.cc/100?img=5'); 
+}
+</script>
+</body>
+</html>

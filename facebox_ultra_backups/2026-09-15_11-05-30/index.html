@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Face BOX</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;  margin: 0; padding: 0; font-size: 38px; padding-bottom: 180px !important; }
+        .menu-toggle-btn {  border: none; cursor: pointer; padding: 5px; display: flex; flex-direction: column; justify-content: space-between; width: 45px; height: 35px; margin-right: 25px; vertical-align: middle; }
+        .menu-toggle-btn span { display: block; height: 5px; width: 100%;  border-radius: 2px; }
+        .app-header { display: flex; align-items: center; justify-content: space-between; padding: 25px 30px;  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+        .header-left { display: flex; align-items: center; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        #langSelect { font-size: 26px; padding: 8px 15px; border-radius: 20px; border: 2px solid #FF6B00; /* removed */ font-weight: bold; }
+        .icon-btn {  border: none; width: 80px; height: 80px; border-radius: 50%; font-size: 38px; display: flex; align-items: center; justify-content: center; }
+        .mind-box {  padding: 35px; margin-top: 20px; display: flex; gap: 30px; align-items: center; border-bottom: 2px solid #e4e6eb; }
+        .user-avatar { width: 110px; height: 110px; border-radius: 50%;  background-size: cover; }
+        .mind-input { flex: 1;  border-radius: 60px; padding: 30px 40px; font-size: 36px; border: none; outline: none; }
+        .stories-wrapper {  padding: 35px 25px; margin-top: 20px; display: flex; gap: 25px; overflow-x: auto; }
+        .story-card { min-width: 260px; height: 440px; border-radius: 25px;  position: relative; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .story-avatar { position: absolute; top: 25px; left: 25px; width: 80px; height: 80px; border-radius: 50%; border: 4px solid #FF6B00; z-index: 2; }
+        .story-name { position: absolute; bottom: 25px; left: 25px; /* removed */ font-size: 30px; font-weight: bold; text-shadow: none !important; z-index: 2; }
+        .feed-container { padding: 25px; }
+        .post-card {  border-radius: 25px; padding: 40px; margin-bottom: 35px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .post-header { display: flex; align-items: center; gap: 25px; margin-bottom: 25px; }
+        .post-author { font-weight: bold; font-size: 38px; }
+        .post-time { /* removed */ font-size: 28px; }
+        .post-content { font-size: 36px; line-height: 1.5; margin-bottom: 25px; }
+        .post-image { width: 100%; border-radius: 15px; margin-bottom: 25px; }
+        .post-actions { display: flex; justify-content: space-between; border-top: 2px solid #e4e6eb; padding-top: 25px; /* removed */ font-weight: bold; font-size: 34px; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%;  display: flex; justify-content: space-around; align-items: center; padding: 35px 0; border-top: 3px solid #e4e6eb; z-index: 9999; box-shadow: 0 -6px 20px rgba(0,0,0,0.15); }
+        .bottom-nav button {  border: none; font-size: 65px; cursor: pointer; }
+        .side-drawer { position: fixed; top: 0; left: -100%; width: 80%; height: 100%;  z-index: 100000; box-shadow: 5px 0 15px rgba(0,0,0,0.2); padding: 40px; box-sizing: border-box; transition: 0.3s ease; }
+        .side-drawer.open { left: 0; }
+        .drawer-close { font-size: 50px;  border: none; cursor: pointer; margin-bottom: 40px; /* removed */ font-weight: bold; }
+    </style>
+
+    <style>
+        .fb-3d-logo {
+            width: 80px;
+            height: 80px;
+            
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 58px;
+            font-weight: bold;
+            /* removed */
+            margin-left: 20px;
+            vertical-align: middle;
+            /* 3D සහ වීදුරු පෙනුම ලබාදෙන Shadows */
+            box-shadow: 
+                inset 4px 4px 6px rgba(255, 255, 255, 0.6), 
+                inset -4px -4px 6px rgba(0, 0, 0, 0.5),
+                0 10px 20px rgba(0, 0, 0, 0.3),
+                0 4px 6px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-shadow: none !important;
+            cursor: pointer;
+            transform: perspective(500px) translateZ(10px);
+        }
+    </style>
+    
+
+    <style>
+        .app-header h1, .app-title {
+            /* removed */ /* කැපී පෙනෙන තනි සුදු අකුරු */
+            font-size: 50px !important;
+            font-weight: bold !important;
+            letter-spacing: 2px !important;
+            
+            /* 💙 ලෝගෝ එකේ පාටම ඇති 3D සහ වීදුරු පසුබිම (Glass Container) */
+            
+            padding: 15px 35px !important;
+            border-radius: 20px !important;
+            display: inline-block !important;
+            
+            /* ✨ 3D සහ වීදුරු පෙනුම ලබාදෙන Shadows */
+            box-shadow: 
+                inset 0 3px 5px rgba(255, 255, 255, 0.4), 
+                inset 0 -3px 5px rgba(0, 0, 0, 0.5),
+                0 8px 16px rgba(0, 0, 0, 0.2) !important;
+            border: 2px solid rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(8px) !important;
+            
+            /* 📝 අකුරු වලට 3D පෙනුමක් දෙන Shadow එක */
+            text-shadow: none !important;
+        }
+    </style>
+    
+
+    <style>
+        /* 🔵 ඉහළ Header එකේ පසුබිම සහ සැකසුම පිරිසිදු කිරීම */
+        .app-header {
+            
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08) !important;
+        }
+
+        /* ⚽ 1. තනිව පවතින 3D බෝල හැඩැති 'f' ලෝගෝව */
+        .fb-3d-ball-logo {
+            width: 85px !important;
+            height: 85px !important;
+            
+            border-radius: 50% !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-family: 'Segoe UI', Arial, sans-serif !important;
+            font-size: 62px !important;
+            font-weight: bold !important;
+            /* removed */ /* තනි සුදු f අකුර */
+            margin-right: 20px !important;
+            vertical-align: middle !important;
+            box-shadow: 
+                inset 5px 5px 8px rgba(255, 255, 255, 0.5), 
+                inset -5px -5px 8px rgba(0, 0, 0, 0.6),
+                0 8px 15px rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            text-shadow: none !important;
+        }
+
+        /* 💎 2. පසුබිම් කොටු නැති, තනිව දිලිසෙන 3D Glass Shine නම */
+        .fb-3d-shiny-title {
+            /* removed */ /* ඩාර්ක් බ්ලූ වර්ණය */
+            font-size: 54px !important;
+            font-weight: bold !important;
+            font-family: 'Segoe UI', Roboto, sans-serif !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+             /* පසුබිම් කොටුව සම්පූර්ණයෙන්ම ඉවත් කළා */
+            padding: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            
+            /* 📝 3D සහ වීදුරු වගේ දිලිසෙන (Shine) ස්වභාවය ලබාදෙන Text Shadows */
+            text-shadow: 
+                1px 1px 0px #04244c,
+                2px 2px 0px #031b3d,
+                3px 3px 0px #021228,
+                3px 3px 5px rgba(0, 0, 0, 0.5),
+                0px 0px 10px rgba(255, 255, 255, 0.6) !important; /* Glass Shine Reflection Effect */
+        }
+    </style>
+    
+
+    <style>
+        /* ඉහළ Header එක පිරිසිදු කිරීම */
+        .app-header {
+            
+            padding: 25px 30px !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08) !important;
+        }
+
+        /* ⚽ 3D බෝල හැඩැති 'f' ලෝගෝව */
+        .fb-3d-ball-logo {
+            width: 85px !important;
+            height: 85px !important;
+            
+            border-radius: 50% !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-family: 'Segoe UI', Arial, sans-serif !important;
+            font-size: 62px !important;
+            font-weight: bold !important;
+            /* removed */
+            margin-right: 20px !important;
+            vertical-align: middle !important;
+            box-shadow: 
+                inset 5px 5px 8px rgba(255, 255, 255, 0.5), 
+                inset -5px -5px 8px rgba(0, 0, 0, 0.6),
+                0 8px 15px rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            text-shadow: none !important;
+        }
+
+        /* 💎 කිසිම කොටුවක් නැති, තනිව දිලිසෙන 3D Glass Shine ඩාර්ක් බ්ලූ නම */
+        .fb-3d-shiny-title {
+            /* removed */ /* ඩාර්ක් බ්ලූ වර්ණය පමණය */
+            font-size: 54px !important;
+            font-weight: bold !important;
+            font-family: 'Segoe UI', Roboto, sans-serif !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+             /* පසුබිම් නිල් කොටුව මුළුමනින්ම ඉවත් කළා */
+            padding: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            margin: 0 !important;
+            
+            /* 3D සහ වීදුරු වගේ දිලිසෙන Glass Shine Reflection */
+            text-shadow: 
+                1px 1px 0px #04244c,
+                2px 2px 0px #031b3d,
+                3px 3px 5px rgba(0, 0, 0, 0.4),
+                0px 0px 10px rgba(255, 255, 255, 0.5) !important;
+        }
+    </style>
+    
+
+    <style>
+        /* ⚽ ලෝගෝව තව චූට්ටක් ලොකු කර සජීවීව කැරකැවීම */
+        .fb-3d-ball-logo {
+            width: 105px;
+            height: 105px;
+            
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 72px;
+            font-weight: bold;
+            /* removed */
+            margin-right: 20px;
+            vertical-align: middle;
+            box-shadow: inset 5px 5px 8px rgba(255, 255, 255, 0.5), inset -5px -5px 8px rgba(0, 0, 0, 0.6), 0 8px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-shadow: none !important;
+            animation: spinBall 6s linear infinite;
+        }
+        @keyframes spinBall {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 💎 නම වටේ ඇති කොටුව අයින් කර ඩාර්ක් බ්ලූ කිරීම */
+        .app-header h1, .fb-3d-shiny-title {
+            /* removed */
+            font-size: 54px;
+            font-weight: bold;
+            
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            margin: 0;
+            display: inline-block;
+            vertical-align: middle;
+            text-shadow: none !important;
+        }
+        
+        /* පැරණි නිල් කොටුවේ මෝස්තරය අක්‍රිය කිරීම */
+        .app-header {
+            
+            padding: 25px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+    </style>
+    
+
+<style id="final-white-f-fix">
+.myface-box-logo{display:flex;align-items:center;gap:8px}
+.myface-circle{width:38px;height:38px;background:#1877F2;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.myface-circle b{color:white !important;font-size:24px;font-weight:900;font-family:Arial,sans-serif}
+.mini-globe-logo{position:absolute;bottom:-5px;right:-5px;font-size:16px;animation:spinGlobe 3s linear infinite}
+@keyframes spinGlobe{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+    <div class="app-header">
+        <div class="header-left">
+            <button class="menu-toggle-btn" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+            <div class="fb-3d-ball-logo">f</div>
+            <h1 class="fb-3d-shiny-title"><div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div></h1>
+        </div>
+        <div class="header-right">
+            <select id="langSelect" onchange="changeLanguage(this.value)"><option value="en">English <div class="plus-menu-container" style="display:inline-block;position:relative;margin-left:8px;"><button onclick="togglePlusMenu()" id="plusBtn" style="background:#e4e6eb;border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button><div id="plusDropdown" class="plus-dropdown-content"><a href="#" onclick="openModal('Post')">Post</a><a href="#" onclick="openModal('Story')">Story</a><a href="#" onclick="openModal('Reel')">Reel</a><a href="#" onclick="openModal('Live')">Live</a><a href="#" onclick="openModal('Note')">Note</a></div></div></option><option value="si">සිංහල</option><option value="ta">தமிழ்</option></select>
+            <button class="icon-btn">+</button>
+            <button class="icon-btn">&#128269;</button>
+        </div>
+    </div>
+<div class="mind-box">
+        <div class="user-avatar" style="background-image: url('https://placeholder.com');"></div>
+        <input type="text" id="mainMindInput" class="mind-input" placeholder="What is on your mind?">
+    </div>
+    <div class="stories-wrapper" id="storiesContainer"></div>
+    <div class="feed-container" id="feedContainer"></div>
+    <div class="bottom-nav">
+        <button onclick="location.reload()">&#127968;</button>
+        <button onclick="alert('Watch')">&#128250;</button>
+        <button onclick="alert('Friends')">&#128101;</button>
+        <button onclick="alert('Profile')">&#128100;</button>
+        <button onclick="alert('Notifications')">&#128277;</button>
+        <button onclick="toggleMenu()">&#9881;</button>
+    </div>
+    <div id="sideDrawer" class="side-drawer">
+        <button class="drawer-close" onclick="toggleMenu()">&#11013; Close</button>
+        <h2 style="font-size: 44px; /* removed */">Menu</h2>
+        <ul style="list-style: none; padding: 0; font-size: 36px; line-height: 2.5;">
+            <li><a href="#" style="text-decoration: none; /* removed */">👤 ප්‍රොෆයිල් (Profile)</a></li>
+            <li><a href="#" style="text-decoration: none; /* removed */">⚙️ සැකසුම් (Settings)</a></li>
+            <li><a href="#" style="text-decoration: none; /* removed */">🚪 Log out</a></li>
+        </ul>
+    </div>
+    <script>
+    let translations = {};
+    fetch('/translations.json?v=' + Date.now()).then(res => res.json()).then(data => { translations = data; const savedLang = localStorage.getItem('selectedLanguage') || 'en'; document.getElementById('langSelect').value = savedLang; changeLanguage(savedLang); });
+    function changeLanguage(lang) { localStorage.setItem('selectedLanguage', lang); document.querySelectorAll('[data-i18n]').forEach(element => { const key = element.getAttribute('data-i18n'); if (translations[lang] && translations[lang][key]) { if (element.tagName === 'INPUT') { element.placeholder = translations[lang][key]; } else { element.innerText = translations[lang][key]; } } }); }
+    function toggleMenu() { document.getElementById('sideDrawer').classList.toggle('open'); }
+    fetch('/api/get-feed?v=' + Date.now()).then(res => res.json()).then(data => {
+        const sContainer = document.getElementById('storiesContainer'); sContainer.innerHTML = '';
+        data.stories.forEach(s => { sContainer.innerHTML += `<div class="story-card" style="background-image: url('` + (s.bg || 'https://placeholder.com') + `'); background-size: cover;"><img src='` + s.avatar + `' class="story-avatar" onerror="this.src='https://placeholder.com'"><div class="story-name">` + s.user + `</div></div>`; });
+        const fContainer = document.getElementById('feedContainer'); fContainer.innerHTML = '';
+        data.posts.forEach(p => { fContainer.innerHTML += `<div class="post-card"><div class="post-header"><div class="user-avatar" style="background-image: url('` + p.author_avatar + `'), url('https://placeholder.com'); background-size: cover;"></div><div><div style="font-weight:bold; font-size:38px;">` + p.author + `</div><div class="post-time">` + p.time + `</div></div></div><div class="post-content">` + p.content + `</div>` + (p.image ? `<img src='` + p.image + `' class="post-image" onerror="this.src='https://placeholder.com'">` : '') + `<div class="post-actions"><div>👍 Like (` + p.likes + `)</div><div>💬 Comment</div><div>↪️ Share</div></div></div>`; });
+    });
+    </script>
+
+<!-- Spinning 3D Glass Globe -->\n<style>\n.fb-3d-logo { position: relative; width: 50px; height: 50px; margin-left: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset -4px -4px 10px rgba(0, 0, 0, 0.6), inset 4px 4px 10px rgba(255, 255, 255, 0.4); overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.25); cursor: pointer; }\n.fb-3d-logo::before { content: ""; position: absolute; width: 300%; height: 100%; background-image: radial-gradient(circle at 20% 40%, #48bb78 12%, transparent 13%), radial-gradient(circle at 35% 65%, #38a169 15%, transparent 16%), radial-gradient(circle at 55% 30%, #48bb78 18%, transparent 19%), radial-gradient(circle at 75% 55%, #38a169 14%, transparent 15%), radial-gradient(circle at 90% 35%, #48bb78 10%, transparent 11%), linear-gradient(90deg, transparent 0%, rgba(72,187,120,0.7) 10%, rgba(56,161,105,0.7) 25%, transparent 35%); background-size: 50% 100%; background-repeat: repeat-x; animation: spinEarth 8s linear infinite; opacity: 0.85; }\n.fb-3d-logo::after { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%;  }\n@keyframes spinEarth { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }\n</style>
+
+<!-- Full 3D Globe Fix -->\n<style>\n.fb-3d-logo { position: relative; width: 45px; height: 45px; margin-left: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset -4px -4px 10px rgba(0, 0, 0, 0.6), inset 4px 4px 10px rgba(255, 255, 255, 0.4); overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.25); cursor: pointer; vertical-align: middle; }\n.fb-3d-logo .sphere { width: 100%; height: 100%; position: absolute; border-radius: 50%; }\n.fb-3d-logo .map-texture { position: absolute; width: 300%; height: 100%; background-image: radial-gradient(circle at 20% 40%, #48bb78 12%, transparent 13%), radial-gradient(circle at 35% 65%, #38a169 15%, transparent 16%), radial-gradient(circle at 55% 30%, #48bb78 18%, transparent 19%), radial-gradient(circle at 75% 55%, #38a169 14%, transparent 15%), radial-gradient(circle at 90% 35%, #48bb78 10%, transparent 11%), linear-gradient(90deg, transparent 0%, rgba(72,187,120,0.7) 10%, rgba(56,161,105,0.7) 25%, transparent 35%); background-size: 50% 100%; background-repeat: repeat-x; animation: spinEarth 8s linear infinite; opacity: 0.85; }\n.fb-3d-logo .glass-reflection { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; pointer-events: none;  }\n.fb-3d-logo .glass-reflection::before { content: ""; position: absolute; top: 3px; left: 6px; width: 14px; height: 7px;  border-radius: 50%; transform: rotate(-15deg); }\n@keyframes spinEarth { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }\n</style>
+
+<!-- Ultimate Glass Facebook Globe -->\n<style>\n.fb-3d-logo { position: relative; width: 80px; height: 80px; margin-left: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset -6px -6px 15px rgba(0, 0, 0, 0.6), inset 6px 6px 15px rgba(255, 255, 255, 0.5), 0 0 15px rgba(24, 119, 242, 0.3); overflow: hidden; border: 1.5px solid rgba(255, 255, 255, 0.35); cursor: pointer; vertical-align: middle; }\n.fb-3d-logo .sphere { width: 100%; height: 100%; position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center; }\n.fb-3d-logo .f-text { font-family: "Segoe UI", Arial, sans-serif; font-size: 58px; font-weight: bold; /* removed */ position: relative; z-index: 3; text-shadow: none !important; transform: translateX(2px) translateY(2px); }\n.fb-3d-logo .map-texture { position: absolute; width: 300%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px); background-size: 10px 10px; background-repeat: repeat-x; animation: spinEarth 6s linear infinite; opacity: 0.6; z-index: 1; }\n.fb-3d-logo .glass-reflection { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; pointer-events: none;  z-index: 4; }\n.fb-3d-logo .glass-reflection::before { content: ""; position: absolute; top: 6px; left: 12px; width: 28px; height: 14px;  border-radius: 50%; transform: rotate(-15deg); filter: blur(0.5px); }\n@keyframes spinEarth { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }\n</style>
+
+
+
+<!-- Forced 3D Glass Globe Mask -->
+<style>
+/* දැනට තියෙන පරණ නිල් පාට පින්තූරය බලෙන්ම Hide කිරීම */
+.fb-3d-logo, [class*="logo"] img, .navbar-brand img, [class*="fb-icon"] {
+  
+  box-shadow: none !important;
+}
+
+/* පරණ රවුම තිබුණු තැනටම උඩින් නියම 3D ලෝක බෝලය බලෙන්ම මතු කිරීම */
+.fb-3d-logo::after {
+  content: "f" !important;
+  font-family: "Segoe UI", Arial, sans-serif !important;
+  font-size: 28px !important;
+  font-weight: bold !important;
+  /* removed */
+  
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999 !important;
+  overflow: hidden !important;
+  
+  /* නිල් සහ කොළ පාට කැරකෙන පෘථිවි සිතියම */
+  
+  background-image: 
+    radial-gradient(circle at 20% 40%, #48bb78 14%, transparent 15%), 
+    radial-gradient(circle at 35% 65%, #38a169 16%, transparent 17%), 
+    radial-gradient(circle at 55% 30%, #48bb78 20%, transparent 21%), 
+    radial-gradient(circle at 75% 55%, #38a169 15%, transparent 16%), 
+    radial-gradient(circle at 90% 35%, #48bb78 12%, transparent 13%), 
+    linear-gradient(90deg, #1a365d 0%, #2b6cb0 50%, #1a365d 100%) !important;
+  background-size: 300% 100% !important;
+  
+  /* ත්‍රිමාණ වීදුරු පෙනුම සහ ආලෝක දිස්නය (Glossy Finish) */
+  box-shadow: 
+    0 4px 10px rgba(0, 0, 0, 0.4), 
+    inset -4px -4px 8px rgba(0, 0, 0, 0.7), 
+    inset 4px 4px 8px rgba(255, 255, 255, 0.5),
+    0 0 10px rgba(24, 119, 242, 0.5) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.4) !important;
+  text-shadow: none !important;
+  
+  /* සිතියම පමණක් කැරකැවීමේ Animation එක */
+  animation: forceSpinEarth 8s linear infinite !important;
+}
+
+@keyframes forceSpinEarth {
+  0% { background-position: 0% 0%; }
+  100% { background-position: -300% 0%; }
+}
+</style>
+
+<!-- Auto Color Invert for <div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div> Title -->
+<style>
+/* <div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div> අකුරු ඇති ප්‍රධාන කොටස සොයාගෙන වර්ණ මාරු කිරීම */
+[class*="navbar"], [class*="brand"], [class*="title"], h1, h2, div {
+  /* යම් හෙයකින් මෙම Text එක <div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div> නම් පමණක් මෙම Style එක ක්‍රියාත්මක වේ */
+}
+
+/* <div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div> බටන් එකේ Background එක සුදු කර අකුරු තද නිල් කිරීම */
+.navbar-brand, button, div {
+  filter: none !important;
+}
+
+/* නියමිත ස්ථානයට පමණක් බලපෑම් කරන CSS රීතිය */
+*[class*="-box"], *[class*="box"], div {
+  /* ඇප් එකේ පෙනුමට අනුව නිවැරදිම Class එකට Styles බලෙන්ම ආදේශ කිරීම */
+}
+
+/* මුළු ඇප් එකේම <div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div> ලියා ඇති බටන් එකේ වර්ණ මාරු කිරීම */
+div:has(> text), .navbar-brand, [class*="logo-text"], div {
+  /* මෙන්න මෙතනින් පසුබිම සුදු කර අකුරු තද නිල් කරනවා */
+}
+
+/* මැනික, මේ CSS ටික ඔයාගේ index.html එකේ අන්තිමටම එකතු වෙලා පරණ පාටවල් වෙනස් කරයි */
+#logo, .title, div {
+  /* removed */
+}
+
+/* අවසාන නිවැරදි කිරීම */
+header div, nav div {
+  /* background සහ color මාරු කිරීම */
+}
+
+/* සෘජුවම අකුරු සහ පසුබිම ඉලක්ක කර බලෙන්ම වෙනස් කිරීම */
+div, span, a, button {
+  /* <div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div> කියන වචනය ඇති තැන සෙවීම */
+}
+
+/* මෙන්න නියම Styles ටික */
+body {
+  --target-blue: #0b3c75;
+}
+
+/* <div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div> අකුරු තද නිල් කිරීම සහ පසුබිම සුදු කිරීම */
+.navbar-brand, [class*="brand"], div[class*="logo"] + div, div:contains("<div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div>") {
+  
+  /* removed */
+  border: 2px solid #0b3c75 !important;
+}
+
+/* සියලුම Elements වල ඇති <div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div> අකුරු වල පාට තද නිල් කිරීම */
+h1, h2, h3, span, div, a {
+  text-shadow: none !important;
+}
+</style>
+
+<!-- Ultimate <div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div> Color Fix -->
+<style>
+/* මුළු ඇප් එකේම තියෙන ප්‍රධාන නිල් පාට බාර් එක (Header) සුදු පාට කිරීම */
+.bg-primary, [class*="header"], [class*="navbar"], nav {
+  
+  
+}
+
+/* <div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div> කියන නම තියෙන බටන් එකේ පසුබිම සුදු කර, අකුරු තද නිල් කිරීම */
+.navbar-brand, [class*="brand"], [class*="logo-text"], button:has(text), div[class*="title"] {
+  
+  
+  /* removed */
+  font-weight: bold !important;
+  border: 2px solid #0b3c75 !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+}
+
+/* ඇප් එකේ නමේ තියෙන හැම අකුරක්ම තද නිල් පාටට හැරවීම */
+.navbar-brand *, [class*="brand"] *, h1, h2, span, a, div {
+  /* removed */
+  text-shadow: none !important;
+}
+
+/* '<div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div>' කියන වචනය ඇතුළත් ඕනෑම තැනක අකුරු බලෙන්ම තද නිල් කිරීම */
+*:contains("<div class="myface-box-logo"><div class="myface-circle"><b>F</b><span class="mini-globe-logo">🌍</span></div><span>My Face BOX</span></div>") {
+  /* removed */
+  
+}
+</style>
+
+<!-- Fix for Left Menu Icon Color -->
+<style>
+/* වම් පැත්තේ ඇති ඉරි කෑලි 3 බොත්තම සහ එහි අයිකනය තද නිල් පාට කිරීම */
+.fa-bars, [class*="bars"], [class*="menu"], nav button i, header button i {
+  color: #0b3c75 !important;
+}
+
+/* එම බොත්තම වටා ඇති කොටුව හෝ පසුබිම සුදු පැහැයට හැඩගැන්වීම */
+nav button, header button, [class*="toggle"] {
+  color: #0b3c75 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+}
+</style>

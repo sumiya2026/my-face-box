@@ -1,0 +1,20 @@
+[
+  {
+    "id": "6f9e39",
+    "name": "Simiya go",
+    "category": "Business",
+    "bio": "My official page",
+    "image": "",
+    "created_at": "2026-09-24 09:17:11.601654"
+  },
+  {
+    "id": "9576f6",
+    "name": "Munithunga Ranaweera Arachchige Suminda Page",
+    "category": "Business",
+    "bio": "Welcome to Sumiya Soul Friends Project! ❤️🌍 We are at No 44/A, 3rd Lane, Delduwa, Wadduwa.",
+    "owner_id": "072cc1b6",
+    "country": "LK",
+    "image": "/static/uploads/76960c5d.jpg",
+    "created_at": "2026-09-24 10:27:42.572156"
+  }
+]

@@ -1,0 +1,238 @@
+const express = require('express');
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
+
+const app = express();
+const server = http.createServer(app);
+
+const PORT = process.env.PORT || 5000;
+
+// Middleware setup to handle large image inputs
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+const dbFile = path.join(__dirname, 'database.json');
+
+const readDB = () => {
+    if (!fs.existsSync(dbFile)) {
+        const initialData = { users: [], posts: [] };
+        fs.writeFileSync(dbFile, JSON.stringify(initialData, null, 2));
+    }
+    const data = fs.readFileSync(dbFile, 'utf8');
+    return JSON.parse(data);
+};
+
+const writeDB = (data) => {
+    fs.writeFileSync(dbFile, JSON.stringify(data, null, 2));
+};
+
+readDB();
+
+app.get('/', (req, res) => {
+    res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Facebook - My Face</title>
+        <style>
+            body { font-family: sans-serif;  margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; padding-bottom: 30px; }
+            header {  color: white; width: 100%; padding: 12px; text-align: center; font-size: 24px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+            .container { max-width: 500px; width: 95%; margin-top: 15px; box-sizing: border-box; }
+            .post-box {  padding: 15px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 15px; }
+            textarea { width: 100%; height: 70px; border: none; resize: none; box-sizing: border-box; font-size: 16px; outline: none; }
+            .preview-img { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; margin-top: 10px; display: none; }
+            .post-actions-box { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e4e6eb; padding-top: 10px; margin-top: 10px; }
+            .file-label { display: flex; align-items: center; gap: 5px; color: #45bd62; font-weight: bold; cursor: pointer; font-size: 14px; }
+            .file-label input { display: none; }
+            .post-btn {  color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; }
+            .feed-title { font-size: 16px; font-weight: bold; color: #65676b; margin-bottom: 10px; }
+            .post {  padding: 15px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 15px; }
+            .post-header { display: flex; align-items: center; margin-bottom: 10px; }
+            .avatar { width: 40px; height: 40px;  color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 10px; font-size: 16px; }
+            .user-info { display: flex; flex-direction: column; }
+            .username { font-weight: bold; color: #050505; font-size: 15px; }
+            .time { font-size: 12px; color: #65676b; margin-top: 2px; }
+            .post-text { color: #050505; font-size: 15px; line-height: 1.4; margin-bottom: 10px; word-wrap: break-word; }
+            .post-img { width: 100%; border-radius: 8px; margin-bottom: 10px; max-height: 350px; object-fit: cover; }
+            .engagement { display: flex; justify-content: space-around; border-top: 1px solid #e4e6eb; border-bottom: 1px solid #e4e6eb; padding: 8px 0; margin-bottom: 10px; }
+            .engage-btn {  border: none; color: #65676b; font-weight: bold; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 5px; width: 45%; justify-content: center; padding: 5px; border-radius: 4px; }
+            .engage-btn:hover {  }
+            .engage-btn.liked { color: #1877f2; }
+            .comment-section {  border-radius: 8px; padding: 8px; margin-top: 10px; }
+            .comment-list { margin-bottom: 8px; }
+            .comment-item { font-size: 13px; color: #050505;  padding: 6px 10px; border-radius: 12px; margin-bottom: 5px; word-wrap: break-word; display: inline-block; max-width: 90%; }
+            .comment-item span { font-weight: bold; margin-right: 5px; color: #1877f2; }
+            .comment-input-box { display: flex; gap: 5px; }
+            .comment-input { flex: 1; border: 1px solid #ccd0d5; border-radius: 16px; padding: 6px 12px; font-size: 13px; outline: none; }
+            .comment-btn {  color: white; border: none; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        </style>
+    </head>
+    <body>
+        <header>📘 facebook</header>
+        <div class="container">
+            <div class="post-box">
+                <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+                <img id="imagePreview" class="preview-img" />
+                <div class="post-actions-box">
+                    <label class="file-label">
+                        🖼️ Photo
+                        <input type="file" id="fileInput" accept="image/*" onchange="previewFile()">
+                    </label>
+                    <button class="post-btn" onclick="createPost()">Post</button>
+                </div>
+            </div>
+            <div class="feed-title">Recent Posts</div>
+            <div id="newsFeed">Loading Feed...</div>
+        </div>
+
+        <script>
+            let encodedImage = "";
+
+            function previewFile() {
+                const preview = document.getElementById('imagePreview');
+                const file = document.getElementById('fileInput').files[0];
+                const reader = new FileReader();
+
+                reader.addEventListener("load", function () {
+                    preview.src = reader.result;
+                    preview.style.display = "block";
+                    encodedImage = reader.result;
+                }, false);
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            async function loadPosts() {
+                const res = await fetch('/api/posts');
+                const data = await res.json();
+                const feed = document.getElementById('newsFeed');
+                feed.innerHTML = '';
+                
+                if(!data.posts || data.posts.length === 0) {
+                    feed.innerHTML = '<div style="padding:20px;text-align:center;border-radius:8px;color:#65676b;">No posts yet!</div>';
+                    return;
+                }
+
+                data.posts.forEach(post => {
+                    const isLiked = post.likes > 0; 
+                    const div = document.createElement('div');
+                    div.className = 'post';
+                    
+                    let imgHtml = post.imageUrl ? `<img class="post-img" src="\${post.imageUrl}">` : '';
+                    
+                    let commentsHtml = '';
+                    post.comments.forEach(c => {
+                        commentsHtml += `<div class="comment-item"><span>Friend:</span>\${c}</div><br>`;
+                    });
+
+                    div.innerHTML = `
+                        <div class="post-header">
+                            <div class="avatar">U</div>
+                            <div class="user-info">
+                                <div class="username">Anonymous User</div>
+                                <div class="time">\${new Date(post.createdAt).toLocaleString()}</div>
+                            </div>
+                        </div>
+                        <div class="post-text">\${post.content}</div>
+                        \${imgHtml}
+                        <div class="engagement">
+                            <button class="engage-btn \${isLiked ? 'liked' : ''}" onclick="toggleLike('\${post.id}')">
+                                👍 \${post.likes > 0 ? 'Liked ('+post.likes+')' : 'Like'}
+                            </button>
+                            <button class="engage-btn">💬 Comment</button>
+                        </div>
+                        <div class="comment-section">
+                            <div class="comment-list">\${commentsHtml}</div>
+                            <div class="comment-input-box">
+                                <input type="text" class="comment-input" id="input-\${post.id}" placeholder="Write a comment...">
+                                <button class="comment-btn" onclick="addComment('\${post.id}')">Send</button>
+                            </div>
+                        </div>
+                    `;
+                    feed.appendChild(div);
+                });
+            }
+
+            async function createPost() {
+                const content = document.getElementById('postContent').value.trim();
+                if(!content && !encodedImage) return alert('Post cannot be empty!');
+
+                await fetch('/api/posts/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: content, imageUrl: encodedImage })
+                });
+
+                document.getElementById('postContent').value = '';
+                document.getElementById('imagePreview').style.display = "none";
+                document.getElementById('fileInput').value = "";
+                encodedImage = "";
+                loadPosts();
+            }
+
+            async function toggleLike(postId) {
+                await fetch('/api/posts/like', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+
+ 
+            async function toggleLike(postId) {
+                await fetch('/api/posts/like', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ postId }) });
+                loadPosts();
+            }
+            async function addComment(postId) {
+                const input = document.getElementById('input-' + postId);
+                const text = input.value.trim();
+                if(!text) return;
+                await fetch('/api/posts/comment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ postId, comment: text }) });
+                input.value = '';
+                loadPosts();
+            }
+            loadPosts();
+        </script>
+    </body>
+    </html>
+    `);
+});
+
+app.get('/api/posts', (req, res) => {
+    const db = readDB();
+    res.status(200).json({ status: "Success", posts: db.posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) });
+});
+
+app.post('/api/posts/create', (req, res) => {
+    const { content, imageUrl } = req.body;
+    const db = readDB();
+    const newPost = { id: 'post_' + Date.now(), content, imageUrl: imageUrl || "", likes: 0, comments: [], createdAt: new Date() };
+    db.posts.push(newPost);
+    writeDB(db);
+    res.status(201).json({ status: "Success" });
+});
+
+app.post('/api/posts/like', (req, res) => {
+    const { postId } = req.body;
+    const db = readDB();
+    const post = db.posts.find(p => p.id === postId);
+    if(post) { post.likes = post.likes === 0 ? 1 : 0; writeDB(db); }
+    res.status(200).json({ status: "Success" });
+});
+
+app.post('/api/posts/comment', (req, res) => {
+    const { postId, comment } = req.body;
+    const db = readDB();
+    const post = db.posts.find(p => p.id === postId);
+    if(post) { if(!post.comments) post.comments = []; post.comments.push(comment); writeDB(db); }
+    res.status(200).json({ status: "Success" });
+});
+
+server.listen(PORT, () => { console.log(`Server updated on port ${PORT}`); });
+xxx
+xx
+x
+x
+

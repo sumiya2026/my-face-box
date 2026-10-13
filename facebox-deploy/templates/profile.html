@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MY FACE BOX - Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f0f2f5; color: #1c1e21; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px 12px; border-bottom: 1px solid #e4e6eb; position: sticky; top:0; z-index:100; }
+        .logo-text { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #FF6B00; letter-spacing: 1px; display:flex; align-items:center; gap:8px; }
+        .logo-globe-small{ width:24px; height:24px; background:#FF6B00; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; font-size:14px; }
+        .back-btn { background: #e4e6eb; border: none; font-size: 18px; color: #050505; cursor: pointer; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .profile-container { max-width: 600px; margin: 0 auto; background: white; min-height: 100vh; }
+        .cover-photo { width: 100%; height: 200px; background: linear-gradient(135deg, #FF6B00, #0056b3); position: relative; }
+        .avatar-container { position: absolute; bottom: -50px; left: 15px; }
+        .profile-avatar { width: 100px; height: 100px; background: #ddd; border-radius: 50%; border: 4px solid white; background-size: cover; display: flex; align-items: center; justify-content: center; font-size: 40px; color: #65676b; background-image: url('https://i.pravatar.cc/200?img=15'); }
+        .profile-details { padding: 60px 15px 15px 15px; border-bottom: 1px solid #e4e6eb; }
+        .user-name { font-size: 24px; font-weight: bold; margin: 0; }
+        .user-bio { color: #65676b; font-size: 14px; margin: 5px 0 15px 0; }
+        .profile-actions { display: flex; gap: 8px; margin-bottom: 15px; }
+        .btn-orange { flex: 1; background: #FF6B00; color: white; border: none; padding: 9px 0; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; display:flex; align-items:center; justify-content:center; gap:6px; }
+        .btn-gray { background: #e4e6eb; color: black; border: none; padding: 9px 12px; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; display:flex; align-items:center; justify-content:center; gap:6px; }
+        .info-section { padding: 15px; font-size: 15px; }
+        .info-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; color: #050505; }
+        .info-row i { color: #65676b; font-size: 18px; width: 24px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <button class="back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+        <div class="logo-text"><div class="logo-globe-small">f</div> MY FACE BOX</div>
+        <div style="width: 36px;"></div>
+    </div>
+    <div class="profile-container">
+        <div class="cover-photo"><div class="avatar-container"><div class="profile-avatar"></div></div></div>
+        <div class="profile-details">
+            <h1 class="user-name">My Face Box User</h1>
+            <p class="user-bio">Welcome to my official MY FACE BOX profile! 🚀</p>
+            <div class="profile-actions">
+                <button class="btn-orange"><i class="fas fa-plus"></i> Add to story</button>
+                <button class="btn-gray"><i class="fas fa-pen"></i> Edit profile</button>
+                <button class="btn-gray"><i class="fas fa-ellipsis-h"></i></button>
+            </div>
+        </div>
+        <div class="info-section">
+            <div class="info-row"><i class="fas fa-briefcase"></i> <span>Works at <b>Developer</b></span></div>
+            <div class="info-row"><i class="fas fa-graduation-cap"></i> <span>Studied at <b>Computer Science</b></span></div>
+            <div class="info-row"><i class="fas fa-home"></i> <span>Lives in <b>Colombo, Sri Lanka</b></span></div>
+            <div class="info-row"><i class="fas fa-map-marker-alt"></i> <span>From <b>Kalutara, Sri Lanka</b></span></div>
+            <div class="info-row"><i class="fas fa-clock"></i> <span>Joined on <b>September 2026</b></span></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>My Face BOX</title>
+    <style>
+        * { box-sizing: border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { margin: 0; padding: 0;  color: #0b2265 !important; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+        
+        /* 🟢 NAVBAR WITH 3D GIANT LOGO & 3D TEXT */
+        .navbar {  backdrop-filter: blur(10px); min-height: 240px; display: none !important; align-items: center; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; width: 100%; border-bottom: 1px solid rgba(255, 255, 255, 0.4); }
+        .logo-container { display: none !important; align-items: center; width: 100%; flex-wrap: wrap; gap: 30px; }
+        .app-logo { 
+            width: 160px; height: 160px; 
+             
+            border-radius: 44px; display: none !important; align-items: center; justify-content: center; color: #0b2265 !important; font-size: 130px; font-weight: 900; cursor: pointer; 
+            box-shadow: inset 0 6px 12px rgba(255,255,255,0.7), inset 0 -6px 12px rgba(0,0,0,0.4), 0 12px 24px rgba(0,0,0,0.25); position: relative; overflow: hidden;
+        }
+        .app-logo::after { content: ''; position: absolute; top: 2px; left: 2px; right: 2px; height: 45%;  border-radius: 42px 42px 10px 10px; }
+        .app-title { font-size: 78px; font-weight: 900; color: #0b2265 !important; letter-spacing: -2px; line-height: 1;  -webkit-background-clip: text; -webkit-text-fill-color: #0b2265 !important; filter: drop-shadow(0 3px 1px rgba(0, 0, 0, 0.15)) drop-shadow(0 8px 10px rgba(24,119,242,0.2)); }
+
+        .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 0 8px; }
+        .tabs { display: none !important;  backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
+        .tab { flex: 1; text-align: center; padding: 15px 0; font-weight: bold; font-size: 18px; color: #0b2265 !important; cursor: pointer; }
+        .tab.active { color: #0b2265 !important; border-bottom: 3px solid #FF6B00; }
+        
+        /* 📸 FB STYLE INFINITE SWIPE STORIES BAR (3x Bigger & Auto-Expanding) */
+        .section-header { font-size: 22px; font-weight: bold; padding: 14px 8px; }
+        .scroll-wrapper { width: 100%; overflow-x: auto; display: none !important; gap: 16px; padding: 12px; scrollbar-width: none;  backdrop-filter: blur(8px); margin-bottom: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.4); }
+        .scroll-wrapper::-webkit-scrollbar { display: none; }
+        
+        /* සීමාවක් නැතිව දකුණට වැල වගේ හැදෙන 3X ලොකු ස්ටෝරි කාඩ් පද්ධතිය */
+        .story-card { min-width: 390px; max-width: 390px; height: 630px; background-size: cover; background-position: center; border-radius: 24px; position: relative; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.2); flex-shrink: 0; border: 1px solid rgba(255,255,255,0.2); }
+        .story-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%;  z-index: 1; }
+        .story-avatar { width: 70px; height: 70px; border-radius: 50%; border: 4px solid #FF6B00; position: absolute; top: 20px; left: 20px; background-size: cover; background-position: center; box-shadow: 0 4px 8px rgba(0,0,0,0.3); z-index: 2; }
+        .story-name { position: absolute; bottom: 24px; left: 20px; right: 20px; color: #0b2265 !important; font-size: 24px; font-weight: bold; text-shadow: none !important; line-height: 1.2; z-index: 2; }
+
+        /* 📱 POST BOX MODULE */
+        .post-box {  backdrop-filter: blur(12px); padding: 16px; width: 100%; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 8px; }
+        textarea { width: 100%; min-height: 12vh; border: none; outline: none; padding: 8px 0; resize: none; font-size: 24px; color: #0b2265 !important;  }
+        .action-bar { border-top: 1px solid rgba(0,0,0,0.05); padding-top: 12px; display: none !important; justify-content: right; }
+        .btn-post {  color: #0b2265 !important; border: none; padding: 12px 40px; border-radius: 6px; font-weight: bold; font-size: 18px; cursor: pointer; width: 100%; box-shadow: 0 2px 4px rgba(24,119,242,0.3); }
+        .feed { width: 100%; margin-top: 10px; padding-bottom: 40px; }
+        .no-posts { text-align: center; color: #0b2265 !important; font-size: 16px;  padding: 30px; margin-top: 10px; border-radius: 8px; backdrop-filter: blur(5px); }
+    </style>
+    <style>
+        body, html {
+            scroll-behavior: smooth;
+        }
+        textarea, .post-box, form {
+            min-height: 70vh !important;
+            font-size: 18px !important;
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+    </style>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                const el = document.querySelector("textarea") || document.querySelector("form");
+                if(el) {
+                    el.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }, 300);
+        });
+    </script>
+    <style>
+        textarea, .post-box, form {
+            width: 100vw !important;
+            max-width: 100% !important;
+            min-height: 75vh !important;
+            margin-left: calc(-50vw + 50%) !important;
+            margin-right: calc(-50vw + 50%) !important;
+            box-sizing: border-box !important;
+        }
+    </style>
+    <style>
+        textarea, .post-box, form {
+            width: 100% !important;
+            max-width: 100vw !important;
+            min-height: 60vh !important;
+            box-sizing: border-box !important;
+            padding: 15px !important;
+        }
+    </style>
+    <style>
+        body, html {
+            width: 100% !important;
+            overflow-x: hidden !important;
+        }
+        textarea, .post-box, form {
+            width: 100% !important;
+            max-width: 100% !important;
+            display: block !important;
+            box-sizing: border-box !important;
+            margin: 0 auto !important;
+        }
+    </style>
+    <style>
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100vw !important;
+            overflow-x: hidden !important;
+        }
+        header, .header, #header, nav {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        textarea, .post-box, form, .container, .main-content {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+            padding: 10px !important;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+        }
+        /* Top Navigation Bar */
+        .top-nav, header, .header {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 8px 16px !important;
+            
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 1000 !important;
+        }
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            display: flex !important;
+            justify-content: space-around !important;
+            align-items: center !important;
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            
+            border-top: 1px solid #ddd !important;
+            padding: 8px 0 !important;
+            z-index: 1000 !
+        }
+        .bottom-nav a, .bottom-nav button {
+            font-size: 22px !important;
+            color: #0b2265 !important;
+            
+            border: none !important;
+        }
+        .bottom-nav a.active, .bottom-nav button.active {
+            color: #0b2265 !important;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .post-action-bar {
+            display: flex !important;
+            justify-content: space-around !important;
+            align-items: center !important;
+            padding: 10px 0 !important;
+            border-top: 1px solid #e4e6eb !important;
+            margin-top: 10px !important;
+        }
+        .post-action-bar label, .post-action-bar button {
+            
+            border: none !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            color: #0b2265 !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+        }
+    </style>
+    <style>
+        .action-bar {
+            display: flex !important;
+            justify-content: space-around !important;
+            align-items: center !important;
+            padding: 12px 0 !important;
+            border-top: 1px solid #e4e6eb !important;
+            
+        }
+        .action-item {
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #0b2265 !important;
+            cursor: pointer !important;
+        }
+    </style>
+    <style>
+        .biometric-box {
+            
+            padding: 25px !important;
+            border-radius: 12px !important;
+            text-align: center !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        }
+        .scan-btn {
+            
+            color: #0b2265 !important;
+            border: none !important;
+            padding: 12px 24px !important;
+            border-radius: 6px !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            margin-top: 15px !important;
+        }
+    </style>
+</head>
+<body>
+<div style="padding:15px; text-align:center;"><button onclick="openAuthModal()" style=" color: #0b2265 !important; padding:12px 20px; border:none; border-radius:8px; font-size:16px; font-weight:bold; width:100%; cursor:pointer;">📸 ID ස්කෑන් කැමරාව ක්‍රියාත්මක කරන්න</button></div>
+    <div class="navbar"><div class="logo-container"><div class="app-logo">f</div><div class="app-title">My Face BOX</div></div></div>
+    <div class="container">
+        <div class="tabs"><div id="tabFeed" class="tab active">Feed</div><div id="tabChat" class="tab">Mind Chat</div></div>
+        
+        <div class="section-header"><span>Stories & Reels</span></div>
+        
+        <!-- 📸 සීමාවක් නැතිව දකුණට හැදෙන සජීවී සැබෑ පින්තූර සහිත ස්ටෝරි බාර් එක -->
+        <div class="scroll-wrapper" id="storiesZone"></div>
+        
+        <div class="post-box">
+            <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+            <div class="action-bar"><button class="btn-post" onclick="submitPost()">Post</button></div>
+        </div>
+
+        <div class="feed" id="postFeed"><div class="no-posts">පෝස්ට් ලෝඩ් වෙමින් පවතී...</div></div>
+    </div>
+    <script>
+        // 🌍 ජාත්‍යන්තර ප්‍රමිතියේ සැබෑ සජීවී ස්ටෝරි දත්ත පද්ධතිය (Infinite Array Map)
+        const liveStories = [
+            { name: "Create Story", img: "https://unsplash.com", av: "https://unsplash.com" },
+            { name: "Sriyani Pathmalatha", img: "https://unsplash.com", av: "https://unsplash.com" },
+            { name: "Manik Thushari Amarasiha", img: "https://unsplash.com", av: "https://unsplash.com" },
+            { name: "Parami Rajapaksha", img: "https://unsplash.com", av: "https://unsplash.com" },
+            { name: "Shanika Wanigasekara", img: "https://unsplash.com", av: "https://unsplash.com" }
+        ];
+
+        function renderStories() {
+            const zone = document.getElementById('storiesZone');
+            zone.innerHTML = liveStories.map(s => `
+                <div class="story-card" style="background-image: url('${s.img}')">
+                    <div class="story-overlay"></div>
+                    <div class="story-avatar" style="background-image: url('${s.av}')"></div>
+                    <div class="story-name">${s.name}</div>
+                </div>
+            `).join('');
+        }
+
+        async function loadPosts() {
+            try {
+                const response = await fetch('/api/posts'); const data = await response.json();
+                const feedDiv = document.getElementById('postFeed');
+                if (data.status === "Success" && data.posts.length > 0) {
+                    feedDiv.innerHTML = '';
+                    data.posts.forEach(post => {
+                        feedDiv.innerHTML += `
+                            <div class="post-card" style=" padding:16px; border-radius:8px; margin-top:10px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                                <div style="font-weight:bold; font-size:18px; color: #0b2265 !important;">${post.userId}</div>
+                                <div style="font-size:22px; margin-top:8px; color: #0b2265 !important;">${post.content}</div>
+                            </div>`;
+                    });
+                } else { feedDiv.innerHTML = '<div class="no-posts">No posts available yet.</div>'; }
+            } catch (error) { console.error(error); }
+        }
+        async function submitPost() {
+            const content = document.getElementById('postContent').value; if (!content.trim()) return;
+            try {
+                const response = await fetch('/api/posts', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: "Wadduwa_User", content: content, type: "post" })
+                });
+                if (response.ok) { document.getElementById('postContent').value = ''; loadPosts(); }
+            } catch (error) { console.error(error); }
+        }
+        window.onload = function() { renderStories(); loadPosts(); };
+    </script>
+<div style="padding:12px; text-align:center;"><button onclick="openAuthModal()" style=" color: #0b2265 !important; border:none; padding:14px 20px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; width:100%; max-width:500px; box-shadow:0 4px 12px rgba(24,119,242,0.3);">🛡️ Verify Identity & Create Account (Real Users Only)</button></div>
+<!-- Global Real User Verification Modal -->
+<div id="authModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;  z-index:99999; justify-content:center; align-items:center; padding:15px; box-sizing:border-box;">
+    <div style=" width:100%; max-width:450px; border-radius:12px; padding:25px; box-shadow:0 8px 24px rgba(0,0,0,0.3); font-family:sans-serif; text-align:left;">
+        
+        <!-- Step 1: ID / Document Capture -->
+        <div id="st1">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px; text-align:center;">🛡️ Real User Verification</h2>
+            <p style="font-size:13px; color: #0b2265 !important; text-align:center; margin-bottom:15px;">Capture NIC, Driving License, Passport, or Postal ID (15+) to verify identity.</p>
+            <div style="border:2px dashed #ccd0d5; border-radius:8px; padding:10px; text-align:center; margin-bottom:15px; ">
+                <video id="liveCam" autoplay playsinline style="width:100%; max-height:180px; border-radius:6px; display:none;"></video>
+                <div id="camTxt" style="padding:25px 0; color: #0b2265 !important; font-size:14px;">📷 Click Start to Scan ID / Passport</div>
+            </div>
+            <button type="button" onclick="initCam()" id="sBtn" style=" color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer; margin-bottom:10px;">Start Document Capture</button>
+            <button type="button" onclick="nextSt2()" id="nBtn" style=" color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer; display:none;">Capture & Auto-Fill</button>
+        </div>
+
+        <!-- Step 2: Account Configuration & Naming -->
+        <div id="st2" style="display:none;">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px; text-align:center;">✨ Account Setup</h2>
+            <p style="font-size:13px; color: #0b2265 !important; text-align:center; margin-bottom:15px;">Document verified. Configure your account details.</p>
+            <label style="font-size:13px; font-weight:bold; color: #0b2265 !important; display:block; margin-bottom:5px;">Select Account Type:</label>
+            <select id="accChoice" style="width:100%; padding:10px; border:1px solid #ccd0d5; border-radius:6px; margin-bottom:15px; font-size:14px;">
+                <option value="fb">Personal FB Account</option>
+                <option value="page">Business / Public Page</option>
+            </select>
+            <label style="font-size:13px; font-weight:bold; color: #0b2265 !important; display:block; margin-bottom:5px;">Enter Account Name:</label>
+            <input type="text" id="userNameInput" placeholder="Type your preferred name..." style="width:100%; padding:10px; border:1px solid #ccd0d5; border-radius:6px; margin-bottom:20px; font-size:14px; box-sizing:border-box;">
+            <button type="button" onclick="nextSt3()" style=" color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer;">Continue to Pin Mark</button>
+        </div>
+
+        <!-- Step 3: Pin Mark / Biometric Signature -->
+        <div id="st3" style="display:none; text-align:center;">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px;">🔒 Biometric Pin Mark</h2>
+            <p style="font-size:13px; color: #0b2265 !important; margin-bottom:20px;">Provide your digital security touch/pin mark to complete real-human verification.</p>
+            <div style=" border:1px solid #ccd0d5; padding:20px; border-radius:8px; margin-bottom:20px; cursor:pointer;" onclick="finishReg()">
+                <div style="font-size:32px; margin-bottom:10px;">👆</div>
+                <strong style="color: #0b2265 !important; font-size:15px;">Tap Here to Register Pin Mark</strong>
+                <div style="font-size:12px; color: #0b2265 !important; margin-top:5px;">Blocks all fake accounts permanently</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let activeStream = null;
+function openAuthModal() {
+    document.getElementById("authModal").style.display = "flex";
+}
+function initCam() {
+    document.getElementById("camTxt").style.display = "none";
+    let v = document.getElementById("liveCam");
+    v.style.display = "block";
+    document.getElementById("sBtn").style.display = "none";
+    document.getElementById("nBtn").style.display = "block";
+    
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+    .then(s => { activeStream = s; v.srcObject = s; })
+    .catch(e => {
+        alert("Camera access notice: Using fallback photo mode due to browser restriction (" + e + ")");
+    });
+}
+function nextSt2() {
+    if(activeStream) { activeStream.getTracks().forEach(t => t.stop()); }
+    document.getElementById("st1").style.display = "none";
+    document.getElementById("st2").style.display = "block";
+}
+function nextSt3() {
+    let nameVal = document.getElementById("userNameInput").value;
+    if(!nameVal.trim()) { alert("Please enter a valid account name."); return; }
+    document.getElementById("st2").style.display = "none";
+    document.getElementById("st3").style.display = "block";
+}
+function finishReg() {
+    alert("🎉 Real User Account Created Successfully! Welcome.");
+    document.getElementById("authModal").style.display = "none";
+    location.reload();
+}
+</script>
+
+</body>
+</html>

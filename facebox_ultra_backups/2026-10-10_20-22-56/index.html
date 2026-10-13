@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>My Face BOX</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+html,body{width:100%;height:100%;overflow-x:hidden}
+body{background:#f5f5f5;display:flex;justify-content:center;padding:0;margin:0}
+.phone{
+  width:100vw;
+  max-width:100%;
+  min-height:100vh;
+  background:#f5f5f5;
+  border-radius:0;
+  overflow:hidden;
+  border:none;
+  box-shadow:none;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.status{height:32px;background:#ff7a00;color:#fff;display:flex;justify-content:space-between;padding:0 20px;align-items:center;font-size:14px;flex-shrink:0}
+.header{height:56px;background:#ff7a00;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0}
+.header b{font-size: clamp(16px, 4vw, 20px);flex:1;margin-left:10px;white-space:nowrap}
+.top-icons{display:flex;gap:clamp(8px, 2vw, 14px);align-items:center;font-size:20px;flex-shrink:0}
+.top-icons .msg{width:26px;height:26px;background:#0084FF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;cursor:pointer}
+.top-icons span{cursor:pointer;}
+
+/* Quick Icons */
+.quick{background:#fff;display:flex;justify-content:space-around;padding:10px 6px;overflow-x:auto;flex-shrink:0}
+.quick::-webkit-scrollbar{display:none}
+.q{text-align:center;flex:1;min-width:60px;text-decoration:none;color:inherit;}
+.q .ico{width:clamp(36px, 10vw, 44px);height:clamp(36px, 10vw, 44px);border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;font-weight:700}
+.g{background:conic-gradient(#4285F4 0% 25%,#EA4335 25% 50%,#FBBC05 50% 75%,#34A853 75% 100%)}.yt{background:#FF0000}.fb{background:#1877F2}.tt{background:#000}.ig{background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)}.wa{background:#25D366}.ps{background:#fff;border:1px solid #ddd}.sr{background:#e0e0e0}
+
+.main-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+
+.composer{background:#fff;margin:12px 10px;border-radius:16px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.ctop{display:flex;gap:10px;align-items:center}
+.ava{width:40px;height:40px;border-radius:50%;background:#888;flex-shrink:0}
+.share{margin-left:auto;background:#ff7a00;color:#fff;border:none;padding:8px 14px;border-radius:20px;font-weight:600;white-space:nowrap;flex-shrink:0;cursor:pointer}
+.div{height:1px;background:#eee;margin:12px 0}
+.acts{display:flex;justify-content:space-around}.acts span{font-size:13px;cursor:pointer;}
+.shead{display:flex;justify-content:space-between;padding:10px 14px}
+.shead a{color:#ff7a00;text-decoration:none;font-weight:600}
+.stories{display:flex;gap:8px;padding:0 10px;overflow-x:auto}
+.stories::-webkit-scrollbar{display:none}
+.story{min-width:clamp(100px, 30vw, 115px);height:clamp(160px, 45vw, 195px);border-radius:14px;overflow:hidden;position:relative;background:#ddd;flex-shrink:0}
+.story img{width:100%;height:100%;object-fit:cover}
+.story .plus{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);width:36px;height:36px;background:#1976D2;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px}
+.story .lab{position:absolute;bottom:6px;left:0;right:0;text-align:center;color:#fff;font-size:11px;font-weight:600}
+.badge{position:absolute;bottom:6px;left:4px;right:4px;display:flex;gap:4px;justify-content:center}
+.badge span{font-size:9px;padding:4px 6px;border-radius:6px;color:#fff;font-weight:600}
+
+.post{background:#fff;margin:12px 10px;border-radius:16px;padding:12px;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.card{background:#fff;margin:12px 10px;border-radius:16px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+
+.bnav{height:66px;background:#fff;border-top:1px solid #eee;display:flex;justify-content:space-around;align-items:center;color:#888;position:sticky;bottom:0;flex-shrink:0;z-index:10}
+.bnav div{text-align:center;cursor:pointer;}
+.bnav .active{color:#ff7a00}
+.plusb{width:48px;height:48px;background:#ff7a00;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;margin-top:-18px;border:3px solid #fff}
+
+/* 📱 Side Menu & Overlay Styles */
+#overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:998;display:none;backdrop-filter:blur(2px)}
+#sideMenu{
+  position:fixed;
+  top:0;
+  right:-100%;
+  width:100%;
+  max-width:412px;
+  height:100%;
+  background:#fff;
+  z-index:999;
+  transition:right 0.3s ease-in-out;
+  display:flex;
+  flex-direction:column;
+  box-shadow:-5px 0 15px rgba(0,0,0,0.2);
+}
+.m-header{background:#ff7a00;color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.m-title{display:flex;align-items:center;gap:8px;font-weight:bold;font-size:18px}
+.lang-box select{padding:6px 10px;border-radius:6px;border:none;font-weight:600;background:#fff;color:#333;outline:none;cursor:pointer}
+.close-btn{background:#D32F2F;color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;cursor:pointer;font-size:16px}
+
+.m-body{flex:1;overflow-y:auto;padding:14px}
+.top-stats-banner{background:#5E35B1;color:#fff;border-radius:12px;padding:12px;display:flex;justify-content:space-around;text-align:center;margin-bottom:15px}
+.top-stats-banner div{font-size:12px}
+.top-stats-banner b{font-size:14px;display:block;margin-top:2px}
+
+.user-avatar-section{text-align:center;margin-bottom:20px}
+.avatar-circle{width:90px;height:90px;border-radius:50%;border:3px dashed #7E57C2;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;background:#eee;position:relative}
+.upload-btn-badge{background:#5E35B1;color:#fff;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:#333;margin-bottom:4px}
+.form-control{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;outline:none;background:#fafafa}
+.form-control:focus{border-color:#5E35B1;background:#fff}
+.row-inputs{display:flex;gap:8px}
+
+.publish-check{display:flex;align-items:center;gap:8px;margin:15px 0;font-size:13px;font-weight:600;color:#333}
+.publish-check input{width:18px;height:18px;accent-color:#5E35B1}
+.register-submit-btn{width:100%;background:#2E7D32;color:#fff;border:none;padding:12px;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;text-align:center}
+.menu-footer-note{text-align:center;color:#666;font-size:12px;margin-top:15px;padding-bottom:20px;border-top:1px solid #eee;padding-top:10px}
+
+@media(min-width:500px){.phone{max-width:420px;margin:0 auto;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.15);min-height:90vh;margin-top:20px}}
+</style>
+</head>
+<body>
+
+<div class="phone">
+    <!-- Status Bar -->
+    <div class="status"><span>9:41</span><span>5G 85% 🔋</span></div>
+
+    <!-- Header -->
+    <div class="header">
+        <span style="cursor:pointer">‹</span>
+        <b>MY FACE BOX</b>
+        <div class="top-icons">
+            <span>🔍</span>
+            <span>🔔</span>
+            <div class="msg" onclick="alert('Messages opened!')">💬</div>
+            <span onclick="toggleMenu()" style="font-size:24px;">☰</span>
+        </div>
+    </div>
+
+    <!-- Quick Social Links -->
+    <div class="quick">
+        <a href="https://google.com" target="_blank" class="q"><div class="ico g">G</div><span style="font-size:10px">Google</span></a>
+        <a href="https://youtube.com" target="_blank" class="q"><div class="ico yt">▶</div><span style="font-size:10px">YouTube</span></a>
+        <a href="https://facebook.com" target="_blank" class="q"><div class="ico fb">f</div><span style="font-size:10px">Facebook</span></a>
+        <a href="https://tiktok.com" target="_blank" class="q"><div class="ico tt">♪</div><span style="font-size:10px">TikTok</span></a>
+        <a href="https://instagram.com" target="_blank" class="q"><div class="ico ig">◎</div><span style="font-size:10px">Instagram</span></a>
+        <a href="https://wa.me" target="_blank" class="q"><div class="ico wa">W</div><span style="font-size:10px">WhatsApp</span></a>
+        <a href="https://google.com" target="_blank" class="q"><div class="ico ps">▶</div><span style="font-size:10px">PlayStore</span></a>
+        <div class="q" onclick="alert('Search clicked')"><div class="ico sr">🔍</div><span style="font-size:10px">Search</span></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="composer">
+            <div class="ctop">
+                <div class="ava"></div>
+                <div style="color:#65676B;font-size:14px;flex:1;">What's on your mind?</div>
+                <button class="share" onclick="alert('Share post activated!')">↗ Share a post</button>
+            </div>
+            <div class="div"></div>
+            <div class="acts">
+                <span onclick="alert('Photos selected')">🖼️ Photos</span>
+                <span onclick="alert('Videos selected')">▶️ Videos</span>
+                <span onclick="alert('Music selected')">🎵 Music</span>
+            </div>
+        </div>
+
+        <div class="shead"><b>Stories</b><a href="#" onclick="alert('All stories view')">See all</a></div>
+        
+        <div class="stories">
+            <div class="story"><img src="https://picsum.photos/seed/sunrise/200/300"><div class="plus">+</div><div class="lab">Create story</div></div>
+            <div class="story"><img src="https://picsum.photos/seed/blueSaree2/200/300"><div class="badge"><span style="background:#D32F2F">📹 Videos</span><span style="background:#1976D2">🎵 Music</span></div></div>
+            <div class="story"><img src="https://picsum.photos/seed/yellowSaree2/200/300"><div class="badge"><span style="background:#FF6F00">✈ Publish</span></div></div>
+        </div>
+
+        <div class="post">
+            <b>Sumiya M.R.A</b> • 12m ago<br>
+            <p style="margin-top:5px;">අලුත් සිස්ටම් එක සාර්ථකව වැඩ කරනවා! 🎉</p>
+            <div style="margin-top:8px;color:#65676B;font-size:13px;">❤️ 128 &nbsp;&nbsp; 💬 24 &nbsp;&nbsp; ↗ 6</div>
+        </div>
+
+        <div class="card" style="background:#7C4DFF;color:#fff;text-align:center">
+            <b>Unlimited Registration</b><br><small>Shop Deals Products</small>
+        </div>
+
+        <div class="card">
+            <b>Payment Secure Instant Rewards</b><br>
+            <small>Card | UPI | Wallet | Bank Transfer<br>Cashback on every transaction</small>
+            <div style="border:1.5px dashed #999;border-radius:10px;padding:10px;margin-top:8px;text-align:center;cursor:pointer;" onclick="alert('Loading more modules...')">
+                Scroll to load more<br><small>20+ modules</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bnav">
+        <div class="active">🏠<br>Home</div>
+        <div onclick="alert('Explore clicked')">🧭<br>Explore</div>
+        <div><div class="plusb" onclick="alert('Add post clicked')">+</div></div>
+        <div onclick="alert('Alerts clicked')">🔔<br>Alerts</div>
+        <div onclick="alert('Profile clicked')">👤<br>Profile</div>
+    </div>
+</div>
+
+<!-- ⚙️ Side Menu Overlay -->
+<div id="overlay" onclick="toggleMenu()"></div>
+<div id="sideMenu">
+    <div class="m-header">
+        <div class="m-title"><span>☰</span> MENU</div>
+        <div class="lang-box">
+            <select id="langSelect" onclick="clearOldMemory()">
+                <option value="si">Sinhala | English | Tamil</option>
+                <option value="en">English</option>
+                <option value="ta">தமிழ்</option>
+            </select>
+        </div>
+        <div class="close-btn" onclick="toggleMenu()">✕</div>
+    </div>
+
+    <div class="m-body">
+        <!-- Top Stats Banner -->
+        <div class="top-stats-banner">
+            <div>✨ <b>Unlimited Registration</b></div>
+            <div>🛍️ <b>Shop Deals Products</b></div>
+            <div>👥 <b id="regCount">0</b> <b>Registered</b></div>
+        </div>
+
+        <!-- User Avatar Upload Section -->
+        <div class="user-avatar-section">
+            <div class="avatar-circle">
+                <span style="font-size:36px;color:#7E57C2;">👤</span>
+            </div>
+            <label class="upload-btn-badge">
+                🖼️ පින්තූරයක් එකතු කරන්න
+                <input type="file" style="display:none" accept="image/*" onchange="previewImage(event)">
+            </label>
+        </div>
+
+        <!-- Registration Form Inputs -->
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" class="form-control" id="fullName" placeholder="Enter full name">
+        </div>
+
+        <div class="form-group">
+            <label>Personal Account</label>
+            <select class="form-control" id="accType">
+                <option>Personal Account</option>
+                <option>Business Account</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Account Name</label>
+            <input type="text" class="form-control" id="accName" placeholder="Enter account name">
+        </div>
+
+        <div class="form-group">
+            <label>Country</label>
+            <select class="form-control" id="country">
+                <option>🇱🇰 Sri Lanka (+94)</option>
+                <option>🇮🇳 India (+91)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number</label>
+            <div class="row-inputs">
+                <select class="form-control" style="width:110px">
+                    <option>🇱🇰 +94</option>
+                </select>
+                <input type="tel" class="form-control" placeholder="7X XXX XXXX" id="phoneNum">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Shop Owner / Agent</label>
+            <select class="form-control" id="ownerType">
+                <option>Shop Owner</option>
+                <option>Agent / Partner</option>
+            </select>
+        </div>
+
+        <div class="publish-check">
+            <input type="checkbox" id="pubCheck" checked>
+            <label for="pubCheck">මාරුකරු ප්‍රසිද්ධ කරගන්න (Publish to List)</label>
+        </div>
+
+        <button class="register-submit-btn" onclick="submitRegistration()">Register Now</button>
+
+<div id="over" onclick="closeMenu()"></div>
+
+<div id="sideMenu">
+    <!--      -->
+    <div class="mHead">
+        <span> MENU</span>
+        <div class="lang-selector">
+            <select id="langSelect" onchange="changeLanguage()" style="padding: 4px; border-radius: 4px; font-size: 12px;">
+                <option value="si"></option>
+                <option value="en">English</option>
+                <option value="ta"></option>
+            </select>
+        </div>
+        <span onclick="closeMenu()" style="cursor:pointer; font-size:24px; font-weight:bold; color: #ff3333;">�</span>
+    </div>
+    
+    <div class="mBody">
+        <!--  -->
+        <div class="reg-banner">
+            <b id="txt_title" style="font-size:18px;">Unlimited Registration</b><br>
+            <small id="txt_subtitle">Shop Deals Products</small><br>
+            <span id="count" style="font-weight:bold; font-size:20px;">0</span> <span id="txt_registered">Registered</span>
+        </div>
+        
+        <!--   -->
+        <!-- 1.   -->
+        <div style="text-align: center; margin-bottom: 12px;">
+            <div id="photoPreview" style="width: 80px; height: 80px; border-radius: 50%; background: #eee; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #aaa; border: 2px dashed #7C4DFF; overflow: hidden;"></div>
+            <label for="profilePhoto" id="txt_upload_btn" style="background: #7C4DFF; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; display: inline-block;"> </label>
+            <input type="file" id="profilePhoto" accept="image/*" onchange="previewImage(event)" style="display: none;">
+        </div>
+
+        <!-- 2.   -->
+        <input type="text" id="name" class="regInput" placeholder="  / Full Name">
+        
+        <!-- 3.     -->
+        <select id="accType" class="regInput" onchange="toggleAccNamePlaceholder()">
+            <option value="Personal">Personal Account ()</option>
+            <option value="Page">Page ()</option>
+            <option value="Business">Business ()</option>
+        </select>
+        <input type="text" id="accName" class="regInput" placeholder="  / Account Name">
+        
+        <!-- 4.   -->
+        <select id="country" onchange="setCode()" class="regInput">
+            <option value="94" data-flag="">Sri Lanka (+94)</option>
+            <option value="1" data-flag="">USA (+1)</option>
+            <option value="44" data-flag="">UK (+44)</option>
+            <option value="91" data-flag="">India (+91)</option>
+            <option value="61" data-flag="">Australia (+61)</option>
+            <option value="964" data-flag="">Iraq (+964)</option>
+            <option value="971" data-flag="">UAE (+971)</option>
+        </select>
+        
+        <!-- 5.   -->
+        <div style="display:flex; gap:6px;">
+            <input type="text" id="code" class="regInput" value="+94" style="width:65px; text-align:center;" readonly>
+            <input type="number" id="phone" class="regInput" placeholder="  / Phone Number" style="flex:1;">
+        </div>
+        
+        <!-- 6.  -->
+        <select id="type" class="regInput">
+            <option value="Agent">Agent ()</option>
+            <option value="Shop Owner">Shop Owner ( )</option>
+        </select>
+
+        <!-- 7.    ( ) -->
+        <div style="display: flex; align-items: center; gap: 8px; margin: 10px 0; background: #f9f9f9; padding: 8px; border-radius: 6px;">
+            <input type="checkbox" id="publishCheck" checked style="width: 18px; height: 18px; accent-color: #7C4DFF;">
+            <label for="publishCheck" id="txt_publish_label" style="font-size: 13px; font-weight: 500; cursor: pointer;">   (Publish to List)</label>
+        </div>
+        
+        <!--    -->
+        <button onclick="register()" class="regBtn" id="btn_register" style="font-size: 16px; font-weight: bold;"> Register Now</button>
+        
+        <!--  -->
+        <div style="margin:14px 0 6px; font-weight:700; color: #333;" id="txt_list_title">  :</div>
+        <div id="uList"></div>
+    </div>
+</div>
+
+<script>
+    // Page Load එකේදී පරණ මතකයන් සම්පූර්ණයෙන්ම ඉවත් කර Fresh ආරම්භයක් ලබා දීමට
+    window.onload = function() {
+        // අවශ්‍ය නම් පහත ලיין එකෙන් LocalStorage සම්පූර්ණයෙන්ම ක්ලීන් කළ හැක:
+        // localStorage.clear();
+        loadUsers();
+    };
+
+    // Side Menu Toggle Function
+function toggleMenu() {
+    var menu = document.getElementById("sideMenu");
+    if (menu.style.right === "0px" || menu.style.display === "block") {
+        menu.style.right = "-100%";
+        menu.style.display = "none";
+    } else {
+        menu.style.right = "0px";
+        menu.style.display = "block";
+    }
+}
+
+
+    // Form Submission & Persistent List
+    function submitRegistration() {
+        const name = document.getElementById('fullName').value;
+        const phone = document.getElementById('phoneNum').value;
+        const type = document.getElementById('ownerType').value;
+
+        if(!name) {
+            alert('කරුණාකර නම ඇතුළත් කරන්න!');
+            return;
+        }
+
+        const now = new Date();
+        const dateStr = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
+
+        const newUser = {
+            name: name,
+            phone: phone ? phone : '7X XXX XXXX',
+            type: type,
+            date: dateStr
+        };
+
+        let users = JSON.parse(localStorage.getItem('facebox_users')) || [];
+        users.unshift(newUser); // අලුත් එක උඩට ද的同时
+        localStorage.setItem('facebox_users', JSON.stringify(users));
+
+        // Form fields clear කිරීම
+        document.getElementById('fullName').value = '';
+        document.getElementById('phoneNum').value = '';
+
+        loadUsers();
+        alert('සාර්ථකව ලියාපදිංචි විය!');
+    }
+
+    // Load and Display Users
+    function loadUsers() {
+        let users = JSON.parse(localStorage.getItem('facebox_users')) || [];
+        document.getElementById('regCount').innerText = users.length;
+
+        let container = document.getElementById('userListContainer');
+        
+        if(users.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#777;font-size:13px;padding:10px;">ග්‍රාහකයින් නොමැත</div>';
+            return;
+        }
+
+        let html = '<div style="font-weight:bold;margin-bottom:8px;font-size:14px;color:#333;">📋 ග්‍රාහකයින් ලැයිස්තුව:</div>';
+        
+        users.forEach(user => {
+            html += `
+                <div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:13px;">
+                    <div style="display:flex;justify-content:space-between;font-weight:bold;color:#222;">
+                        <span>${user.name}</span>
+                        <span style="font-size:11px;color:#666;">${user.date}</span>
+                    </div>
+                    <div style="color:#555;font-size:12px;margin-top:2px;">+94${user.phone} • ${user.type}</div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+//       
+function clearOldMemory() {
+    if(confirm('           ?')) {
+        localStorage.clear();
+        loadUsers();
+        alert('      !');
+    }
+}
+
+// Image Preview Feature
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function(){
+        const circle = document.querySelector('.avatar-circle');
+        circle.style.backgroundImage = `url(${reader.result})`;
+        circle.style.backgroundSize = 'cover';
+        circle.style.backgroundPosition = 'center';
+        circle.style.innerHTML = "";
+    }     reader.readAsDataURL(event.target.files[0]);
+}
+
+// ---       (Registration Code) ---
+document.getElementById('registerBtn').addEventListener('click', function() {
+    const fullName = document.getElementById('fullName')?.value || "";
+    const phoneNumber = document.getElementById('phoneNumber')?.value || "";
+    const userRole = document.getElementById('userRole')?.value || "Shop Owner";
+    const accountType = document.querySelector('select[name="accountType"]')?.value || "Personal Account";
+    const accountName = document.querySelector('input[placeholder="Enter account name"]')?.value || "";
+    const publishToList = document.querySelector('input[type="checkbox"]')?.checked || false;
+
+    if (!fullName || !phoneNumber || !accountName) {
+        alert('   (,     )  !');
+        return;
+    }
+
+    fetch('http://localhost:8000/api/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: fullName,
+            phone: phoneNumber,
+            role: userRole,
+            accountType: accountType,
+            accountName: accountName,
+            publishToList: publishToList
+        })
+    })
+    .then(response => {
+        if (!response.ok) { throw new Error('Server error'); }
+        return response.json();
+    })
+    .then(data => {
+        alert(' !');
+        if (typeof loadUsers === "function") { loadUsers(); }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('      !');
+    });
+});
+
+    reader.readAsDataURL(event.target.files[0]);
+}
+document.getElementById('registerBtn').addEventListener('click', function() {
+    // 1.     JavaScript   
+    const accountType = document.querySelector('select[name="accountType"]')?.value || "Personal Account";
+    const accountName = document.querySelector('input[placeholder="Enter account name"]')?.value || "";
+    const publishToList = document.querySelector('input[type="checkbox"]')?.checked || false;
+
+    // 2.     (Validation)
+    if (!fullName || !phoneNumber || !accountName) {
+        alert('   (,     )  !');
+        return;
+    }
+
+    // 3.       (Fetch API)  
+    fetch('http://localhost:8000/api/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: fullName,
+            phone: phoneNumber,
+            role: userRole,
+            accountType: accountType,
+            accountName: accountName,
+            publishToList: publishToList
+        })
+    })
+    .then(response => {
+        if (!response.ok) { throw new Error('Server error'); }
+        return response.json();
+    })
+    .then(data => {
+        alert(' !');
+        if (typeof loadUsers === "function") { loadUsers(); } //   
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('      !');
+    });
+});
+
+
+</script>
+
+</body>
+</html>

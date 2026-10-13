@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Face BOX</title>
+    <style>
+        html, body { width: 100%; margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; background-color: #0b2265 !important; -webkit-text-size-adjust: 100%; }
+        .container { width: 100%; max-width: 500px; margin: 0 auto; padding: 10px; }
+        .post-box { background: #ffffff; border-radius: 12px; padding: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .post-box textarea { width: 100%; border: none; resize: none; font-size: 16px; outline: none; min-height: 80px; }
+        .post-box .post-btn { width: 100%; background-color: #0b2265 !important; color: #0b2265 !important; border: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div style="padding:15px; text-align:center;"><button onclick="openAuthModal()" style="background:#FF6B00; color: #0b2265 !important; padding:12px 20px; border:none; border-radius:8px; font-size:16px; font-weight:bold; width:100%; cursor:pointer;">📸 ID ස්කෑන් කැමරාව ක්‍රියාත්මක කරන්න</button></div>
+    <div class="container">
+        <h2>My Face BOX</h2>
+        <div class="post-box">
+            <textarea placeholder="ඔබේ සිතුවිලි මෙතන ලියන්න..."></textarea>
+            <button class="post-btn">Post</button>
+        </div>
+    </div>
+<div style="padding:12px; text-align:center;"><button onclick="openAuthModal()" style="background:linear-gradient(135deg, #FF6B00, #2b87f5); color: #0b2265 !important; border:none; padding:14px 20px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; width:100%; max-width:500px; box-shadow:0 4px 12px rgba(24,119,242,0.3);">🛡️ Verify Identity & Create Account (Real Users Only)</button></div>
+<!-- Global Real User Verification Modal -->
+<div id="authModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; justify-content:center; align-items:center; padding:15px; box-sizing:border-box;">
+    <div style="background:white; width:100%; max-width:450px; border-radius:12px; padding:25px; box-shadow:0 8px 24px rgba(0,0,0,0.3); font-family:sans-serif; text-align:left;">
+        
+        <!-- Step 1: ID / Document Capture -->
+        <div id="st1">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px; text-align:center;">🛡️ Real User Verification</h2>
+            <p style="font-size:13px; color: #0b2265 !important; text-align:center; margin-bottom:15px;">Capture NIC, Driving License, Passport, or Postal ID (15+) to verify identity.</p>
+            <div style="border:2px dashed #ccd0d5; border-radius:8px; padding:10px; text-align:center; margin-bottom:15px; background:#f0f2f5;">
+                <video id="liveCam" autoplay playsinline style="width:100%; max-height:180px; border-radius:6px; display:none;"></video>
+                <div id="camTxt" style="padding:25px 0; color: #0b2265 !important; font-size:14px;">📷 Click Start to Scan ID / Passport</div>
+            </div>
+            <button type="button" onclick="initCam()" id="sBtn" style="background:#FF6B00; color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer; margin-bottom:10px;">Start Document Capture</button>
+            <button type="button" onclick="nextSt2()" id="nBtn" style="background:#42b72a; color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer; display:none;">Capture & Auto-Fill</button>
+        </div>
+
+        <!-- Step 2: Account Configuration & Naming -->
+        <div id="st2" style="display:none;">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px; text-align:center;">✨ Account Setup</h2>
+            <p style="font-size:13px; color: #0b2265 !important; text-align:center; margin-bottom:15px;">Document verified. Configure your account details.</p>
+            <label style="font-size:13px; font-weight:bold; color: #0b2265 !important; display:block; margin-bottom:5px;">Select Account Type:</label>
+            <select id="accChoice" style="width:100%; padding:10px; border:1px solid #ccd0d5; border-radius:6px; margin-bottom:15px; font-size:14px;">
+                <option value="fb">Personal FB Account</option>
+                <option value="page">Business / Public Page</option>
+            </select>
+            <label style="font-size:13px; font-weight:bold; color: #0b2265 !important; display:block; margin-bottom:5px;">Enter Account Name:</label>
+            <input type="text" id="userNameInput" placeholder="Type your preferred name..." style="width:100%; padding:10px; border:1px solid #ccd0d5; border-radius:6px; margin-bottom:20px; font-size:14px; box-sizing:border-box;">
+            <button type="button" onclick="nextSt3()" style="background:#FF6B00; color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer;">Continue to Pin Mark</button>
+        </div>
+
+        <!-- Step 3: Pin Mark / Biometric Signature -->
+        <div id="st3" style="display:none; text-align:center;">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px;">🔒 Biometric Pin Mark</h2>
+            <p style="font-size:13px; color: #0b2265 !important; margin-bottom:20px;">Provide your digital security touch/pin mark to complete real-human verification.</p>
+            <div style="background:#f0f2f5; border:1px solid #ccd0d5; padding:20px; border-radius:8px; margin-bottom:20px; cursor:pointer;" onclick="finishReg()">
+                <div style="font-size:32px; margin-bottom:10px;">👆</div>
+                <strong style="color: #0b2265 !important; font-size:15px;">Tap Here to Register Pin Mark</strong>
+                <div style="font-size:12px; color: #0b2265 !important; margin-top:5px;">Blocks all fake accounts permanently</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let activeStream = null;
+function openAuthModal() {
+    document.getElementById("authModal").style.display = "flex";
+}
+function initCam() {
+    document.getElementById("camTxt").style.display = "none";
+    let v = document.getElementById("liveCam");
+    v.style.display = "block";
+    document.getElementById("sBtn").style.display = "none";
+    document.getElementById("nBtn").style.display = "block";
+    
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+    .then(s => { activeStream = s; v.srcObject = s; })
+    .catch(e => {
+        alert("Camera access notice: Using fallback photo mode due to browser restriction (" + e + ")");
+    });
+}
+function nextSt2() {
+    if(activeStream) { activeStream.getTracks().forEach(t => t.stop()); }
+    document.getElementById("st1").style.display = "none";
+    document.getElementById("st2").style.display = "block";
+}
+function nextSt3() {
+    let nameVal = document.getElementById("userNameInput").value;
+    if(!nameVal.trim()) { alert("Please enter a valid account name."); return; }
+    document.getElementById("st2").style.display = "none";
+    document.getElementById("st3").style.display = "block";
+}
+function finishReg() {
+    alert("🎉 Real User Account Created Successfully! Welcome.");
+    document.getElementById("authModal").style.display = "none";
+    location.reload();
+}
+</script>
+
+</body>
+</html>

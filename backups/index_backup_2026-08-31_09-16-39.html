@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Face BOX</title>
+    <style>
+        /* ඕනෑම තිරයකට ඔටෝ සූම් වීම සහ නිවැරදිව පෙනීම සඳහා */
+        html, body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        /* NAVBAR WITH BIG GIANT LOGO & 3D TEXT */
+        .navbar {
+            display: none !important;
+            align-items: center;
+            
+            padding: 10px 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border-radius: 0 0 15px 15px;
+            margin-bottom: 15px;
+        }
+
+        .app-logo {
+            width: 50px;
+            height: 50px;
+            
+            color: #0b2265 !important;
+            font-size: 32px;
+            font-weight: bold;
+            display: none !important;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-right: 15px;
+            box-shadow: 0 4px 10px rgba(24, 119, 242, 0.3);
+        }
+
+        .app-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #0b2265 !important;
+            text-shadow: none !important;
+        }
+
+        /* STORIES MODULE */
+        .stories-container {
+            display: none !important;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .stories-container::-webkit-scrollbar { display: none; }
+
+        .story-card {
+            min-width: 100px;
+            height: 160px;
+            
+            border-radius: 12px;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .story-name {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            color: #0b2265 !important;
+            font-size: 12px;
+            font-weight: bold;
+            text-shadow: none !important;
+        }
+
+        /* FULL WIDTH POST BOX MODULE */
+        .post-box {
+            
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .post-box textarea {
+            width: 100%;
+            border: none;
+            resize: none;
+            font-size: 16px;
+            outline: none;
+            min-height: 70px;
+            font-family: inherit;
+        }
+
+        .post-btn {
+            width: 100%;
+            
+            color: #0b2265 !important;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .post-btn:hover {  }
+
+        /* LIVE FEED PANEL (POSTS) */
+        .feed-container {
+            display: none !important;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .post-card {
+            
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .post-header {
+            display: none !important;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            
+            border-radius: 50%;
+            margin-right: 10px;
+            display: none !important;
+            align-items: center;
+            justify-content: center;
+            color: #0b2265 !important;
+            font-weight: bold;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: #0b2265 !important;
+        }
+
+        .post-content {
+            font-size: 15px;
+            color: #0b2265 !important;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+<div style="padding:15px; text-align:center;"><button onclick="openAuthModal()" style=" color: #0b2265 !important; padding:12px 20px; border:none; border-radius:8px; font-size:16px; font-weight:bold; width:100%; cursor:pointer;">📸 ID ස්කෑන් කැමරාව ක්‍රියාත්මක කරන්න</button></div>
+
+    <div class="container">
+        <!-- NAVBAR -->
+        <div class="navbar">
+            <div class="app-logo">f</div>
+            <div class="app-title">My Face BOX</div>
+        </div>
+
+        <!-- STORIES -->
+        <div class="stories-container">
+            <div class="story-card" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url('https://unsplash.com');">
+                <div class="story-name">Create Story</div>
+            </div>
+            <div class="story-card" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url('https://unsplash.com');">
+                <div class="story-name">Sriyani Pathma</div>
+            </div>
+            <div class="story-card" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url('https://unsplash.com');">
+                <div class="story-name">Manik Thushari</div>
+            </div>
+        </div>
+
+        <!-- POST BOX -->
+        <div class="post-box">
+            <textarea id="postContent" placeholder="ඔබේ සිතුවිලි මෙතන ලියන්න..."></textarea>
+            <button class="post-btn" onclick="submitPost()">Post</button>
+        </div>
+
+        <!-- LIVE FEED -->
+        <div class="feed-container" id="feedContainer">
+            <!-- පෝස්ට් මෙතනට ඔටෝ එකතු වේවි -->
+        </div>
+    </div>
+
+    <script>
+        // පෝස්ට් එකක් දැමූ පසු එය පිටුවේ පහළින් පෙන්වන ස්වයංක්‍රීය ක්‍රමය
+        function submitPost() {
+            const textarea = document.getElementById('postContent');
+            const text = textarea.value.trim();
+            
+            if (text === "") {
+                alert("කරුණාකර යමක් ලියන්න!");
+                return;
+            }
+
+            const feed = document.getElementById('feedContainer');
+            
+            // අලුත් පෝස්ට් කාඩ් එක සෑදීම
+            const postCard = document.createElement('div');
+            postCard.className = 'post-card';
+            
+            postCard.innerHTML = `
+                <div class="post-header">
+                    <div class="user-avatar">U</div>
+                    <div class="user-name">ඔබ (User)</div>
+                </div>
+                <div class="post-content">${text.replace(/\n/g, '<br>')}</div>
+            `;
+            
+            // අලුත්ම පෝස්ට් එක උඩින්ම පෙන්වීම සඳහා
+            feed.insertBefore(postCard, feed.firstChild);
+            
+            // ලියපු ටෙක්ස්ට් එක බොක්ස් එකෙන් අයින් කිරීම
+            textarea.value = "";
+        }
+    </script>
+
+<div style="padding:12px; text-align:center;"><button onclick="openAuthModal()" style=" color: #0b2265 !important; border:none; padding:14px 20px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; width:100%; max-width:500px; box-shadow:0 4px 12px rgba(24,119,242,0.3);">🛡️ Verify Identity & Create Account (Real Users Only)</button></div>
+<!-- Global Real User Verification Modal -->
+<div id="authModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;  z-index:99999; justify-content:center; align-items:center; padding:15px; box-sizing:border-box;">
+    <div style=" width:100%; max-width:450px; border-radius:12px; padding:25px; box-shadow:0 8px 24px rgba(0,0,0,0.3); font-family:sans-serif; text-align:left;">
+        
+        <!-- Step 1: ID / Document Capture -->
+        <div id="st1">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px; text-align:center;">🛡️ Real User Verification</h2>
+            <p style="font-size:13px; color: #0b2265 !important; text-align:center; margin-bottom:15px;">Capture NIC, Driving License, Passport, or Postal ID (15+) to verify identity.</p>
+            <div style="border:2px dashed #ccd0d5; border-radius:8px; padding:10px; text-align:center; margin-bottom:15px; ">
+                <video id="liveCam" autoplay playsinline style="width:100%; max-height:180px; border-radius:6px; display:none;"></video>
+                <div id="camTxt" style="padding:25px 0; color: #0b2265 !important; font-size:14px;">📷 Click Start to Scan ID / Passport</div>
+            </div>
+            <button type="button" onclick="initCam()" id="sBtn" style=" color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer; margin-bottom:10px;">Start Document Capture</button>
+            <button type="button" onclick="nextSt2()" id="nBtn" style=" color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer; display:none;">Capture & Auto-Fill</button>
+        </div>
+
+        <!-- Step 2: Account Configuration & Naming -->
+        <div id="st2" style="display:none;">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px; text-align:center;">✨ Account Setup</h2>
+            <p style="font-size:13px; color: #0b2265 !important; text-align:center; margin-bottom:15px;">Document verified. Configure your account details.</p>
+            <label style="font-size:13px; font-weight:bold; color: #0b2265 !important; display:block; margin-bottom:5px;">Select Account Type:</label>
+            <select id="accChoice" style="width:100%; padding:10px; border:1px solid #ccd0d5; border-radius:6px; margin-bottom:15px; font-size:14px;">
+                <option value="fb">Personal FB Account</option>
+                <option value="page">Business / Public Page</option>
+            </select>
+            <label style="font-size:13px; font-weight:bold; color: #0b2265 !important; display:block; margin-bottom:5px;">Enter Account Name:</label>
+            <input type="text" id="userNameInput" placeholder="Type your preferred name..." style="width:100%; padding:10px; border:1px solid #ccd0d5; border-radius:6px; margin-bottom:20px; font-size:14px; box-sizing:border-box;">
+            <button type="button" onclick="nextSt3()" style=" color: #0b2265 !important; border:none; width:100%; padding:12px; border-radius:6px; font-weight:bold; font-size:15px; cursor:pointer;">Continue to Pin Mark</button>
+        </div>
+
+        <!-- Step 3: Pin Mark / Biometric Signature -->
+        <div id="st3" style="display:none; text-align:center;">
+            <h2 style="color: #0b2265 !important; font-size:20px; margin-bottom:10px;">🔒 Biometric Pin Mark</h2>
+            <p style="font-size:13px; color: #0b2265 !important; margin-bottom:20px;">Provide your digital security touch/pin mark to complete real-human verification.</p>
+            <div style=" border:1px solid #ccd0d5; padding:20px; border-radius:8px; margin-bottom:20px; cursor:pointer;" onclick="finishReg()">
+                <div style="font-size:32px; margin-bottom:10px;">👆</div>
+                <strong style="color: #0b2265 !important; font-size:15px;">Tap Here to Register Pin Mark</strong>
+                <div style="font-size:12px; color: #0b2265 !important; margin-top:5px;">Blocks all fake accounts permanently</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let activeStream = null;
+function openAuthModal() {
+    document.getElementById("authModal").style.display = "flex";
+}
+function initCam() {
+    document.getElementById("camTxt").style.display = "none";
+    let v = document.getElementById("liveCam");
+    v.style.display = "block";
+    document.getElementById("sBtn").style.display = "none";
+    document.getElementById("nBtn").style.display = "block";
+    
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+    .then(s => { activeStream = s; v.srcObject = s; })
+    .catch(e => {
+        alert("Camera access notice: Using fallback photo mode due to browser restriction (" + e + ")");
+    });
+}
+function nextSt2() {
+    if(activeStream) { activeStream.getTracks().forEach(t => t.stop()); }
+    document.getElementById("st1").style.display = "none";
+    document.getElementById("st2").style.display = "block";
+}
+function nextSt3() {
+    let nameVal = document.getElementById("userNameInput").value;
+    if(!nameVal.trim()) { alert("Please enter a valid account name."); return; }
+    document.getElementById("st2").style.display = "none";
+    document.getElementById("st3").style.display = "block";
+}
+function finishReg() {
+    alert("🎉 Real User Account Created Successfully! Welcome.");
+    document.getElementById("authModal").style.display = "none";
+    location.reload();
+}
+</script>
+
+</body>
+</html>

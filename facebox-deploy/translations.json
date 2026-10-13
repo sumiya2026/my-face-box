@@ -1,0 +1,35 @@
+{
+  "en": {
+    "title": "My Face BOX",
+    "feed": "Feed",
+    "mindChat": "Mind Chat",
+    "storiesReels": "Stories & Reels",
+    "createStory": "Create Story",
+    "whatsOnYourMind": "What's on your mind?",
+    "post": "Post",
+    "noPosts": "No posts available yet.",
+    "verifyBtn": "Verify Identity & Create Account (Real Users Only)"
+  },
+  "si": {
+    "title": "මයි ෆේස් බොක්ස් (My Face BOX)",
+    "feed": "පුවත් පථය (Feed)",
+    "mindChat": "මනස් සංවාදය (Mind Chat)",
+    "storiesReels": "කතන්දර සහ රීල්ස් (Stories & Reels)",
+    "createStory": "කතන්දරයක් සාදන්න",
+    "whatsOnYourMind": "ඔබේ සිතේ ඇති දේ කුමක්ද?",
+    "post": "පළ කරන්න",
+    "noPosts": "තවමත් පෝස්ට් කිසිවක් නොමැත.",
+    "verifyBtn": "Identity එක තහවුරු කර ගිණුමක් සාදන්න (සැබෑ පරිශීලකයන් පමණි)"
+  },
+  "ta": {
+    "title": "மை பேஸ் பாக்ஸ் (My Face BOX)",
+    "feed": "செய்தியோடை (Feed)",
+    "mindChat": "மன உரையாடல் (Mind Chat)",
+    "storiesReels": "கதைகள் மற்றும் ரீல்ஸ் (Stories & Reels)",
+    "createStory": "கதையை உருவாக்கு",
+    "whatsOnYourMind": "உங்கள் மனதில் என்ன இருக்கிறது?",
+    "post": "பதிவிடு",
+    "noPosts": "இன்னும் பதிவுகள் எதுவும் இல்லை.",
+    "verifyBtn": "அடையாளத்தை சரிபார்த்து கணக்கை உருவாக்கவும் (உண்மையான பயனர்கள் மட்டும்)"
+  }
+}

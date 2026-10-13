@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="si"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Face BOX</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#f0f2f5}
+.header{background:white;padding:10px 15px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 4px rgba(0,0,0,.1);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:8px;font-weight:900;color:#ff6a00;font-size:22px}
+.logo span{background:#ff6a00;color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.h-right{display:flex;gap:10px}
+.h-icon{width:38px;height:38px;background:#e4e6eb;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.nav{display:flex;justify-content:space-around;background:white;padding:8px 0;border-bottom:1px solid #ddd;position:sticky;top:56px;z-index:90}
+.nav div{font-size:22px;padding:6px 18px;border-bottom:3px solid transparent;cursor:pointer}
+.nav.active{border-color:#ff6a00;color:#ff6a00}
+.composer{background:white;padding:12px;display:flex;gap:10px;align-items:center;margin:8px 0}
+.composer img{width:40px;height:40px;border-radius:50%}
+.composer input{flex:1;background:#f0f2f5;border:none;border-radius:20px;padding:10px 15px}
+.stories{display:flex;gap:8px;overflow-x:auto;padding:10px;background:white}
+.story{min-width:110px;height:180px;border-radius:10px;position:relative;overflow:hidden;background-size:cover;background-position:center;cursor:pointer}
+.story::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.6))}
+.s-name{position:absolute;bottom:6px;left:6px;color:white;font-size:12px;font-weight:bold;z-index:2}
+.s-plus{position:absolute;top:10px;left:10px;background:#ff6a00;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;border:3px solid white;z-index:2}
+.s-avatar{position:absolute;top:10px;left:10px;width:36px;height:36px;border-radius:50%;border:3px solid #ff6a00;z-index:2}
+.post{background:white;margin:8px 0;padding:0}
+.p-head{display:flex;gap:10px;align-items:center;padding:12px 12px 0}
+.p-head img{width:40px;height:40px;border-radius:50%}
+.p-text{padding:10px 12px;font-size:15px}
+.p-img{width:100%;max-height:500px;object-fit:cover}
+.actions{display:flex;justify-content:space-around;border-top:1px solid #eee;border-bottom:1px solid #eee;padding:6px 0}
+.act{flex:1;text-align:center;padding:6px;font-size:14px;color:#65676b;cursor:pointer;font-weight:600}
+.act:active{background:#f0f2f5}
+.c-list{padding:8px 12px}
+.c-item{font-size:13px;margin:4px 0}
+.c-box{display:flex;gap:8px;padding:8px 12px 12px}
+.c-box img{width:32px;height:32px;border-radius:50%}
+.c-box input{flex:1;background:#f0f2f5;border:none;border-radius:20px;padding:8px 12px}
+.login-wrap{position:fixed;inset:0;background:#f0f2f5;display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
+.login-box{background:white;width:100%;max-width:360px;padding:25px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15);text-align:center}
+.login-box input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin:8px 0}
+.login-box button{width:100%;padding:12px;background:#ff6a00;color:white;border:none;border-radius:8px;font-weight:bold}
+#stepName,#stepOTP{display:none}
+</style></head><body>
+
+<div id="loginPage" class="login-wrap"><div class="login-box">
+<h2 style="color:#ff6a00">MY FACE BOX</h2>
+<div id="stepPhone"><input id="phone" placeholder="Phone 07XXXXXXXX"><button onclick="sendOTP()">OTP යවන්න</button><p id="otpInfo" style="color:green;font-size:12px;margin-top:8px"></p></div>
+<div id="stepOTP"><input id="otp" placeholder="OTP Code 6ක්"><button onclick="verifyOTP()">Verify</button></div>
+<div id="stepName"><h3>ඔයාගේ නම දාන්න</h3><input id="userName" placeholder="Nimal"><button onclick="saveName()">Continue →</button></div>
+</div></div>
+
+<div id="mainApp" style="display:none">
+<div class="header"><div class="logo"><span>f</span> MY FACE BOX</div><div class="h-right"><div class="h-icon" onclick="document.getElementById('postInput').focus()">+</div><div class="h-icon" onclick="alert('Search - ළඟදීම!')">🔍</div><div class="h-icon">💬</div></div></div>
+<div class="nav"><div class="active">🏠</div><div onclick="alert('Watch Videos - ළඟදීම!')">📺</div><div onclick="alert('Friends - ළඟදීම!')">👥</div><div onclick="alert('Market - ළඟදීම!')">🏪</div><div onclick="alert('Notifications - ළඟදීම!')">🔔</div><div>☰</div></div>
+<div class="composer"><img id="myAvatar" src="https://i.pravatar.cc/100"><input id="postInput" placeholder="What's on your mind?"><input type="file" id="mediaInput" accept="image/*,video/*" hidden><span style="font-size:22px;cursor:pointer" onclick="document.getElementById('mediaInput').click()">🖼️</span><button onclick="createPost()" style="background:#ff6a00;color:white;border:none;padding:8px 14px;border-radius:20px;font-weight:bold">Post</button></div>
+<div class="stories" id="stories"></div>
+<div id="feed"></div>
+<div style="text-align:center;padding:20px;color:gray;font-size:13px">You're all caught up! Scroll කරද්දි අලුත් Post Auto Add වෙනවා...</div>
+</div>
+
+<script>
+let curPhone="",curName="",selectedMedia="";
+document.getElementById('mediaInput').addEventListener('change',function(e){
+ let file=e.target.files[0]; if(!file)return;
+ let r=new FileReader(); r.onload=function(ev){selectedMedia=ev.target.result; alert('Photo/Video Ready! දැන් Post ඔබන්න')}; r.readAsDataURL(file);
+});
+function sendOTP(){curPhone=document.getElementById('phone').value; fetch('/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:curPhone})}).then(r=>r.json()).then(d=>{document.getElementById('otpInfo').innerText='OTP: '+d.debug_code; document.getElementById('stepOTP').style.display='block';})}
+function verifyOTP(){let code=document.getElementById('otp').value; fetch('/verify-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:curPhone,code:code})}).then(r=>r.json()).then(d=>{if(d.success){document.getElementById('stepPhone').style.display='none';document.getElementById('stepOTP').style.display='none';document.getElementById('stepName').style.display='block';}else alert('OTP වැරදියි')})}
+function saveName(){curName=document.getElementById('userName').value; if(!curName)return alert('නම දාන්න'); localStorage.setItem('fb_name',curName); localStorage.setItem('fb_phone',curPhone); document.getElementById('loginPage').style.display='none'; document.getElementById('mainApp').style.display='block'; loadAll();}
+function loadAll(){loadStories();loadFeed();}
+function loadStories(){
+ let html=`<div class="story" style="background-image:url('https://images.unsplash.com/photo-1517486808902-6ca8b3f04846?w=200')"><div class="s-plus">+</div><div class="s-name">Create story</div></div>`;
+ for(let i=1;i<=5;i++){ html+=`<div class="story" style="background-image:url('https://picsum.photos/200/300?random=${i}')" onclick="followStory(${i})"><img class="s-avatar" src="https://i.pravatar.cc/100?img=${i}"><div class="s-name">User ${i}</div></div>`}
+ document.getElementById('stories').innerHTML=html;
+}
+function loadFeed(){
+ fetch('/api/feed').then(r=>r.json()).then(d=>{
+  let html='';
+  d.posts.forEach(p=>{
+   let isVideo=p.image && p.image.includes('video');
+   html+=`<div class="post"><div class="p-head"><img src="https://i.pravatar.cc/100?img=${p.id%10}"><div><b>${p.name}</b><div style="font-size:11px;color:gray">Just now • 🌍</div><button onclick="followPost(${p.id})" style="font-size:11px;border:1px solid #ff6a00;color:${p.followed?'white':'#ff6a00'};background:${p.followed?'#ff6a00':'white'};border-radius:12px;padding:2px 8px;margin-top:2px">${p.followed?'Following ✓':'Follow + Add'}</button></div></div><div class="p-text">${p.content}</div>${p.image? (p.image.startsWith('data:video')?`<video class="p-img" controls src="${p.image}"></video>`:`<img class="p-img" src="${p.image}">`):''}<div style="padding:6px 12px;font-size:13px;color:gray">❤️ ${p.likes||0} Likes • ${p.comments.length} Comments</div><div class="actions"><div class="act" onclick="likePost(${p.id})">👍 Like</div><div class="act" onclick="document.getElementById('cinput-${p.id}').focus()">💬 Comment</div><div class="act" onclick="alert('Shared!')">↗️ Share</div></div><div class="c-list">${p.comments.map(c=>`<div class="c-item"><b>${c.name}:</b> ${c.text}</div>`).join('')}</div><div class="c-box"><img src="https://i.pravatar.cc/100"><input id="cinput-${p.id}" placeholder="Write a comment..." onkeydown="if(event.key==='Enter') commentPost(${p.id})"></div></div>`;
+  });
+  document.getElementById('feed').innerHTML=html;
+ });
+}
+function createPost(){
+ let c=document.getElementById('postInput').value; if(!c &&!selectedMedia) return;
+ fetch('/api/create-post',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:curName||localStorage.getItem('fb_name'),content:c,image:selectedMedia})}).then(()=>{document.getElementById('postInput').value=''; selectedMedia=''; loadFeed();});
+}
+function likePost(id){fetch('/api/like',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(()=>loadFeed());}
+function commentPost(id){let inp=document.getElementById('cinput-'+id); let txt=inp.value; if(!txt)return; fetch('/api/comment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,name:curName||localStorage.getItem('fb_name'),text:txt})}).then(()=>loadFeed());}
+function followPost(id){fetch('/api/follow',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(()=>loadFeed());}
+function followStory(id){alert('User '+id+' Followed! + Added!');}
+window.onload=()=>{let n=localStorage.getItem('fb_name'); if(n){curName=n; document.getElementById('loginPage').style.display='none'; document.getElementById('mainApp').style.display='block'; loadAll();}}
+window.addEventListener('scroll',()=>{if(window.innerHeight+window.scrollY >= document.body.offsetHeight-500){/* infinite scroll auto load happens via loadFeed already */}});
+</script></body></html>
