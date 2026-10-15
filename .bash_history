@@ -1,16 +1,3 @@
-        return conn
-    except Exception:
-        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
-        return conn
-
-def init_db():
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS app_data (
-            key TEXT PRIMARY KEY,
             value TEXT
         );
         """)
@@ -498,3 +485,16 @@ node server.js
 
 cd /storage/emulated/0/
 python -m http.server 58000
+cd /storage/emulated/0/myfacebox
+python3 -m http.server 5000
+cd /storage/emulated/0/myfacebox
+python3 -m http.server 5000
+ls /storage/emulated/0/
+cd /storage/emulated/0/MyFaceBox
+python3 -m http.server 5000
+termux-setup-storage
+cd ~/storage/shared/
+python3 -m http.server 5000
+ls
+cd MyFaceBox
+python3 -m http.server 5000

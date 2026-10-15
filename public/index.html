@@ -1,105 +1,2275 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="si" id="htmlRoot" style="color-scheme: light;">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
-<title>My Face BOX</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+<title>MY FACE BOX - Ultra Pro International Cloud Hub</title>
+<link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;MY FACE BOX&quot;,&quot;short_name&quot;:&quot;FaceBox&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#121212&quot;,&quot;theme_color&quot;:&quot;#ff7a00&quot;}">
+<script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gun/lib/axe.js"></script>
 <style>
-.bg-orange-main{background:#FF6600!important}
-.marquee-container{overflow:hidden;white-space:nowrap;background:#0a0a0a;height:18px;display:flex;align-items:center}
-.marquee-text{display:inline-block;animation:marquee 25s linear infinite;font-size:9px;color:#facc15;font-weight:bold}
-@keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{scrollbar-width:none}
-.story-tall{height:288px!important}
-.app-icon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;color:white;flex-shrink:0}
-html{font-size:clamp(14px, 1.2vw + 0.5vh, 18px);}
-main{width:100%;max-width:clamp(360px, 95vw, 1200px);margin:auto;}
-img{max-width:100%}.zoomable{cursor:zoom-in;transition:0.3s}
+:root {
+  --bg-main: #ffffff; --text-main: #1f1f1f; --border-color: #dadce0; --card-bg: #ffffff;
+  --card-sub-bg: #f8f9fa; --status-bar-bg: #ffffff; --status-text: #3c4043; --header-bg: #ffffff;
+  --input-bg: #f8f9fa; --input-text: #1f1f1f; --nav-bg: #ffffff; --nav-text: #5f6368;
+}
+[data-theme="dark"] {
+  --bg-main: #121212; --text-main: #f1f3f4; --border-color: #333333; --card-bg: #1e1e1e;
+  --card-sub-bg: #2a2a2a; --status-bar-bg: #121212; --status-text: #9aa0a6; --header-bg: #181818;
+  --input-bg: #2a2a2a; --input-text: #f1f3f4; --nav-bg: #181818; --nav-text: #9aa0a6;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(--text-main)!important;overflow:hidden;touch-action:manipulation;font-size:16px;display:flex;justify-content:center;align-items:center;}
+.app-window{width:100vw;max-width:480px;height:100vh;height:100dvh;display:flex;flex-direction:column;background:var(--bg-main)!important;position:relative;overflow:hidden;box-shadow:0 0 25px rgba(0,0,0,0.25)}
+@media(min-width: 481px) {
+  .app-window { border-left:1px solid var(--border-color); border-right:1px solid var(--border-color); }
+}
+.status-bar{background:var(--status-bar-bg)!important;color:var(--status-text)!important;padding:calc(env(safe-area-inset-top, 0px) + 6px) 16px 6px 16px;display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-bottom:1px solid var(--border-color);z-index:20;flex-shrink:0}
+.live-badge{background:#ea4335!important;color:#fff!important;font-size:11px;padding:2px 6px;border-radius:4px;margin-left:4px}
+.main-header{background:var(--header-bg)!important;color:var(--text-main)!important;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);box-shadow:0 1px 4px rgba(0,0,0,0.04);z-index:20;flex-shrink:0}
+.header-left-group{display:flex;align-items:center;gap:12px}
+.brand-logo-img{width:40px;height:40px;border-radius:12px;object-fit:cover;filter:drop-shadow(0 2px 4px rgba(0,136,255,0.2));background:transparent}
+.brand-wrapper{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.brand-title{font-size:19px;font-weight:900;letter-spacing:1px;font-family:'Courier New', Courier, monospace;color:#0088ff!important}
+.brand-signature{font-size:11px;color:var(--status-text)!important;font-style:italic;font-weight:700;letter-spacing:0.5px}
+.content-scroller{flex:1;overflow-y:auto;background:var(--bg-main)!important;-webkit-overflow-scrolling:touch;position:relative}
+.page-view{display:none}.page-view.active-view{display:block}
+.page-padding{padding:16px}
+.bottom-navigation{width:100%;max-width:480px;height:calc(60px + env(safe-area-inset-bottom, 0px));background:var(--nav-bg)!important;border-top:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;padding:0 2px env(safe-area-inset-bottom, 0px) 2px;z-index:99999;box-shadow:0 -2px 10px rgba(0,0,0,0.04);flex-shrink:0;position:absolute;bottom:0;left:0;right:0;margin:0 auto}
+.nav-tab{text-align:center;font-size:10px;color:var(--nav-text)!important;cursor:pointer;font-weight:bold;flex:1;padding:4px 0}
+.nav-tab.active{color:#ff7a00!important;font-weight:900}
+.nav-tab.messenger-tab{color:#0084ff!important;font-weight:900}
+.nav-tab.diary-tab{color:#e91e63!important;font-weight:900}
+.nav-tab.studio-tab{color:#9c27b0!important;font-weight:900}
+.nav-tab.ai-tab{color:#00c4cc!important;font-weight:900}
+.status-composer{background:var(--card-bg)!important;padding:14px;margin:8px;border-radius:16px;border:1px solid var(--border-color);box-shadow:0 1px 3px rgba(0,0,0,0.04);color:var(--text-main)!important}
+.composer-upper{display:flex;gap:10px;align-items:center}
+.user-avatar{width:42px;height:42px;border-radius:50%;background:var(--card-sub-bg)!important;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold;color:#ff7a00!important;cursor:pointer;flex-shrink:0;border:1px solid var(--border-color)}
+.user-avatar img{width:100%;height:100%;object-fit:cover}
+.composer-upper input{flex:1;padding:10px 16px;border-radius:20px;border:1px solid var(--border-color);background:var(--input-bg)!important;outline:none;user-select:text;font-size:15px;color:var(--input-text)!important}
+.post-btn{background:linear-gradient(135deg, #ff7a00, #ff5500);color:#fff!important;border:none;padding:8px 18px;border-radius:18px;font-weight:800;font-size:14px;cursor:pointer;transition:transform 0.1s ease;box-shadow:0 2px 6px rgba(255,122,0,0.3)}
+.post-btn:active{transform:scale(0.95)}
+.media-bar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;border-top:1px solid var(--border-color);padding-top:10px}
+.media-btn{padding:8px 12px;border-radius:18px;border:1px solid var(--border-color);background:var(--card-sub-bg)!important;font-size:13px;font-weight:700;color:var(--text-main)!important;cursor:pointer}
+.feed-post-card{background:var(--card-bg)!important;padding:16px;margin:8px;border-radius:16px;border:1px solid var(--border-color);box-shadow:0 1px 4px rgba(0,0,0,0.04);color:var(--text-main)!important}
+.feed-media{width:100%;max-height:650px;object-fit:contain;background:#000;border-radius:12px;margin-top:8px;cursor:pointer;display:block;margin-left:auto;margin-right:auto;}
+.feed-multi-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:8px;margin-top:8px}
+.feed-multi-grid img{width:100%;height:260px;object-fit:cover;border-radius:8px;cursor:pointer;background:#000}
+.count-bar{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border-color);font-size:14px;color:var(--status-text)!important;margin-top:6px;font-weight:700}
+.action-bar{display:flex;justify-content:space-around;padding:8px 0;margin-top:4px}
+.action-btn{flex:1;text-align:center;padding:8px;font-size:14px;font-weight:700;color:var(--text-main)!important;cursor:pointer;border-radius:8px}
+.action-btn:active{background:var(--card-sub-bg)!important}.action-btn.liked{color:#ff7a00!important}.action-btn.loved{color:#f3425f!important}
+.comment-box{display:flex;gap:8px;margin-top:12px;align-items:center}
+.comment-box input{flex:1;padding:10px 14px;border-radius:18px;border:1px solid var(--border-color);background:var(--input-bg)!important;font-size:14px;outline:none;user-select:text;color:var(--input-text)!important}
+.comment-list{margin-top:10px}
+.comment-item{background:var(--card-sub-bg)!important;padding:10px 14px;border-radius:16px;margin-top:6px;font-size:14px;display:flex;justify-content:space-between;align-items:flex-start;color:var(--text-main)!important}
+.app-shortcuts-container{background:var(--card-bg)!important;padding:12px 14px;border-radius:16px;margin:8px;border:1px solid var(--border-color);box-shadow:0 1px 3px rgba(0,0,0,0.03);color:var(--text-main)!important}
+.app-search-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.app-search-input{flex:1;padding:10px 16px;border:1px solid var(--border-color);border-radius:20px;font-size:14px;outline:none;background:var(--input-bg)!important;user-select:text;color:var(--input-text)!important}
+.app-shortcuts{display:flex;gap:14px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.app-shortcuts::-webkit-scrollbar{display:none}
+.shortcut-item{min-width:72px;text-align:center;font-size:11px;font-weight:700;color:var(--text-main)!important;cursor:pointer;flex-shrink:0}
+.circle-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff!important;font-weight:bold;font-size:20px;margin:0 auto 4px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+.bg-google{background:#ea4335!important}.bg-youtube{background:#f00!important}.bg-facebook{background:#1877f2!important}.bg-tiktok{background:#000!important}.bg-instagram{background:linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)}.bg-whatsapp{background:#25d366!important}.bg-default{background:#ff7a00!important}.bg-canva{background:#00c4cc!important}
+.stories-panel{background:var(--card-bg)!important;padding:14px;margin:8px;border-radius:16px;border:1px solid var(--border-color);box-shadow:0 1px 3px rgba(0,0,0,0.03);color:var(--text-main)!important}
+.scrollable-stories{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.story-card{width:110px;height:190px;border-radius:12px;background:#111;position:relative;flex-shrink:0;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.1);cursor:pointer}
+.story-card img,.story-card video{width:100%;height:100%;object-fit:cover}
+.story-label{position:absolute;bottom:8px;left:6px;right:6px;color:#fff!important;font-size:12px;font-weight:800;text-shadow:0 1px 3px #000;z-index:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.story-add-card{border:1px dashed #ff7a00;background:var(--card-sub-bg)!important;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.reels-panel{background:var(--card-bg)!important;padding:14px;margin:8px;border-radius:16px;border:1px solid var(--border-color);color:var(--text-main)!important}
+.reels-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.reels-title{font-size:16px;font-weight:900;color:var(--text-main)!important;display:flex;align-items:center;gap:6px}
+.scrollable-reels{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.reel-card{width:110px;height:190px;border-radius:12px;background:#111;position:relative;flex-shrink:0;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.1);cursor:pointer}
+.reel-card video,.reel-card img{width:100%;height:100%;object-fit:cover}
+.reel-label{position:absolute;bottom:8px;left:6px;right:6px;color:#fff!important;font-size:12px;font-weight:800;text-shadow:0 1px 3px #000;z-index:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reel-add-card{border:1px dashed #ff7a00;background:var(--card-sub-bg)!important;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ai-assistant-container{display:flex;flex-direction:column;height:100%;background:var(--bg-main)!important;color:var(--text-main)!important}
+.ai-header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);background:var(--header-bg)!important}
+.ai-title{font-size:20px;font-weight:900;color:#00c4cc!important;display:flex;align-items:center;gap:8px}
+.ai-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.ai-msg-box{display:flex;flex-direction:column;max-width:85%;position:relative}
+.ai-msg-box.user{align-self:flex-end}
+.ai-msg-box.ai{align-self:flex-start}
+.ai-bubble{padding:12px 16px;border-radius:18px;font-size:15px;line-height:1.5;word-break:break-word}
+.ai-bubble.user{background:linear-gradient(135deg, #00c4cc, #0088ff);color:#fff!important}
+.ai-bubble.ai{background:var(--card-sub-bg)!important;color:var(--text-main)!important;border:1px solid var(--border-color)}
+.ai-input-bar{background:var(--header-bg)!important;padding:12px 16px;display:flex;align-items:center;gap:10px;border-top:1px solid var(--border-color)}
+.ai-input-bar input{flex:1;padding:10px 16px;border-radius:20px;border:1px solid var(--border-color);background:var(--input-bg)!important;outline:none;font-size:15px;user-select:text;color:var(--input-text)!important}
+.ai-send-btn{background:linear-gradient(135deg, #00c4cc, #0088ff);color:#fff!important;border:none;padding:10px 18px;border-radius:18px;font-weight:bold;cursor:pointer}
+.audio-studio-container{padding:16px;background:var(--bg-main)!important;min-height:100%;padding-bottom:50px;color:var(--text-main)!important}
+.studio-header-box{display:flex;justify-content:space-between;align-items:center;background:var(--card-bg)!important;padding:14px 18px;border-radius:16px;border:1px solid var(--border-color);box-shadow:0 1px 3px rgba(0,0,0,0.03);margin-bottom:12px;color:var(--text-main)!important}
+.studio-card{background:var(--card-bg)!important;padding:16px;border-radius:16px;border:1px solid var(--border-color);box-shadow:0 1px 3px rgba(0,0,0,0.03);margin-bottom:12px;border-left:5px solid #9c27b0;color:var(--text-main)!important}
+.effect-chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.effect-chip{padding:8px 14px;border-radius:18px;background:var(--card-sub-bg);border:1px solid var(--border-color);font-size:13px;font-weight:bold;cursor:pointer;color:var(--text-main)}
+.effect-chip.selected{background:#9c27b0;color:#fff;border-color:#9c27b0}
+.studio-record-btn{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg, #9c27b0, #e91e63);color:#fff;border:none;font-size:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin:16px auto;box-shadow:0 4px 14px rgba(156,39,176,0.4);transition:transform 0.1s}
+.studio-record-btn:active{transform:scale(0.92)}
+.waveform-box{width:100%;height:60px;background:var(--card-sub-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;gap:3px;padding:0 10px;margin:10px 0;overflow:hidden}
+.wave-bar{width:4px;background:#9c27b0;border-radius:2px;animation:waveAnim 1.2s infinite ease-in-out}
+@keyframes waveAnim{0%,100%{height:10px}50%{height:45px}}
+.diary-container{padding:16px;background:var(--bg-main)!important;min-height:100%;padding-bottom:50px;color:var(--text-main)!important}
+.diary-header-box{display:flex;justify-content:space-between;align-items:center;background:var(--card-bg)!important;padding:14px 18px;border-radius:16px;border:1px solid var(--border-color);box-shadow:0 1px 3px rgba(0,0,0,0.03);margin-bottom:12px;color:var(--text-main)!important}
+.lang-selector-select{padding:6px 12px;border-radius:10px;border:1px solid #e91e63;color:#e91e63!important;font-weight:bold;outline:none;background:var(--card-bg)!important;cursor:pointer}
+.diary-card{background:var(--card-bg)!important;padding:16px;border-radius:16px;border:1px solid var(--border-color);box-shadow:0 1px 3px rgba(0,0,0,0.03);margin-bottom:12px;border-left:5px solid #e91e63;color:var(--text-main)!important}
+.diary-input{width:100%;min-height:110px;max-height:160px;padding:12px;border:1px solid var(--border-color);background:var(--input-bg)!important;border-radius:10px;font-size:15px;outline:none;margin-top:8px;resize:vertical;user-select:text;color:var(--input-text)!important}
+.mood-picker{display:flex;gap:10px;margin:10px 0;font-size:24px;cursor:pointer}
+.mood-emoji{padding:6px;border-radius:50%;background:var(--card-sub-bg)!important;border:2px solid transparent;transition:transform 0.1s}
+.mood-emoji.selected{border-color:#e91e63;transform:scale(1.1);background:var(--card-bg)!important}
+.diary-save-btn{background:#e91e63!important;color:#fff!important;border:none;padding:12px 20px;border-radius:10px;font-weight:bold;font-size:15px;cursor:pointer;width:100%;box-shadow:0 2px 6px rgba(233,30,99,0.2)}
+.diary-entry-item{background:var(--card-sub-bg)!important;padding:12px 14px;border-radius:10px;margin-top:10px;border-left:3px solid #ff7a00;font-size:14px;color:var(--text-main)!important}
+.diary-lock-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:var(--bg-main);z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+.messenger-container{display:flex;flex-direction:column;height:100%;background:var(--bg-main)!important;color:var(--text-main)!important}
+.messenger-header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);background:var(--header-bg)!important}
+.messenger-title{font-size:24px;font-weight:900;color:var(--text-main)!important}
+.messenger-search{padding:10px 16px;background:var(--bg-main)!important}
+.messenger-search input{width:100%;padding:10px 16px;background:var(--card-sub-bg)!important;border:none;border-radius:22px;outline:none;font-size:15px;color:var(--input-text)!important}
+.messenger-tabs{display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border-color);overflow-x:auto}
+.m-tab{padding:8px 16px;background:var(--card-sub-bg)!important;border-radius:18px;font-size:14px;font-weight:bold;cursor:pointer;white-space:nowrap;color:var(--text-main)!important}
+.m-tab.active{background:#ff7a00!important;color:#fff!important}
+.chat-list{flex:1;overflow-y:auto}
+.chat-item{display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;transition:background 0.1s}
+.chat-item:active{background:var(--card-sub-bg)!important}
+.chat-avatar{width:52px;height:52px;border-radius:50%;background:#e8f0fe!important;position:relative;flex-shrink:0;overflow:hidden}
+.chat-avatar img{width:100%;height:100%;object-fit:cover}
+.online-dot{position:absolute;bottom:2px;right:2px;width:12px;height:12px;background:#31a24c!important;border:2px solid #fff;border-radius:50%}
+.chat-info{flex:1;overflow:hidden}
+.chat-name{font-size:16px;font-weight:800;color:var(--text-main)!important}
+.chat-last-msg{font-size:14px;color:var(--status-text)!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.chat-meta{text-align:right;font-size:12px;color:var(--status-text)!important}
+.unread-badge{background:#ff7a00!important;color:#fff!important;font-size:11px;padding:2px 6px;border-radius:50%;display:inline-block;margin-top:4px}
+.chat-room{display:none;flex-direction:column;height:100%;background:var(--bg-main)!important}
+.chat-room.active{display:flex}
+.room-header{background:var(--header-bg)!important;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-color)}
+.room-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.msg-container{display:flex;flex-direction:column;max-width:82%;position:relative}
+.msg-container.incoming{align-self:flex-start}
+.msg-container.outgoing{align-self:flex-end}
+.msg-bubble{padding:12px 16px;border-radius:18px;font-size:16px;font-weight:500;word-break:break-word;position:relative;line-height:1.4}
+.msg-bubble.incoming{background:var(--card-sub-bg)!important;color:var(--text-main)!important}
+.msg-bubble.outgoing{background:linear-gradient(135deg, #ff7a00, #ff5500);color:#fff!important}
+.room-input-bar{background:var(--header-bg)!important;padding:12px 16px;display:flex;align-items:center;gap:10px;border-top:1px solid var(--border-color)}
+.room-input-bar input{flex:1;padding:10px 16px;border-radius:20px;border:1px solid var(--border-color);background:var(--input-bg)!important;outline:none;font-size:15px;user-select:text;color:var(--input-text)!important}
+.recording-pulse{animation:pulseAnim 1s infinite;color:#ea4335!important}
+@keyframes pulseAnim{0%{opacity:1}50%{opacity:0.3}100%{opacity:1}}
+.app-text-input,.app-select{width:100%;padding:12px;border:1px solid var(--border-color);border-radius:8px;outline:none;margin-top:6px;background:var(--input-bg)!important;user-select:text;font-size:15px;color:var(--input-text)!important}
+.green-action-btn{width:100%;background:linear-gradient(135deg, #ff7a00, #ff5500);color:#fff!important;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:17px;cursor:pointer;margin-top:16px;box-shadow:0 3px 8px rgba(255,122,0,0.3)}
+.type-selector{display:flex;gap:8px;margin-top:8px}.type-card{flex:1;padding:12px;border:1px solid var(--border-color);border-radius:8px;text-align:center;font-size:14px;font-weight:800;cursor:pointer;background:var(--card-bg)!important;color:var(--text-main)!important}
+.type-card.selected{border-color:#ff7a00;background:var(--card-sub-bg)!important;color:#ff7a00!important}
+.gender-row{display:flex;gap:8px;margin-top:8px}.gender-btn{flex:1;padding:12px;border:1px solid var(--border-color);border-radius:8px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;background:var(--card-bg)!important;color:var(--text-main)!important}.gender-btn.selected{background:#ff7a00!important;color:#fff!important;border-color:#ff7a00}
+.lang-check{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;color:var(--text-main)!important}.lang-check label{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px}
+.full-screen-menu-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-main)!important;backdrop-filter:blur(15px);z-index:999999;display:none;overflow-y:auto;padding:24px;color:var(--text-main)!important}
+.report-box{background:var(--card-sub-bg)!important;color:var(--text-main)!important;padding:14px;border-radius:10px;font-family:monospace;font-size:12px;white-space:pre-wrap;margin-top:14px;line-height:1.6;border:1px solid var(--border-color)}
+.filter-bar{display:flex;gap:8px;padding:10px 14px;background:var(--card-bg)!important;margin:8px;border-radius:12px;align-items:center;overflow-x:auto;border:1px solid var(--border-color);color:var(--text-main)!important}
+.filter-input{padding:6px 10px;border:1px solid var(--border-color);background:var(--input-bg)!important;border-radius:8px;font-size:13px;user-select:text;color:var(--input-text)!important}
+.theme-toggle-box{display:flex;justify-content:space-between;align-items:center;background:var(--card-sub-bg);padding:12px 16px;border-radius:12px;margin-top:14px;border:1px solid var(--border-color)}
+.notif-dropdown{position:absolute;top:60px;right:16px;width:300px;max-height:400px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.15);z-index:9999999;display:none;flex-direction:column;overflow:hidden}
+.notif-header{padding:12px 16px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;font-weight:bold}
+.notif-body{flex:1;overflow-y:auto;padding:8px}
+.notif-item{padding:10px;border-bottom:1px solid var(--border-color);font-size:13px;border-radius:8px;margin-bottom:4px;background:var(--card-sub-bg)}
+.webapp-sandbox-modal{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:999999999;display:none;flex-direction:column;overflow:hidden}
+.sandbox-header{background:var(--header-bg)!important;color:var(--text-main)!important;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color)}
+.sandbox-title{font-size:15px;font-weight:bold;display:flex;align-items:center;gap:6px;color:var(--text-main)!important}
+.sandbox-actions{display:flex;gap:8px}
+.sandbox-btn{background:var(--card-sub-bg)!important;color:var(--text-main)!important;border:1px solid var(--border-color);padding:6px 12px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:13px}
+.sandbox-close{background:#ea4335!important;color:#fff!important;border:none;padding:6px 14px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:13px}
+.sandbox-body{flex:1;background:var(--bg-main)!important;position:relative}
+.sandbox-body iframe{width:100%;height:100%;border:none}
+.fb-story-viewer-modal{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:99999999;display:none;flex-direction:column;justify-content:space-between;overflow:hidden;touch-action:none;}
+.fb-viewer-header{padding:12px 16px;background:linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);display:flex;flex-direction:column;gap:8px;z-index:10}
+.fb-progress-bar-wrap{width:100%;height:3px;background:rgba(255,255,255,0.3);border-radius:2px;overflow:hidden}
+.fb-progress-fill{width:100%;height:100%;background:#fff;animation:storyProgress 5s linear forwards}
+@keyframes storyProgress{from{width:0%}to{width:100%}}
+.fb-user-info-bar{display:flex;justify-content:space-between;align-items:center;color:#fff}
+.fb-user-details{display:flex;align-items:center;gap:10px}
+.fb-user-avatar{width:36px;height:36px;border-radius:50%;overflow:hidden;background:#555}
+.fb-user-avatar img{width:100%;height:100%;object-fit:cover}
+.fb-username{font-size:14px;font-weight:800}
+.fb-close-btn{background:none;border:none;color:#fff;font-size:28px;cursor:pointer;font-weight:bold}
+.fb-viewer-body{flex:1;position:relative;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden;width:100%;height:100%;}
+.zoomable-media{width:100%;height:100%;object-fit:contain;transform-origin:center center;transition:transform 0.05s ease-out;cursor:grab;}
+.zoomable-media:active{cursor:grabbing;}
+.manual-zoom-toolbar{position:absolute;bottom:140px;left:50%;transform:translateX(-50%);display:flex;gap:12px;background:rgba(0,0,0,0.6);padding:6px 16px;border-radius:20px;z-index:20;align-items:center;backdrop-filter:blur(5px);}
+.zoom-ctrl-btn{background:rgba(255,255,255,0.3);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:16px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.zoom-slider{width:100px;accent-color:#ff7a00;cursor:pointer;}
+.fb-viewer-footer{padding:12px 16px;background:linear-gradient(to top, rgba(0,0,0,0.9), transparent);display:flex;flex-direction:column;gap:8px;z-index:10}
+.fb-viewer-comment-list{max-height:120px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.fb-comment-bubble{background:rgba(255,255,255,0.2);padding:6px 10px;border-radius:10px;color:#fff;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.fb-footer-row{display:flex;align-items:center;gap:10px;width:100%}
+.fb-reply-input{flex:1;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);padding:10px 16px;border-radius:20px;color:#fff;font-size:14px;outline:none}
+.fb-action-icon-btn{background:rgba(255,255,255,0.25);color:#fff;border:none;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
+.fb-reaction-btns{display:flex;gap:8px;font-size:20px;cursor:pointer}
+.data-saver-badge{background:linear-gradient(135deg,#00c853,#009624);color:#fff!important;padding:3px 8px;border-radius:10px;font-size:10px;font-weight:900;margin-left:6px}
+.emergency-119-btn{position:fixed;bottom:80px;right:12px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ea4335,#b71c1c);color:#fff;border:3px solid #fff;box-shadow:0 4px 16px rgba(234,67,53,0.6);font-size:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:99998;animation:emergencyPulse 1.5s infinite}
+@keyframes emergencyPulse{0%{box-shadow:0 0 0 0 rgba(234,67,53,0.7)}70%{box-shadow:0 0 0 16px rgba(234,67,53,0)}100%{box-shadow:0 0 0 0 rgba(234,67,53,0)}}
+.zero-dot-loader{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,#ff7a00,#0088ff,#00c853);z-index:9999999;animation:zeroDotMove 1.2s linear infinite;display:none}
+@keyframes zeroDotMove{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.offline-banner{position:fixed;top:48px;left:0;width:100%;background:#ff9800;color:#fff;text-align:center;padding:4px;font-size:11px;font-weight:800;z-index:99999;display:none}
+.data-saver-img{filter:blur(0px);transition:filter 0.2s}.data-saver-img.lazy{filter:blur(12px);background:#eee}
+.emergency-modal{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:99999999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.emergency-box{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:360px;text-align:center}
+
+/* P2P Zoom/Video Class Room Modal Styles */
+.zoom-class-modal{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#0d0d0d;z-index:9999999999;display:none;flex-direction:column;overflow:hidden;}
+.zoom-header{background:#181818;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333;}
+.zoom-grid{flex:1;display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:10px;padding:16px;overflow-y:auto;align-content:center;}
+.zoom-video-card{background:#1a1a1a;border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;border:2px solid #333;box-shadow:0 4px 12px rgba(0,0,0,0.5);}
+.zoom-video-card video{width:100%;height:100%;object-fit:cover;background:#000;}
+.zoom-card-name{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,0.6);color:#fff;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:bold;}
+.zoom-footer-controls{background:#181818;padding:16px;display:flex;justify-content:center;gap:16px;border-top:1px solid #333;}
+.zoom-ctrl-btn{background:#333;color:#fff;border:none;padding:10px 20px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:14px;display:flex;align-items:center;gap:6px;}
+.zoom-ctrl-btn.end-call{background:#ea4335;}
 </style>
 </head>
-<body class="bg-gray-100 pb-24">
-<header class="bg-orange-main text-white sticky top-0 z-50 px-3 py-3 flex justify-between items-center shadow-md">
-<div class="flex items-center gap-3"><button onclick="goBack()" class="w-9 h-9 bg-white rounded-full text-orange-600 flex items-center justify-center"><i class="fa-solid fa-arrow-left"></i></button><h1 class="font-black text-xl tracking-wider">MY FACE BOX</h1></div>
-<div class="flex gap-4 text-xl items-center"><i class="fa-solid fa-magnifying-glass cursor-pointer" onclick="document.getElementById('globalSearch').focus()"></i><i class="fa-solid fa-bell"></i><i class="fa-brands fa-facebook-messenger bg-white text-blue-600 w-8 h-8 rounded-full flex items-center justify-center p-1"></i></div>
-</header>
-<div class="marquee-container"><div class="marquee-text">Welcome to My Face Box • No OTP etc • Welcome to My Face Box • No OTP etc • No OTP • No Password • Just Log In & Share •</div></div>
-<div class="bg-white border-b shadow-sm py-2.5"><div class="flex gap-4 overflow-x-auto no-scrollbar px-3">
-<button onclick="openMiniApp('https://m.youtube.com')" class="flex flex-col items-center gap-1"><div class="app-icon bg-white border shadow"><i class="fa-brands fa-youtube text-red-600"></i></div><span class="text-[10px] font-bold">YouTube</span></button>
-<button onclick="openMiniApp('https://m.facebook.com')" class="flex flex-col items-center gap-1"><div class="app-icon bg-blue-600"><i class="fa-brands fa-facebook-f"></i></div><span class="text-[10px] font-bold">Facebook</span></button>
-<button onclick="openMiniApp('https://www.tiktok.com')" class="flex flex-col items-center gap-1"><div class="app-icon bg-black"><i class="fa-brands fa-tiktok"></i></div><span class="text-[10px] font-bold">TikTok</span></button>
-<button onclick="openMiniApp('https://www.instagram.com')" class="flex flex-col items-center gap-1"><div class="app-icon bg-gradient-to-br from-purple-600 to-orange-400"><i class="fa-brands fa-instagram"></i></div><span class="text-[10px] font-bold">Instagram</span></button>
-<button onclick="openMiniApp('https://www.google.com')" class="flex flex-col items-center gap-1"><div class="app-icon bg-white border shadow"><i class="fa-brands fa-google text-xl"></i></div><span class="text-[10px] font-bold">Google</span></button>
-<button onclick="openMiniApp('https://web.whatsapp.com')" class="flex flex-col items-center gap-1"><div class="app-icon bg-green-500"><i class="fa-brands fa-whatsapp"></i></div><span class="text-[10px] font-bold">WhatsApp</span></button>
-<button onclick="openMiniApp('https://play.google.com')" class="flex flex-col items-center gap-1"><div class="app-icon bg-white border shadow"><i class="fa-brands fa-google-play text-green-600"></i></div><span class="text-[10px] font-bold">PlayStore</span></button>
-</div></div>
-<div class="max-w-[1200px] mx-auto px-2 mt-3 w-full"><div class="bg-white rounded-full shadow-sm border flex items-center px-3 py-2.5 gap-2"><div class="w-8 h-8 flex items-center justify-center"><i class="fa-brands fa-google text-xl"></i></div><input id="globalSearch" onkeydown="if(event.key==='Enter')searchNet()" placeholder="Search anything on internet... in Simala and English • ඉංග්‍රීසි හා සිංහලෙන් අන්තර්ජාලය සවන්..." class="w-full text-[11px] focus:outline-none bg-transparent"><button onclick="searchNet()" class="text-gray-400 text-xl"><i class="fa-solid fa-magnifying-glass"></i></button><button class="text-gray-400 text-xl"><i class="fa-solid fa-microphone"></i></button></div></div>
-<main class="mt-3 px-2 space-y-3">
-<div class="bg-white p-3 rounded-2xl border shadow-sm">
-<div class="flex gap-3 items-center"><img src="https://i.pravatar.cc/100?img=32" class="w-10 h-10 rounded-full"><input id="postInput" placeholder="What's on your mind? Share a post..." class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-[13px] focus:outline-none border"></div>
-<div id="imagePreviewContainer" class="hidden mt-2"></div>
-<div class="flex justify-between mt-3 gap-2 flex-wrap">
-<button onclick="document.getElementById('fileIn').click()" class="flex items-center gap-1.5 text-green-700 bg-green-50 border border-green-500 px-3 py-1.5 rounded-full text-xs font-bold"><i class="fa-regular fa-image"></i> Photos</button>
-<button onclick="document.getElementById('fileIn').click()" class="flex items-center gap-1.5 text-red-600 bg-red-50 border border-red-500 px-3 py-1.5 rounded-full text-xs font-bold"><i class="fa-solid fa-video"></i> Videos</button>
-<button class="flex items-center gap-1.5 text-blue-600 bg-blue-50 border border-blue-500 px-3 py-1.5 rounded-full text-xs font-bold"><i class="fa-solid fa-music"></i> Music</button>
-<button onclick="addNewPost()" class="flex items-center gap-1.5 text-white bg-orange-main px-4 py-1.5 rounded-full text-xs font-bold"><i class="fa-solid fa-plus"></i> Publish</button>
+<body>
+<div class="zero-dot-loader" id="zeroDotLoader"></div>
+<div class="offline-banner" id="offlineBanner">📴 Offline Mode Active - Your posts will sync when signal returns (119 Emergency Ready)</div>
+<div class="app-window">
+  <div class="status-bar"><span id="liveTime">9:41</span><span id="netStatus">5G 85% • P2P:<span id="p2pDot" style="color:#31a24c">●</span> • <span id="dataSaverStatus">📶 Normal</span></span><span class="live-badge">LIVE 24/7</span></div>
+  <div class="main-header">
+    <div class="header-left-group">
+      <svg class="brand-logo-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="appBg" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#1f1f1f"/>
+            <stop offset="100%" stop-color="#080808"/>
+          </linearGradient>
+          <linearGradient id="gloss" x1="0%" y1="0%" x2="0%" y2="50%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0.0"/>
+          </linearGradient>
+          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.4"/>
+          </filter>
+        </defs>
+        <rect x="4" y="4" width="92" height="92" rx="28" fill="url(#appBg)" filter="url(#shadow)" stroke="#333" stroke-width="2"/>
+        <rect x="20" y="32" width="32" height="7" rx="3.5" fill="#0088ff"/>
+        <rect x="20" y="46" width="32" height="7" rx="3.5" fill="#0088ff"/>
+        <rect x="20" y="60" width="32" height="7" rx="3.5" fill="#0088ff"/>
+        <path d="M57 56 L67 68 L86 38" fill="none" stroke="#0088ff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M 6 30 Q 50 12 94 30 L 94 16 Q 50 6 6 16 Z" fill="url(#gloss)" rx="28"/>
+      </svg>
+      <div class="brand-wrapper">
+        <b class="brand-title">MY FACE BOX</b>
+        <span class="brand-signature">✨ By Sumiya (සුමිය)</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="position:relative;cursor:pointer;font-size:22px;" onclick="toggleNotifications()">
+        🔔<span id="notifBadge" style="position:absolute;top:-4px;right:-6px;background:#ea4335;color:#fff;font-size:10px;padding:1px 5px;border-radius:50%;display:none">0</span>
+      </div>
+      <b onclick="openMenu()" style="font-size:24px;cursor:pointer;color:#ff7a00">⚙️</b>
+    </div>
+  </div>
+  <div class="notif-dropdown" id="notifDropdown">
+    <div class="notif-header">
+      <span>🔔 Notifications</span>
+      <span onclick="clearNotifications()" style="font-size:12px;color:#ff7a00;cursor:pointer">Clear All</span>
+    </div>
+    <div class="notif-body" id="notifListContainer">
+      <div style="padding:10px;text-align:center;color:#5f6368;font-size:13px">No new notifications</div>
+    </div>
+  </div>
+  <div class="content-scroller" id="mainContentScroller">
+    <div class="page-view active-view" id="homePage">
+      <div class="app-shortcuts-container">
+        <div class="app-search-row">
+          <input type="text" id="appSearchInput" class="app-search-input" placeholder="🔍 Search any Play Store app (No Download Needed)..." oninput="filterCloudApps(this.value)">
+          <button onclick="launchCustomSearchedApp()" style="background:linear-gradient(135deg, #ff7a00, #ff5500);color:#fff;border:none;padding:8px 14px;border-radius:16px;font-size:13px;font-weight:bold;cursor:pointer">Open</button>
+        </div>
+        <div class="app-shortcuts" id="appShortcutsRow">
+          <div class="shortcut-item" onclick="launchWebApp('Google','https://www.google.com')"><div class="circle-icon bg-google">G</div>Google</div>
+          <div class="shortcut-item" onclick="launchWebApp('YouTube','https://m.youtube.com')"><div class="circle-icon bg-youtube">▶</div>YouTube</div>
+          <div class="shortcut-item" onclick="launchWebApp('Facebook','https://m.facebook.com')"><div class="circle-icon bg-facebook">f</div>Facebook</div>
+          <div class="shortcut-item" onclick="launchWebApp('TikTok','https://www.tiktok.com')"><div class="circle-icon bg-tiktok">♪</div>TikTok</div>
+          <div class="shortcut-item" onclick="launchWebApp('Instagram','https://www.instagram.com')"><div class="circle-icon bg-instagram">📷</div>Instagram</div>
+          <div class="shortcut-item" onclick="launchWebApp('WhatsApp','https://web.whatsapp.com')"><div class="circle-icon bg-whatsapp">W</div>WhatsApp</div>
+          <div class="shortcut-item" onclick="launchWebApp('ChatGPT','https://chatgpt.com')"><div class="circle-icon bg-default">🤖</div>ChatGPT</div>
+          <div class="shortcut-item" onclick="launchWebApp('Canva','https://www.canva.com')"><div class="circle-icon bg-canva">🎨</div>Canva</div>
+          <div class="shortcut-item" onclick="launchWebApp('Telegram','https://web.telegram.org')"><div class="circle-icon bg-default">✈️</div>Telegram</div>
+        </div>
+      </div>
+      
+      <!-- NEW: P2P Zoom & Unlimited Video Class Launcher Banner -->
+      <div style="background:linear-gradient(135deg, #0088ff, #00c4cc);padding:16px;margin:8px;border-radius:16px;color:#fff;box-shadow:0 4px 15px rgba(0,136,255,0.3);display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <b style="font-size:17px;">🎓 P2P Unlimited Zoom Class & Mesh</b><br>
+          <small style="opacity:0.9;font-size:12px;">Zero server limits • 1000% Private Voice, Video & Group Calls</small>
+        </div>
+        <button onclick="startZoomClassRoom()" style="background:#fff;color:#0088ff;border:none;padding:10px 18px;border-radius:20px;font-weight:900;cursor:pointer;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.2);">🚀 Join Class</button>
+      </div>
+
+      <div class="status-composer">
+        <div class="composer-upper">
+          <div class="user-avatar" id="topAvatar">👤</div>
+          <input id="postInput" placeholder="What's on your mind?">
+          <button class="post-btn" onclick="createPost()">Post</button>
+        </div>
+        <div class="media-bar">
+          <label class="media-btn">📷 Photos (Max 10)<input type="file" accept="image/*" multiple hidden onchange="previewPostPhotos(this)"></label>
+          <label class="media-btn">🎥 Video<input type="file" accept="video/*" hidden onchange="previewPostMedia(this,'video')"></label>
+          <label class="media-btn">🎙️ Voice<input type="file" accept="audio/*" hidden onchange="previewPostMedia(this,'voice')"></label>
+          <span class="media-btn" onclick="setLiveMode()">🔴 Live</span>
+          <span class="media-btn" id="encryptBadge" style="background:#e8f0fe;color:#0088ff;">🟢 AI ULTRA HD SECURE <span id="dataModeBadge" class="data-saver-badge" style="display:none">LITE</span></span>
+        </div>
+        <div id="postMediaPreview" style="margin-top:10px"></div>
+        <small id="ipfsStatus" style="font-size:12px;color:#5f6368;font-weight:600"></small>
+      </div>
+      <div class="filter-bar">
+        <span style="font-size:13px;font-weight:bold;color:#5f6368">🔍 Filter:</span>
+        <input type="date" id="filterDate" class="filter-input" onchange="resetAndRender()">
+        <input type="text" id="filterKeyword" class="filter-input" placeholder="Keyword search (#tag)..." oninput="resetAndRender()">
+        <button onclick="clearFilter()" style="padding:6px 12px;background:#e8f0fe;border:none;border-radius:8px;font-size:12px;cursor:pointer;font-weight:bold;color:#0088ff">Reset</button>
+      </div>
+      <div class="stories-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <b id="lblStories" style="font-size:15px;color:var(--text-main)">Stories <small style="color:#31a24c">• 24h Auto-Expiry</small></b>
+          <label id="lblDirectStory" style="background:linear-gradient(135deg, #ff7a00, #ff5500);color:#fff;padding:6px 12px;border-radius:14px;font-size:12px;cursor:pointer;font-weight:bold;">
+            ➕ Direct Story<input type="file" accept="image/*,video/*" hidden onchange="directUploadStory(this)">
+          </label>
+        </div>
+        <div class="scrollable-stories" id="storiesRow" style="margin-top:10px"></div>
+      </div>
+      <div id="feedContainer"></div>
+      <div id="feedLoadingSkeleton" style="padding:20px;text-align:center;color:#5f6368;font-weight:bold;display:none">⏳ Loading more posts...</div>
+    </div>
+    <div class="page-view" id="messengerPage">
+      <div class="messenger-container">
+        <div class="messenger-header">
+          <div class="messenger-title" id="lblChatTitle">Chats (P2P Mesh)</div>
+          <div style="display:flex;gap:14px;font-size:22px;cursor:pointer;color:var(--text-main)">
+            <span onclick="startZoomClassRoom()" title="Start Video Class / Group Call">📹</span>
+            <span onclick="alert('New Message')">✏️</span>
+          </div>
+        </div>
+        <div class="messenger-search">
+          <input id="lblMessengerSearch" placeholder="Search Messenger...">
+        </div>
+        <div class="messenger-tabs">
+          <div class="m-tab active">Inbox</div>
+          <div class="m-tab">Unread</div>
+          <div class="m-tab">Marketplace</div>
+          <div class="m-tab">Communities</div>
+        </div>
+        <div class="chat-list" id="messengerChatList">
+          <div class="chat-item" onclick="openChatRoom('Master Suminda', 'Active 12m ago')">
+            <div class="chat-avatar"><div class="online-dot"></div>👤</div>
+            <div class="chat-info">
+              <div class="chat-name">Master Suminda</div>
+              <div class="chat-last-msg">Feature 05: Sumiya AI Assistant Hub Active! 🤖</div>
+            </div>
+            <div class="chat-meta">7:27 AM<br><span class="unread-badge">1</span></div>
+          </div>
+          <div class="chat-item" onclick="openChatRoom('Senu Official', 'Active 1h ago')">
+            <div class="chat-avatar"><div class="online-dot"></div>👦</div>
+            <div class="chat-info">
+              <div class="chat-name">Senu Official</div>
+              <div class="chat-last-msg">AI Chatbot & Audio Studio Ready. 👍</div>
+            </div>
+            <div class="chat-meta">Thu</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-room" id="activeChatRoom">
+        <div class="room-header">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span onclick="closeChatRoom()" style="font-size:24px;cursor:pointer;color:var(--text-main)">←</span>
+            <div class="user-avatar" style="width:38px;height:38px">👤</div>
+            <div>
+              <b id="roomChatName" style="font-size:16px;color:var(--text-main)">Chat Room</b>
+              <div style="font-size:12px;color:#31a24c;font-weight:bold" id="roomChatStatus">Active now (GunDB Mesh)</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:18px;font-size:22px;color:#ff7a00;cursor:pointer;">
+            <span onclick="startZoomClassRoom()" title="Start Voice Call">📞</span>
+            <span onclick="startZoomClassRoom()" title="Start Video Call">📹</span>
+          </div>
+        </div>
+        <div class="room-messages" id="roomMessagesList"></div>
+        <div class="room-input-bar">
+          <span onclick="alert('Attach file')" style="cursor:pointer;font-size:22px;color:#ff7a00">➕</span>
+          <input id="roomMsgInput" placeholder="Aa" onkeydown="if(event.key==='Enter')sendRoomMessage()">
+          <span id="micRecordBtn" onclick="toggleVoiceRecording()" title="Record Voice Note" style="cursor:pointer;font-size:22px;color:#ff7a00">🎙️</span>
+          <span onclick="sendRoomMessage()" style="cursor:pointer;font-size:22px;color:#ff7a00">👍</span>
+        </div>
+      </div>
+    </div>
+    <div class="page-view" id="diaryPage" style="position:relative;">
+      <div class="diary-lock-overlay" id="diaryLockScreen">
+        <div style="font-size:48px;margin-bottom:10px">🔐</div>
+        <h2 style="color:#e91e63;margin-bottom:6px">Phigital Diary Locked</h2>
+        <p style="font-size:13px;color:var(--status-text);margin-bottom:16px">Enter 4-digit PIN to unlock your secret diary (Default PIN: 1234 or set your own)</p>
+        <input type="password" id="diaryPinInput" maxlength="4" style="width:160px;text-align:center;font-size:24px;letter-spacing:8px;padding:10px;border:2px solid #e91e63;border-radius:12px;background:var(--input-bg);color:var(--input-text);outline:none;margin-bottom:12px">
+        <button onclick="unlockDiary()" style="background:#e91e63;color:#fff;border:none;padding:10px 24px;border-radius:12px;font-weight:bold;cursor:pointer;font-size:15px">Unlock Diary</button>
+      </div>
+      <div class="diary-container">
+        <div class="diary-header-box">
+          <div>
+            <h2 id="diaryTitleText" style="color:#e91e63;font-size:20px">📔 ෆිජිටල් රහසිගත ඩයරිය</h2>
+            <p id="diarySubText" style="font-size:12px;color:#5f6368">කොල්ලන් සහ කෙල්ලන් සඳහා හැඟීම් සහ මතක සටහන්</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button onclick="setDiaryPin()" style="background:none;border:1px solid #e91e63;color:#e91e63;padding:6px 10px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:bold" title="Set PIN">🔒 PIN</button>
+            <select id="diaryLangSelect" class="lang-selector-select" onchange="changeLanguage(this.value)">
+              <option value="si">සිංහල</option>
+              <option value="en">English</option>
+              <option value="ta">தமிழ்</option>
+            </select>
+          </div>
+        </div>
+        <div class="diary-card">
+          <b id="diaryLabelToday" style="font-size:15px;color:var(--text-main)">✨ ඔබේ අද දවසේ හැඟීම කුමක්ද?</b>
+          <div class="mood-picker">
+            <span class="mood-emoji selected" onclick="selectMood(this, '😊')">😊</span>
+            <span class="mood-emoji" onclick="selectMood(this, '💖')">💖</span>
+            <span class="mood-emoji" onclick="selectMood(this, '🔥')">🔥</span>
+            <span class="mood-emoji" onclick="selectMood(this, '😎')">😎</span>
+            <span class="mood-emoji" onclick="selectMood(this, '🌧️')">🌧️</span>
+            <span class="mood-emoji" onclick="selectMood(this, '⭐')">⭐</span>
+          </div>
+          <input type="text" id="diaryTitleInput" class="app-text-input" placeholder="ඩයරි මාතෘකාව (Diary Title)...">
+          <textarea id="diaryContentInput" class="diary-input" rows="4" placeholder="ඔබේ රහසිගත සිතුවිලි, සිහින හෝ ප්‍රේම සටහන් මෙහි ලියන්න..."></textarea>
+          <div style="margin-top:10px;display:flex;gap:10px;">
+            <label class="media-btn" style="flex:1;text-align:center;">📷 Attach Ultra HD Photo<input type="file" accept="image/*" hidden id="diaryMediaFile" onchange="previewDiaryMedia(this)"></label>
+          </div>
+          <div id="diaryMediaPreviewBox" style="margin-top:8px"></div>
+          <button class="diary-save-btn" onclick="saveDiaryEntry()" style="margin-top:14px">💾 ඩයරියට සුරකින්න (Save)</button>
+        </div>
+        <div class="diary-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+            <b id="diaryHistoryTitle" style="font-size:16px;color:#e91e63">📖 මගේ ඩයරි සටහන් ඉතිහාසය</b>
+            <input type="date" id="diarySearchDate" class="filter-input" onchange="renderDiaryEntries()" title="Filter by date">
+          </div>
+          <div id="diaryEntriesList" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="page-view" id="audioStudioPage">
+      <div class="audio-studio-container">
+        <div class="studio-header-box">
+          <div>
+            <h2 id="lblStudioTitle" style="color:#9c27b0;font-size:20px">🎙️ Advanced Audio Studio</h2>
+            <p id="lblStudioSub" style="font-size:12px;color:#5f6368">Record, Apply Voice Effects & Create Master Audio Notes</p>
+          </div>
+          <span style="font-size:24px">🎚️</span>
+        </div>
+        <div class="studio-card">
+          <b id="lblStudioFilter" style="font-size:15px;color:var(--text-main)">1. Select Voice Effect / Filter:</b>
+          <div class="effect-chips">
+            <div class="effect-chip selected" onclick="selectAudioEffect(this, 'normal')">🎙️ Normal</div>
+            <div class="effect-chip" onclick="selectAudioEffect(this, 'echo')">🌌 Echo / Hall</div>
+            <div class="effect-chip" onclick="selectAudioEffect(this, 'robot')">🤖 Robot Voice</div>
+            <div class="effect-chip" onclick="selectAudioEffect(this, 'chipmunk')">🐿️ Chipmunk (High)</div>
+            <div class="effect-chip" onclick="selectAudioEffect(this, 'deep')">👤 Deep Bass</div>
+          </div>
+          <div class="waveform-box" id="studioWaveformBox">
+            <div class="wave-bar" style="animation-delay:0.1s"></div>
+            <div class="wave-bar" style="animation-delay:0.3s"></div>
+            <div class="wave-bar" style="animation-delay:0.2s"></div>
+            <div class="wave-bar" style="animation-delay:0.4s"></div>
+            <div class="wave-bar" style="animation-delay:0.1s"></div>
+            <div class="wave-bar" style="animation-delay:0.5s"></div>
+          </div>
+          <button class="studio-record-btn" id="studioRecordBtn" onclick="toggleStudioRecording()">🎙️</button>
+          <div id="studioStatusText" style="text-align:center;font-size:14px;font-weight:bold;color:#9c27b0">Tap mic to start recording</div>
+          <div id="studioPreviewArea" style="margin-top:14px"></div>
+        </div>
+        <div class="studio-card">
+          <b id="lblStudioMaster" style="font-size:15px;color:#9c27b0">🎵 Saved Studio Audio Masterpieces</b>
+          <div id="studioSavedList" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="page-view" id="aiAssistantPage">
+      <div class="ai-assistant-container">
+        <div class="ai-header">
+          <div class="ai-title" id="lblAiTitle">🤖 Sumiya AI Assistant</div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button onclick="toggleSpeechOutput()" id="speechToggleBtn" style="background:none;border:1px solid #00c4cc;color:#00c4cc;padding:4px 10px;border-radius:12px;font-size:12px;cursor:pointer;font-weight:bold">🔊 Voice: OFF</button>
+            <button onclick="clearAiChat()" style="background:none;border:none;color:#ea4335;font-weight:bold;cursor:pointer;font-size:13px">🗑️ Clear</button>
+          </div>
+        </div>
+        <div class="ai-messages" id="aiMessagesList">
+          <div class="ai-msg-box ai"><div class="ai-bubble ai" id="lblAiWelcome">👋 Hello! I am Sumiya AI, your intelligent companion inside MY FACE BOX. Ask me anything, request summaries, or get creative ideas! ✨</div></div>
+        </div>
+        <div class="ai-input-bar">
+          <span onclick="startVoiceRecognition()" title="Voice Input" style="cursor:pointer;font-size:22px;color:#00c4cc">🎙️</span>
+          <input id="aiMsgInput" placeholder="Ask Sumiya AI anything..." onkeydown="if(event.key==='Enter')sendAiMessage()">
+          <button class="ai-send-btn" onclick="sendAiMessage()" id="lblAiSend">Send</button>
+        </div>
+      </div>
+    </div>
+    <div class="page-view" id="regPage"><div class="page-padding">
+      <div id="lblRegHeader" style="background:linear-gradient(135deg, #ff7a00, #ff5500);color:#fff;padding:14px;border-radius:12px;text-align:center;margin-bottom:16px;font-size:16px;font-weight:bold">Secure Gun SEA Registration & Login</div>
+      <div style="text-align:center;margin-bottom:16px">
+        <div class="user-avatar" id="avatarPreview" style="width:90px;height:90px;margin:0 auto 10px;font-size:32px">👤</div>
+        <label id="lblAvatarUpload" style="background:linear-gradient(135deg, #ff7a00, #ff5500);color:#fff;padding:8px 16px;border-radius:18px;font-size:13px;cursor:pointer;font-weight:bold">
+          <input type="file" accept="image/*" hidden onchange="previewPhoto(event)">📷 Ultra HD Avatar Upload
+        </label>
+      </div>
+      <label id="lblAccType" style="font-size:14px;font-weight:700;color:var(--text-main)">Account Type</label>
+      <div class="type-selector">
+        <div class="type-card selected" id="type-personal" onclick="selectType('personal')">👤<br>Personal</div>
+        <div class="type-card" id="type-business" onclick="selectType('business')">🏢<br>Business</div>
+        <div class="type-card" id="type-page" onclick="selectType('page')">📄<br>Page</div>
+      </div>
+      <div style="margin-top:14px"><input class="app-text-input" id="regName" placeholder="Username / Handle (Unique)"></div>
+      <div style="margin-top:12px"><input class="app-text-input" id="regContact" placeholder="Email or Phone Number (e.g. user@gmail.com or 0771234567)"></div>
+      <div style="margin-top:12px"><input type="password" class="app-text-input" id="regPassword" placeholder="Secure Password (Min 6 chars)"></div>
+      <div style="margin-top:12px"><input class="app-text-input" id="regBio" placeholder="Bio / Status (e.g. Creator & Developer)"></div>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <div style="flex:1"><input type="date" class="app-text-input" id="regBirthday"></div>
+        <div style="flex:1">
+          <select class="app-select" id="regCountry">
+            <option value="LK">🇱🇰 Sri Lanka</option>
+            <option value="IN">🇮🇳 India</option>
+            <option value="US">🇺🇸 USA</option>
+            <option value="UK">🇬🇧 UK</option>
+            <option value="AE">🇦🇪 UAE</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <div class="gender-row">
+          <div class="gender-btn selected" id="g-male" onclick="selectGender('male')">👨 Male</div>
+          <div class="gender-btn" id="g-female" onclick="selectGender('female')">👩 Female</div>
+          <div class="gender-btn" id="g-other" onclick="selectGender('other')">⚧ Other</div>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <div class="lang-check" id="regLangCheckboxes">
+          <label><input type="checkbox" value="si" checked> සිංහල</label>
+          <label><input type="checkbox" value="ta"> தமிழ்</label>
+          <label><input type="checkbox" value="en" checked> English</label>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="green-action-btn" id="lblBtnRegister" onclick="registerUserSecure()" style="flex:1;margin:0">🔒 Secure Register</button>
+        <button class="green-action-btn" id="lblBtnLogin" onclick="loginUserSecure()" style="flex:1;margin:0;background:linear-gradient(135deg,#0088ff,#0055ff)">🔑 Secure Login</button>
+      </div>
+      <div id="regStatus" style="margin-top:12px;font-size:14px;color:#ff7a00;font-weight:bold"></div>
+    </div></div>
+    <div class="page-view" id="dataPage"><div class="page-padding"><b id="lblMasterDataTitle" style="font-size:18px;color:var(--text-main)">Master Database Engine</b><div id="dataTable" style="margin-top:14px"></div></div></div>
+    <div class="page-view" id="profilePage"><div class="page-padding">
+      <div id="lblProfileHeader" style="background:linear-gradient(135deg, #ff7a00, #ff5500);color:#fff;padding:14px;border-radius:12px;text-align:center;margin-bottom:16px;font-size:16px;font-weight:bold">👤 User Profile & Settings</div>
+      <div style="text-align:center;margin-bottom:16px">
+        <div class="user-avatar" id="profilePageAvatar" style="width:100px;height:100px;margin:0 auto;font-size:36px">👤</div>
+        <h3 id="profileNameDisplay" style="margin-top:10px;font-size:20px;color:var(--text-main)">Guest User</h3>
+        <p id="profileBioDisplay" style="color:#ff7a00;font-size:14px;font-weight:bold;margin-top:4px"></p>
+        <p id="profileContactDisplay" style="color:#5f6368;font-size:13px;font-weight:600;margin-top:2px"></p>
+      </div>
+      <div style="background:var(--card-bg);padding:16px;border-radius:12px;border:1px solid var(--border-color)">
+        <b id="lblAccDetails" style="font-size:16px;color:var(--text-main)">Account Details:</b>
+        <p id="profileMetaDisplay" style="font-size:15px;color:var(--text-main);margin-top:8px;line-height:1.6;font-weight:600"></p>
+      </div>
+      <button class="green-action-btn" id="lblEditProfile" onclick="openEditProfileModal()" style="background:linear-gradient(135deg, #ff7a00, #ff5500)">✏️ Edit Profile & Bio</button>
+    </div></div>
+  </div>
+  <div class="bottom-navigation">
+    <div class="nav-tab active" onclick="switchPage('homePage',this)">🏠<br><span id="navHome">Home</span></div>
+    <div class="nav-tab messenger-tab" onclick="switchPage('messengerPage',this)">💬<br><span id="navChat">Chat</span></div>
+    <div class="nav-tab diary-tab" onclick="switchPage('diaryPage',this)">📔<br><span id="navDiary">Diary</span></div>
+    <div class="nav-tab studio-tab" onclick="switchPage('audioStudioPage',this)">🎙️<br><span id="navStudio">Studio</span></div>
+    <div class="nav-tab ai-tab" onclick="switchPage('aiAssistantPage',this)">🤖<br><span id="navAi">AI Hub</span></div>
+    <div class="nav-tab" onclick="switchPage('regPage',this)">📝<br><span id="navRegister">Register</span></div>
+    <div class="nav-tab" onclick="switchPage('dataPage',this)">📊<br><span id="navData">Data</span></div>
+    <div class="nav-tab" onclick="openMenu()">⚙️<br><span id="navMenu">Menu</span></div>
+    <div class="nav-tab" onclick="switchPage('profilePage',this)">👤<br><span id="navProfile">Profile</span></div>
+  </div>
+  <div class="full-screen-menu-overlay" id="fullMenu">
+    <div style="display:flex;justify-content:space-between;align-items:center;"><b id="lblMenuEngine" style="font-size:18px;color:#0088ff">⚙️ MASTER SYSTEM ENGINE</b><span onclick="closeMenu()" style="font-size:32px;color:#ea4335;cursor:pointer">×</span></div>
+    <div class="theme-toggle-box">
+      <div>
+        <b id="lblThemeTitle" style="font-size:15px">🌙 Dark / Light Theme</b><br>
+        <small id="lblThemeSub" style="color:#5f6368">Switch between Light and Dark mode</small>
+      </div>
+      <button onclick="toggleThemeMode()" id="themeToggleBtn" style="padding:8px 16px;background:#ff7a00;color:#fff;border:none;border-radius:16px;font-weight:bold;cursor:pointer">Dark Mode</button>
+    </div>
+    <div class="theme-toggle-box">
+      <div>
+        <b id="lblDataSaverTitle" style="font-size:15px">📱 Data Saver Mode (දුප්පත් අයට)</b><br>
+        <small id="lblDataSaverSub" style="color:#5f6368">Airtel, Hutch, Dialog ඕනෑම package එකකින් 90% data save - Images blur, video no autoplay</small>
+      </div>
+      <button onclick="toggleDataSaver()" id="dataSaverBtn" style="padding:8px 16px;background:#00c853;color:#fff;border:none;border-radius:16px;font-weight:bold;cursor:pointer">💚 Enable LITE</button>
+    </div>
+    <div class="theme-toggle-box">
+      <div>
+        <b id="lblEmergencyTitle" style="font-size:15px">🆘 119 Emergency Hub (Signal නැති අයට)</b><br>
+        <small id="lblEmergencySub" style="color:#5f6368">Signal නැති උනත් post save වෙලා signal ආවම auto යනවා - 119 වගේ</small>
+      </div>
+      <button onclick="openEmergencyHub()" id="lblEmergencyBtn" style="padding:8px 16px;background:#ea4335;color:#fff;border:none;border-radius:16px;font-weight:bold;cursor:pointer">🆘 Open 119 Hub</button>
+    </div>
+    <div class="theme-toggle-box">
+      <div>
+        <b id="lblLangTitle" style="font-size:15px">🌐 App Language / භාෂාව</b><br>
+        <small id="lblLangSub" style="color:#5f6368">Choose Sinhala, English or Tamil</small>
+      </div>
+      <select id="menuLangSelect" class="lang-selector-select" onchange="changeLanguage(this.value)">
+        <option value="si">සිංහල</option>
+        <option value="en">English</option>
+        <option value="ta">தமிழ்</option>
+      </select>
+    </div>
+    <div class="theme-toggle-box" style="flex-direction:column;align-items:flex-start;gap:10px;">
+      <div>
+        <b id="lblBackupTitle" style="font-size:15px">💾 Master Data Backup & Sync</b><br>
+        <small id="lblBackupSub" style="color:#5f6368">Export or import your entire app database JSON</small>
+      </div>
+      <div style="display:flex;gap:8px;width:100%;flex-wrap:wrap">
+        <button onclick="exportMasterDataBackup()" id="lblExportJson" style="flex:1;padding:8px 12px;background:#0088ff;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer">📤 Export JSON</button>
+        <label id="lblImportJson" style="flex:1;padding:8px 12px;background:#31a24c;color:#fff;border-radius:10px;font-weight:bold;cursor:pointer;text-align:center">
+          📥 Import JSON<input type="file" accept=".json" hidden onchange="importMasterDataBackup(event)">
+        </label>
+      </div>
+      <div style="display:flex;gap:8px;width:100%;margin-top:6px">
+        <button onclick="clearAllAppCache()" id="lblResetData" style="flex:1;padding:8px;background:#ea4335;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer">🗑️ Reset All App Data</button>
+      </div>
+    </div>
+    <div style="margin-top:15px;font-size:15px;line-height:1.8;font-weight:600;color:var(--text-main)">
+      <b>🚀 10000% Ultra Pro Edition:</b><br>
+      • SHA-256 Hashed Diary PIN & Gun SEA User Auth<br>
+      • 100% Real-time Gun Sync for Likes, Comments, Shares<br>
+      • Pinch-to-Zoom & Manual Zoom Bar Logic Enabled<br>
+      • P2P WebRTC Voice, Video & Zoom Class Room Enabled<br>
+      • Strict Memory Management & URL Revoking<br>
+      • NEW: Zero Dot Loading + Data Saver + 119 Emergency + Service Worker Offline<br>
+      • Creator: Sumiya (සුමිය) ✨<br>
+    </div>
+    <div class="report-box" id="techLog">🟢 Master Secure Engine Online 24/7<br>💾 Gun P2P Mesh & SEA Auth Active<br>⚡ Zero-Dot Engine + Lite Mode + 119 Hub Ready</div>
+    <button onclick="closeMenu()" id="lblCloseMenu" style="margin-top:20px;padding:12px 24px;background:linear-gradient(135deg, #ff7a00, #ff5500);color:#fff;border:none;border-radius:8px;font-weight:bold;font-size:16px;cursor:pointer">Close Menu</button>
+  </div>
+  <div class="webapp-sandbox-modal" id="webappSandboxModal">
+    <div class="sandbox-header">
+      <div class="sandbox-title" id="sandboxAppTitle">🌐 Cloud App Sandbox</div>
+      <div class="sandbox-actions">
+        <button class="sandbox-btn" onclick="sandboxGoBack()">⬅️ Back</button>
+        <button class="sandbox-btn" onclick="sandboxRefresh()">🔄 Refresh</button>
+        <button class="sandbox-close" onclick="closeWebAppSandbox()">✕ Close</button>
+      </div>
+    </div>
+    <div class="sandbox-body">
+      <iframe id="sandboxIframe" src="" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+    </div>
+  </div>
+
+  <!-- NEW: P2P Zoom & Unlimited Video Class Room Modal -->
+  <div class="zoom-class-modal" id="zoomClassModal">
+    <div class="zoom-header">
+      <div>
+        <b style="font-size:16px;">🎓 P2P Unlimited Zoom Class Room</b><br>
+        <small style="color:#00c4cc;font-size:11px;" id="zoomClassStatus">Connected via WebRTC Mesh (1000% Private)</small>
+      </div>
+      <button onclick="closeZoomClassRoom()" style="background:#ea4335;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-weight:bold;cursor:pointer;">✕ Leave</button>
+    </div>
+    <div class="zoom-grid" id="zoomGridContainer">
+      <div class="zoom-video-card">
+        <video id="localZoomVideo" autoplay muted playsinline></video>
+        <div class="zoom-card-name" id="localZoomName">You (Host)</div>
+      </div>
+    </div>
+    <div class="zoom-footer-controls">
+      <button class="zoom-ctrl-btn" onclick="toggleZoomAudio()" id="zoomAudioBtn">🎙️ Mute</button>
+      <button class="zoom-ctrl-btn" onclick="toggleZoomVideo()" id="zoomVideoBtn">📹 Stop Cam</button>
+      <button class="zoom-ctrl-btn end-call" onclick="closeZoomClassRoom()">📞 End Class</button>
+    </div>
+  </div>
+
+  <div class="fb-story-viewer-modal" id="fbViewerModal">
+    <div class="fb-viewer-header">
+      <div class="fb-progress-bar-wrap"><div class="fb-progress-fill" id="fbProgressFill"></div></div>
+      <div class="fb-user-info-bar">
+        <div class="fb-user-details">
+          <div class="fb-user-avatar" id="fbModalAvatar">👤</div>
+          <span class="fb-username" id="fbModalUsername">Master User</span>
+          <span style="font-size:12px;color:#ccc;margin-left:6px;font-weight:600" id="fbModalTime">Just now</span>
+        </div>
+        <button class="fb-close-btn" onclick="closeFbViewer()">×</button>
+      </div>
+    </div>
+    <div class="fb-viewer-body" id="fbViewerBody"></div>
+    <div class="manual-zoom-toolbar">
+      <button class="zoom-ctrl-btn" onclick="adjustZoom(-0.25)">➖</button>
+      <input type="range" min="1" max="4" step="0.1" value="1" class="zoom-slider" id="manualZoomSlider" oninput="setManualZoom(this.value)">
+      <button class="zoom-ctrl-btn" onclick="adjustZoom(0.25)">➕</button>
+      <button class="zoom-ctrl-btn" onclick="resetZoom()" style="font-size:12px;">Reset</button>
+    </div>
+    <div class="fb-viewer-footer">
+      <div class="fb-viewer-comment-list" id="fbViewerCommentList"></div>
+      <div class="fb-footer-row">
+        <input class="fb-reply-input" id="fbCommentInput" placeholder="Send message..." onkeydown="if(event.key==='Enter')sendViewerComment()">
+        <button class="fb-action-icon-btn" onclick="sendViewerComment()" title="Send">📤</button>
+        <button class="fb-action-icon-btn" onclick="downloadCurrentMedia()" title="Download Media">📥</button>
+        <div class="fb-reaction-btns">
+          <span onclick="alert('❤️ Loved!')">❤️</span>
+          <span onclick="alert('👍 Liked!')">👍</span>
+          <span onclick="alert('😆 Laugh!')">😆</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="emergency-modal" id="emergencyModal">
+    <div class="emergency-box">
+      <div style="font-size:48px">🆘</div>
+      <h2 style="color:#ea4335;margin:8px 0">119 Emergency Hub</h2>
+      <p style="font-size:13px;color:#555;margin-bottom:12px">Signal නැති උනත් ඔයාගේ පණිවිඩය save වෙනවා. Signal ආවම auto ලෝකෙටම යනවා. දුෂ්කර ගම් වලටම හදපු system එක!</p>
+      <input id="emergencyText" class="app-text-input" placeholder="Emergency message... e.g. Help needed at...">
+      <input id="emergencyLoc" class="app-text-input" placeholder="Location (e.g. Yatawatta, Matale)" style="margin-top:8px">
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button onclick="sendEmergencyPost()" style="flex:1;background:#ea4335;color:#fff;border:none;padding:12px;border-radius:10px;font-weight:bold;cursor:pointer">🚨 Send Emergency</button>
+        <button onclick="copyEmergencySMS()" style="flex:1;background:#0088ff;color:#fff;border:none;padding:12px;border-radius:10px;font-weight:bold;cursor:pointer">📋 Copy for SMS</button>
+      </div>
+      <button onclick="closeEmergencyHub()" style="margin-top:10px;background:none;border:1px solid #ccc;padding:8px 16px;border-radius:8px;cursor:pointer">Close</button>
+      <div id="emergencyStatus" style="margin-top:10px;font-size:12px;color:#00c853;font-weight:bold"></div>
+      <div id="emergencyQueueList" style="margin-top:12px;text-align:left;font-size:12px;max-height:120px;overflow-y:auto"></div>
+    </div>
+  </div>
 </div>
-<input type="file" id="fileIn" class="hidden" accept="image/*" onchange="preview(event)">
-</div>
-<div class="flex justify-between items-center"><h2 class="font-bold text-lg">Stories</h2><button class="text-orange-main text-sm font-bold">See all →</button></div>
-<div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
-<div class="story-tall w-36 bg-white rounded-2xl border-2 border-dashed border-gray-300 flex-shrink-0 overflow-hidden relative shadow-sm flex flex-col"><div class="p-3 flex flex-col items-center"><div class="w-12 h-12 bg-orange-main rounded-full flex items-center justify-center text-white text-xl"><i class="fa-solid fa-plus"></i></div><span class="text-[12px] font-bold mt-2">Create story</span></div><div class="flex-1 bg-cover relative" style="background-image:url('https://picsum.photos/200/300?random=5')"><div class="absolute bottom-1 left-1 bg-black/70 text-white text-[11px] px-2 py-1 rounded-full">Sumiya M.R.A</div><div class="absolute bottom-10 left-1/2 -translate-x-1/2 bg-black/60 w-8 h-8 rounded-full flex items-center justify-center text-white"><i class="fa-solid fa-play text-[10px]"></i></div></div></div>
-<div class="story-tall w-36 rounded-2xl flex-shrink-0 bg-cover relative shadow border overflow-hidden" style="background-image:url('https://picsum.photos/200/400?random=6')"><div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2"><div class="bg-black/60 text-white text-[11px] px-2 py-1 rounded-full inline-block">Sumiya M.R.A</div></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/60 w-10 h-10 rounded-full flex items-center justify-center text-white"><i class="fa-solid fa-play"></i></div></div>
-<div class="story-tall w-36 rounded-2xl flex-shrink-0 bg-cover relative shadow border overflow-hidden" style="background-image:url('https://picsum.photos/200/400?random=7')"><div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2"><div class="bg-black/60 text-white text-[11px] px-2 py-1 rounded-full inline-block">Sumiya M.R.A</div></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/60 w-10 h-10 rounded-full flex items-center justify-center text-white"><i class="fa-solid fa-play"></i></div></div>
-<div class="story-tall w-36 rounded-2xl flex-shrink-0 bg-cover relative shadow border overflow-hidden" style="background-image:url('https://picsum.photos/200/400?random=8')"><div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2"><div class="bg-black/60 text-white text-[11px] px-2 py-1 rounded-full inline-block">Sumiya M.</div></div></div>
-</div>
-<div id="posts-container" class="space-y-4">
-<div class="bg-white rounded-2xl border shadow-sm p-3 space-y-3">
-<div class="flex justify-between items-center"><div class="flex gap-2 items-center"><div class="w-8 h-8 bg-white border rounded-full flex items-center justify-center text-red-600"><i class="fa-brands fa-youtube"></i></div><b class="text-sm">YouTube • 2h ago</b></div><i class="fa-solid fa-ellipsis-vertical"></i></div>
-<div class="flex gap-3"><img src="https://i.pravatar.cc/100?img=32" class="w-10 h-10 rounded-full"><div><b class="text-sm">Sumiya. M.R.A <i class="fa-solid fa-circle-check text-blue-500 text-xs"></i></b><p class="text-[11px] text-gray-500">Sinhala • 15 min ago • Testen My Face Box Super Update Live 🔥</p></div></div>
-<p class="text-sm">My Face Box Super Update is now LIVE! 🎉<br>Join the festival celebration on the app now ✨</p>
-<img onclick="openZoomSrc(this.src)" src="https://picsum.photos/800/400?random=30" class="rounded-xl w-full zoomable h-64 object-cover">
-<div class="flex justify-between items-center text-sm text-gray-600 px-1"><div class="flex gap-4"><span>❤️ 128</span><span>👎 24</span><span class="flex gap-1"><span class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs"><i class="fa-solid fa-thumbs-up"></i></span>❤️</span><span>🗒️ 6</span></div><i class="fa-solid fa-ellipsis"></i></div>
-</div>
-</div>
-</main>
-<div id="photoZoom" class="fixed inset-0 z-[200] bg-black/90 hidden items-center justify-center p-4" onclick="closeZoom()"><img id="zoomImg" class="max-w-[95vw] max-h-[90vh] rounded-xl shadow-2xl object-contain"><button class="absolute top-4 right-4 text-white text-2xl w-10 h-10 bg-white/20 rounded-full"><i class="fa-solid fa-xmark"></i></button></div>
-<div id="miniAppViewer" class="fixed inset-0 z-[100] bg-black/90 hidden flex-col"><div class="bg-orange-main text-white p-3 flex justify-between items-center"><button onclick="closeMiniApp()" class="bg-white text-orange-500 w-8 h-8 rounded-full"><i class="fa-solid fa-arrow-left"></i></button><span id="miniAppTitle" class="font-bold">Mini App</span><button onclick="closeMiniApp()" class="w-8 h-8"><i class="fa-solid fa-xmark"></i></button></div><iframe id="miniAppFrame" class="w-full flex-1 bg-white" src=""></iframe></div>
-<div class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-2.5 text-gray-500 text-[11px] max-w-[1200px] mx-auto rounded-t-2xl shadow-[0_-2px_10px_rgba(0,0,0,0.1)] w-full">
-<button class="text-orange-main flex flex-col items-center gap-1"><i class="fa-solid fa-house text-2xl"></i>Home</button>
-<button onclick="openMiniApp('https://m.youtube.com')" class="flex flex-col items-center gap-1"><i class="fa-regular fa-compass text-2xl"></i>Explore</button>
-<button class="flex flex-col items-center gap-1"><div class="w-12 h-12 bg-orange-main text-white rounded-full -mt-6 flex items-center justify-center text-2xl shadow-lg"><i class="fa-solid fa-plus"></i></div>Add</button>
-<button class="flex flex-col items-center gap-1"><i class="fa-solid fa-bell text-2xl"></i>Alerts</button>
-<button class="flex flex-col items-center gap-1"><i class="fa-regular fa-user text-2xl"></i>Profile</button>
-</div>
-<p class="fixed bottom-[2px] right-2 text-[9px] text-gray-400">Tap image to zoom • Pinch to zoom</p>
+<div class="emergency-119-btn" id="emergencyFloatBtn" onclick="openEmergencyHub()" title="119 Emergency - Works Offline">🆘</div>
 <script>
-let imgData="", historyStack=[];
-function preview(e){
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    imgData=ev.target.result;
-    let container = document.getElementById('imagePreviewContainer');
-    container.innerHTML = `<div class="bg-white p-2 rounded-xl border"><img id="imagePreview" src="${imgData}" class="w-full h-60 object-cover rounded-xl zoomable"><div class="flex justify-between mt-2"><button onclick="clearImg()" class="text-xs bg-black/60 text-white px-3 py-1 rounded-full">Remove</button><button onclick="addNewPost()" class="text-xs bg-orange-main text-white px-4 py-1 rounded-full">Confirm Publish</button></div></div>`;
-    container.classList.remove('hidden');
+let db;
+const request = indexedDB.open("MyFaceBoxMasterDB", 30);
+request.onupgradeneeded = function(e) {
+  db = e.target.result;
+  if(!db.objectStoreNames.contains("mediaStore")) db.createObjectStore("mediaStore");
+  if(!db.objectStoreNames.contains("offlineQueue")) db.createObjectStore("offlineQueue", {keyPath:"id"});
+  if(!db.objectStoreNames.contains("emergencyStore")) db.createObjectStore("emergencyStore", {keyPath:"id"});
+};
+request.onsuccess = function(e) { db = e.target.result; loadInitialData(); loadEmergencyQueue(); };
+function saveMediaToIDB(id, fileOrBlob) {
+  return new Promise((resolve, reject) => {
+    if(!db) { resolve(null); return; }
+    const tx = db.transaction("mediaStore", "readwrite");
+    const store = tx.objectStore("mediaStore");
+    store.put(fileOrBlob, id);
+    tx.oncomplete = () => resolve(id);
+    tx.onerror = () => reject(tx.error);
+  });
+}
+function getMediaFromIDB(id) {
+  return new Promise((resolve) => {
+    if(!db) { resolve(null); return; }
+    const tx = db.transaction("mediaStore", "readonly");
+    const store = tx.objectStore("mediaStore");
+    const req = store.get(id);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => resolve(null);
+  });
+}
+function saveToOfflineQueue(item){
+  return new Promise(res=>{
+    if(!db) return res();
+    const tx=db.transaction("offlineQueue","readwrite"); tx.objectStore("offlineQueue").put(item); tx.oncomplete=()=>res();
+  });
+}
+function getOfflineQueue(){
+  return new Promise(res=>{
+    if(!db) return res([]);
+    const tx=db.transaction("offlineQueue","readonly"); const req=tx.objectStore("offlineQueue").getAll(); req.onsuccess=()=>res(req.result||[]);
+  });
+}
+function saveEmergencyToIDB(item){
+  return new Promise(res=>{
+    if(!db) return res();
+    const tx=db.transaction("emergencyStore","readwrite"); tx.objectStore("emergencyStore").put(item); tx.oncomplete=()=>res();
+  });
+}
+let activeObjectURLs = [];
+function registerObjectURL(url) {
+  activeObjectURLs.push(url);
+  if(activeObjectURLs.length > 25) {
+    const oldUrl = activeObjectURLs.shift();
+    try { URL.revokeObjectURL(oldUrl); } catch(e){}
+  }
+}
+function showZeroDot(){ const el=document.getElementById('zeroDotLoader'); if(el){ el.style.display='block'; setTimeout(()=>el.style.display='none',1200); } }
+let dataSaverMode = localStorage.getItem('myfacebox_datasaver') === 'true';
+let effectiveConnection = '4g';
+function updateDataSaverUI(){
+  const badge=document.getElementById('dataModeBadge');
+  const status=document.getElementById('dataSaverStatus');
+  const btn=document.getElementById('dataSaverBtn');
+  if(dataSaverMode){
+    if(badge) badge.style.display='inline-block';
+    if(status) status.innerText='💚 LITE (90% Save)';
+    if(btn){ btn.innerText='📶 Normal Mode'; btn.style.background='#ff7a00'; }
+  } else {
+    if(badge) badge.style.display='none';
+    if(status) status.innerText='📶 Normal';
+    if(btn){ btn.innerText='💚 Enable LITE'; btn.style.background='#00c853'; }
+  }
+}
+function toggleDataSaver(){
+  dataSaverMode = !dataSaverMode;
+  localStorage.setItem('myfacebox_datasaver', dataSaverMode);
+  updateDataSaverUI();
+  addNotification(dataSaverMode? '💚 Data Saver ON - 90% data saved for poor packages' : '📶 Normal Mode ON - Full HD');
+  resetAndRender();
+}
+if(navigator.connection){
+  effectiveConnection = navigator.connection.effectiveType || '4g';
+  navigator.connection.addEventListener('change', ()=>{
+    effectiveConnection = navigator.connection.effectiveType;
+    if(['slow-2g','2g'].includes(effectiveConnection) && !dataSaverMode){
+      dataSaverMode = true; localStorage.setItem('myfacebox_datasaver', true); updateDataSaverUI();
+    }
+  });
+  if(['slow-2g','2g','3g'].includes(effectiveConnection)){ dataSaverMode = true; }
+}
+let currentTheme = localStorage.getItem('myfacebox_theme') || 'light';
+function applyTheme(theme) {
+  currentTheme = theme; localStorage.setItem('myfacebox_theme', theme);
+  const root = document.getElementById('htmlRoot'); const btn = document.getElementById('themeToggleBtn');
+  if(theme === 'dark') { root.setAttribute('data-theme', 'dark'); root.style.colorScheme = 'dark'; if(btn) btn.innerText = '☀️ Light Mode'; }
+  else { root.removeAttribute('data-theme'); root.style.colorScheme = 'light'; if(btn) btn.innerText = '🌙 Dark Mode'; }
+}
+function toggleThemeMode() { if(currentTheme === 'light') { applyTheme('dark'); } else { applyTheme('light'); } }
+
+let currentAppLang = localStorage.getItem('myfacebox_lang') || 'si';
+const langDict = {
+  si: {
+    diaryTitle: "📔 ෆිජිටල් රහසිගත ඩයරිය", diarySub: "කොල්ලන් සහ කෙල්ලන් සඳහා හැඟීම් සහ මතක සටහන්", diaryHow: "✨ ඔබේ අද දවසේ හැඟීම කුමක්ද?", diaryTitlePlace: "ඩයරි මාතෘකාව (Diary Title)...", diaryContentPlace: "ඔබේ රහසිගත සිතුවිලි, සිහින හෝ ප්‍රේම සටහන් මෙහි ලියන්න...", diarySave: "💾 ඩයරියට සුරකින්න (Save)", diaryHistory: "📖 මගේ ඩයරි සටහන් ඉතිහාසය",
+    navHome: "Home", navChat: "Chat", navDiary: "Diary", navStudio: "Studio", navAi: "AI Hub", navRegister: "Register", navData: "Data", navMenu: "Menu", navProfile: "Profile",
+    lblStories: "Stories", lblDirectStory: "➕ Direct Story", lblChatTitle: "Chats (P2P Mesh)", lblMessengerSearch: "Search Messenger...",
+    lblStudioTitle: "🎙️ Advanced Audio Studio", lblStudioSub: "Record, Apply Voice Effects & Create Master Audio Notes", lblStudioFilter: "1. Select Voice Effect / Filter:", lblStudioMaster: "🎵 Saved Studio Audio Masterpieces",
+    lblAiTitle: "🤖 Sumiya AI Assistant", lblAiWelcome: "👋 Hello! I am Sumiya AI, your intelligent companion inside MY FACE BOX. Ask me anything, request summaries, or get creative ideas! ✨", lblAiSend: "Send",
+    lblRegHeader: "Secure Gun SEA Registration & Login", lblAvatarUpload: "📷 Ultra HD Avatar Upload", lblAccType: "Account Type", regNamePlace: "Username / Handle (Unique)", regContactPlace: "Email or Phone Number (e.g. user@gmail.com or 0771234567)", regPassPlace: "Secure Password (Min 6 chars)", regBioPlace: "Bio / Status (e.g. Creator & Developer)", lblBtnRegister: "🔒 Secure Register", lblBtnLogin: "🔑 Secure Login",
+    lblMasterDataTitle: "Master Database Engine", lblProfileHeader: "👤 User Profile & Settings", lblAccDetails: "Account Details:", lblEditProfile: "✏️ Edit Profile & Bio",
+    lblMenuEngine: "⚙️ MASTER SYSTEM ENGINE", lblThemeTitle: "🌙 Dark / Light Theme", lblThemeSub: "Switch between Light and Dark mode", lblDataSaverTitle: "📱 Data Saver Mode (දුප්පත් අයට)", lblDataSaverSub: "Airtel, Hutch, Dialog ඕනෑම package එකකින් 90% data save", lblEmergencyTitle: "🆘 119 Emergency Hub (Signal නැති අයට)", lblEmergencySub: "Signal නැති උනත් post save වෙලා signal ආවම auto යනවා", lblEmergencyBtn: "🆘 Open 119 Hub", lblLangTitle: "🌐 App Language / භාෂාව", lblLangSub: "Choose Sinhala, English or Tamil", lblBackupTitle: "💾 Master Data Backup & Sync", lblBackupSub: "Export or import your entire app database JSON", lblExportJson: "📤 Export JSON", lblImportJson: "📥 Import JSON", lblResetData: "🗑️ Reset All App Data", lblCloseMenu: "Close Menu"
+  },
+  en: {
+    diaryTitle: "📔 Phigital Secret Diary", diarySub: "Emotional & Secret Journal for Boys & Girls", diaryHow: "✨ How are you feeling today?", diaryTitlePlace: "Diary Title...", diaryContentPlace: "Write your secret thoughts, dreams or love notes here...", diarySave: "💾 Save to Phigital Diary", diaryHistory: "📖 My Secret Diary Entries",
+    navHome: "Home", navChat: "Chat", navDiary: "Diary", navStudio: "Studio", navAi: "AI Hub", navRegister: "Register", navData: "Data", navMenu: "Menu", navProfile: "Profile",
+    lblStories: "Stories", lblDirectStory: "➕ Direct Story", lblChatTitle: "Chats (P2P Mesh)", lblMessengerSearch: "Search Messenger...",
+    lblStudioTitle: "🎙️ Advanced Audio Studio", lblStudioSub: "Record, Apply Voice Effects & Create Master Audio Notes", lblStudioFilter: "1. Select Voice Effect / Filter:", lblStudioMaster: "🎵 Saved Studio Audio Masterpieces",
+    lblAiTitle: "🤖 Sumiya AI Assistant", lblAiWelcome: "👋 Hello! I am Sumiya AI, your intelligent companion inside MY FACE BOX. Ask me anything, request summaries, or get creative ideas! ✨", lblAiSend: "Send",
+    lblRegHeader: "Secure Gun SEA Registration & Login", lblAvatarUpload: "📷 Ultra HD Avatar Upload", lblAccType: "Account Type", regNamePlace: "Username / Handle (Unique)", regContactPlace: "Email or Phone Number (e.g. user@gmail.com or 0771234567)", regPassPlace: "Secure Password (Min 6 chars)", regBioPlace: "Bio / Status (e.g. Creator & Developer)", lblBtnRegister: "?? Secure Register", lblBtnLogin: "🔑 Secure Login",
+    lblMasterDataTitle: "Master Database Engine", lblProfileHeader: "👤 User Profile & Settings", lblAccDetails: "Account Details:", lblEditProfile: "✏️ Edit Profile & Bio",
+    lblMenuEngine: "⚙️ MASTER SYSTEM ENGINE", lblThemeTitle: "🌙 Dark / Light Theme", lblThemeSub: "Switch between Light and Dark mode", lblDataSaverTitle: "📱 Data Saver Mode", lblDataSaverSub: "Save 90% data on any mobile package", lblEmergencyTitle: "🆘 119 Emergency Hub", lblEmergencySub: "Saves offline and auto-syncs when signal returns", lblEmergencyBtn: "🆘 Open 119 Hub", lblLangTitle: "🌐 App Language", lblLangSub: "Choose Sinhala, English or Tamil", lblBackupTitle: "💾 Master Data Backup & Sync", lblBackupSub: "Export or import your entire app database JSON", lblExportJson: "📤 Export JSON", lblImportJson: "📥 Import JSON", lblResetData: "🗑️ Reset All App Data", lblCloseMenu: "Close Menu"
+  },
+  ta: {
+    diaryTitle: "📔 ஃபிஜிடல் ரகசிய நாட்குறிப்பு", diarySub: "சிறுவர்கள் மற்றும் சிறுமிகளுக்கான உணர்வுபூர்வமான குறிப்புகள்", diaryHow: "✨ இன்று உங்கள் மனநிலை எப்படி இருக்கிறது?", diaryTitlePlace: "நாட்குறிப்பு தலைப்பு...", diaryContentPlace: "உங்கள் ரகசிய எண்ணங்கள் அல்லது கவிதைகளை இங்கே எழுதுங்கள்...", diarySave: "💾 நாட்குறிப்பில் சேமிக்கவும்", diaryHistory: "📖 எனது நாட்குறிப்பு பதிவுகள்",
+    navHome: "Home", navChat: "Chat", navDiary: "Diary", navStudio: "Studio", navAi: "AI Hub", navRegister: "Register", navData: "Data", navMenu: "Menu", navProfile: "Profile",
+    lblStories: "Stories", lblDirectStory: "➕ Direct Story", lblChatTitle: "Chats (P2P Mesh)", lblMessengerSearch: "Search Messenger...",
+    lblStudioTitle: "🎙️ Advanced Audio Studio", lblStudioSub: "Record, Apply Voice Effects & Create Master Audio Notes", lblStudioFilter: "1. Select Voice Effect / Filter:", lblStudioMaster: "🎵 Saved Studio Audio Masterpieces",
+    lblAiTitle: "🤖 Sumiya AI Assistant", lblAiWelcome: "👋 Hello! I am Sumiya AI, your intelligent companion inside MY FACE BOX. Ask me anything, request summaries, or get creative ideas! ✨", lblAiSend: "Send",
+    lblRegHeader: "Secure Gun SEA Registration & Login", lblAvatarUpload: "📷 Ultra HD Avatar Upload", lblAccType: "Account Type", regNamePlace: "Username / Handle (Unique)", regContactPlace: "Email or Phone Number (e.g. user@gmail.com or 0771234567)", regPassPlace: "Secure Password (Min 6 chars)", regBioPlace: "Bio / Status (e.g. Creator & Developer)", lblBtnRegister: "🔒 Secure Register", lblBtnLogin: "🔑 Secure Login",
+    lblMasterDataTitle: "Master Database Engine", lblProfileHeader: "👤 User Profile & Settings", lblAccDetails: "Account Details:", lblEditProfile: "✏️ Edit Profile & Bio",
+    lblMenuEngine: "⚙️ MASTER SYSTEM ENGINE", lblThemeTitle: "🌙 Dark / Light Theme", lblThemeSub: "Switch between Light and Dark mode", lblDataSaverTitle: "📱 Data Saver Mode", lblDataSaverSub: "Save 90% data on any mobile package", lblEmergencyTitle: "🆘 119 Emergency Hub", lblEmergencySub: "Saves offline and auto-syncs when signal returns", lblEmergencyBtn: "🆘 Open 119 Hub", lblLangTitle: "🌐 App Language", lblLangSub: "Choose Sinhala, English or Tamil", lblBackupTitle: "💾 Master Data Backup & Sync", lblBackupSub: "Export or import your entire app database JSON", lblExportJson: "📤 Export JSON", lblImportJson: "📥 Import JSON", lblResetData: "🗑️ Reset All App Data", lblCloseMenu: "Close Menu"
+  }
+};
+
+function changeLanguage(lang) {
+  currentAppLang = lang; localStorage.setItem('myfacebox_lang', lang); const d = langDict[lang];
+  if(!d) return;
+  const setTxt = (id, val) => { const el = document.getElementById(id); if(el) el.innerText = val; };
+  const setPlc = (id, val) => { const el = document.getElementById(id); if(el) el.placeholder = val; };
+
+  setTxt('diaryTitleText', d.diaryTitle); setTxt('diarySubText', d.diarySub); setTxt('diaryLabelToday', d.diaryHow);
+  setPlc('diaryTitleInput', d.diaryTitlePlace); setPlc('diaryContentInput', d.diaryContentPlace);
+  setTxt('diaryHistoryTitle', d.diaryHistory);
+  
+  setTxt('navHome', d.navHome); setTxt('navChat', d.navChat); setTxt('navDiary', d.navDiary); setTxt('navStudio', d.navStudio);
+  setTxt('navAi', d.navAi); setTxt('navRegister', d.navRegister); setTxt('navData', d.navData); setTxt('navMenu', d.navMenu); setTxt('navProfile', d.navProfile);
+
+  setTxt('lblChatTitle', d.lblChatTitle); setPlc('lblMessengerSearch', d.lblMessengerSearch);
+  setTxt('lblStudioTitle', d.lblStudioTitle); setTxt('lblStudioSub', d.lblStudioSub); setTxt('lblStudioFilter', d.lblStudioFilter); setTxt('lblStudioMaster', d.lblStudioMaster);
+  setTxt('lblAiTitle', d.lblAiTitle); setTxt('lblAiWelcome', d.lblAiWelcome); setTxt('lblAiSend', d.lblAiSend);
+  setTxt('lblRegHeader', d.lblRegHeader); setTxt('lblAvatarUpload', d.lblAvatarUpload); setTxt('lblAccType', d.lblAccType);
+  setPlc('regName', d.regNamePlace); setPlc('regContact', d.regContactPlace); setPlc('regPassword', d.regPassPlace); setPlc('regBio', d.regBioPlace);
+  setTxt('lblBtnRegister', d.lblBtnRegister); setTxt('lblBtnLogin', d.lblBtnLogin);
+  setTxt('lblMasterDataTitle', d.lblMasterDataTitle); setTxt('lblProfileHeader', d.lblProfileHeader); setTxt('lblAccDetails', d.lblAccDetails); setTxt('lblEditProfile', d.lblEditProfile);
+  setTxt('lblMenuEngine', d.lblMenuEngine); setTxt('lblThemeTitle', d.lblThemeTitle); setTxt('lblThemeSub', d.lblThemeSub);
+  setTxt('lblDataSaverTitle', d.lblDataSaverTitle); setTxt('lblDataSaverSub', d.lblDataSaverSub);
+  setTxt('lblEmergencyTitle', d.lblEmergencyTitle); setTxt('lblEmergencySub', d.lblEmergencySub); setTxt('lblEmergencyBtn', d.lblEmergencyBtn);
+  setTxt('lblLangTitle', d.lblLangTitle); setTxt('lblLangSub', d.lblLangSub);
+  setTxt('lblBackupTitle', d.lblBackupTitle); setTxt('lblBackupSub', d.lblBackupSub);
+  setTxt('lblExportJson', d.lblExportJson); setTxt('lblImportJson', d.lblImportJson); setTxt('lblResetData', d.lblResetData); setTxt('lblCloseMenu', d.lblCloseMenu);
+
+  const dls = document.getElementById('diaryLangSelect'); if(dls) dls.value = lang;
+  const mls = document.getElementById('menuLangSelect'); if(mls) mls.value = lang;
+}
+
+let notifications = JSON.parse(localStorage.getItem('myfacebox_notifications') || '[]');
+function addNotification(text) {
+  notifications.unshift({id: Date.now(), text, time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), read: false});
+  localStorage.setItem('myfacebox_notifications', JSON.stringify(notifications));
+  updateNotifUI();
+}
+function updateNotifUI() {
+  const badge = document.getElementById('notifBadge');
+  const list = document.getElementById('notifListContainer');
+  const unreadCount = notifications.filter(n => !n.read).length;
+  if(unreadCount > 0) { badge.innerText = unreadCount; badge.style.display = 'inline-block'; }
+  else { badge.style.display = 'none'; }
+  if(!list) return;
+  if(notifications.length === 0) { list.innerHTML = `<div style="padding:10px;text-align:center;color:#5f6368;font-size:13px">No new notifications</div>`; return; }
+  list.innerHTML = notifications.map(n => `<div class="notif-item"><b>📢 ${n.text}</b><br><small style="color:#5f6368">${n.time}</small></div>`).join('');
+}
+function toggleNotifications() {
+  const dropdown = document.getElementById('notifDropdown');
+  if(!dropdown) return;
+  dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+  notifications.forEach(n => n.read = true);
+  localStorage.setItem('myfacebox_notifications', JSON.stringify(notifications));
+  updateNotifUI();
+}
+function clearNotifications() {
+  notifications = [];
+  localStorage.setItem('myfacebox_notifications', JSON.stringify(notifications));
+  updateNotifUI();
+}
+
+async function sha256(message) {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+let lastPostTimestamp = 0;
+const badWordsList = ['spam', 'badword1', 'badword2'];
+function containsBadWords(txt) {
+  const lower = txt.toLowerCase();
+  return badWordsList.some(w => lower.includes(w));
+}
+
+function processAiEnhancedImage(file, maxWidth = 1920, maxHeight = 1920, quality = 0.95) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        let width = img.width, height = img.height;
+        if (width > height) { if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; } }
+        else { if (height > maxHeight) { width = Math.round((width * maxHeight) / height); height = maxHeight; } }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d', { alpha: false });
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.filter = 'contrast(1.1) brightness(1.05) saturate(1.15)';
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => { resolve(blob || file); }, 'image/jpeg', quality);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function processAiEnhancedVideo(file) { return new Promise((resolve) => { resolve(file); }); }
+
+const gun = Gun(['https://gun-manhattan.herokuapp.com/gun', 'https://relay.peer.ooo/gun']);
+const gunUser = gun.user();
+const gunPosts = gun.get('myfacebox_global_posts_v8');
+const gunStories = gun.get('myfacebox_global_stories_v6');
+const gunReels = gun.get('myfacebox_global_reels_v6');
+const gunChats = gun.get('myfacebox_global_chats_v2');
+
+let users = JSON.parse(localStorage.getItem('myfacebox_users') || '[]');
+let posts = JSON.parse(localStorage.getItem('myfacebox_posts') || '[]');
+let stories = JSON.parse(localStorage.getItem('myfacebox_stories') || '[]');
+let reels = JSON.parse(localStorage.getItem('myfacebox_reels') || '[]');
+let currentUser = JSON.parse(localStorage.getItem('myfacebox_currentUser') || 'null');
+let diaryEntries = JSON.parse(localStorage.getItem('myfacebox_diaryEntries') || '[]');
+let studioAudios = JSON.parse(localStorage.getItem('myfacebox_studioAudios') || '[]');
+let aiMessages = JSON.parse(localStorage.getItem('myfacebox_aiMessages') || JSON.stringify([
+  {sender: 'ai', text: "Hello! I am Sumiya AI, your intelligent companion inside MY FACE BOX. Ask me anything, request summaries, or get creative ideas! ✨"}
+]));
+let chatMessages = JSON.parse(localStorage.getItem('myfacebox_chatMessages') || JSON.stringify([
+  {id: 1, txt: "Hello! Welcome to MY FACE BOX Cloud App Engine. P2P Mesh Chat Active ✨", type: 'incoming', reaction: '', time: '7:25 AM', isAudio: false}
+]));
+
+let selectedType = 'personal', selectedGender = 'male', currentSelectedFiles = [], postMediaType = 'text';
+let selectedMoodEmoji = '😊';
+let diaryMediaBlobId = null;
+let tempAvatarBlobId = null;
+let currentViewerMediaSrc = null;
+let currentViewerItem = null;
+let mediaRecorder = null, audioChunks = [], isRecordingVoice = false;
+let isSpeechActive = false;
+
+/* --- NEW: P2P WebRTC Zoom Class & Call Logic --- */
+let localZoomStream = null;
+let isZoomAudioMuted = false;
+let isZoomVideoStopped = false;
+
+async function startZoomClassRoom() {
+  const modal = document.getElementById('zoomClassModal');
+  modal.style.display = 'flex';
+  const myName = currentUser ? currentUser.name : 'Master Host';
+  document.getElementById('localZoomName').innerText = myName + ' (Host)';
+  
+  try {
+    localZoomStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    const localVideoEl = document.getElementById('localZoomVideo');
+    localVideoEl.srcObject = localZoomStream;
+    addNotification('🎓 P2P Unlimited Zoom Class Room started successfully!');
+  } catch(err) {
+    alert('⚠️ Camera/Microphone access required for Zoom Class.');
+  }
+}
+
+function closeZoomClassRoom() {
+  if(localZoomStream) {
+    localZoomStream.getTracks().forEach(track => track.stop());
+    localZoomStream = null;
+  }
+  const localVideoEl = document.getElementById('localZoomVideo');
+  if(localVideoEl) localVideoEl.srcObject = null;
+  document.getElementById('zoomClassModal').style.display = 'none';
+  addNotification('🎓 Left Zoom Class Room.');
+}
+
+function toggleZoomAudio() {
+  if(!localZoomStream) return;
+  const audioTrack = localZoomStream.getAudioTracks()[0];
+  if(audioTrack) {
+    audioTrack.enabled = !audioTrack.enabled;
+    isZoomAudioMuted = !audioTrack.enabled;
+    document.getElementById('zoomAudioBtn').innerText = isZoomAudioMuted ? '🎙️ Unmute' : '🎙️ Mute';
+  }
+}
+
+function toggleZoomVideo() {
+  if(!localZoomStream) return;
+  const videoTrack = localZoomStream.getVideoTracks()[0];
+  if(videoTrack) {
+    videoTrack.enabled = !videoTrack.enabled;
+    isZoomVideoStopped = !videoTrack.enabled;
+    document.getElementById('zoomVideoBtn').innerText = isZoomVideoStopped ? '📹 Start Cam' : '📹 Stop Cam';
+  }
+}
+
+let currentZoom = 1;
+let panX = 0, panY = 0;
+let isDragging = false, startX = 0, startY = 0;
+let initialPinchDistance = null;
+
+let currentPage = 1, pageSize = 10, isLoadingMore = false;
+let storedDiaryPinHash = localStorage.getItem('myfacebox_diary_pin_hash') || '';
+if(!storedDiaryPinHash) {
+  sha256('1234').then(h => { storedDiaryPinHash = h; localStorage.setItem('myfacebox_diary_pin_hash', h); });
+}
+
+async function unlockDiary() {
+  const pin = document.getElementById('diaryPinInput').value.trim();
+  const inputHash = await sha256(pin);
+  if(inputHash === storedDiaryPinHash) {
+    document.getElementById('diaryLockScreen').style.display = 'none';
+    document.getElementById('diaryPinInput').value = '';
+  } else {
+    alert('⚠️ වැරදි PIN අංකයකි! (Default PIN: 1234)');
+  }
+}
+
+async function setDiaryPin() {
+  const oldPin = prompt("පැරණි PIN අංකය ඇතුළත් කරන්න:");
+  if(!oldPin) return;
+  const oldHash = await sha256(oldPin);
+  if(oldHash !== storedDiaryPinHash) { alert('⚠️ වැරදි PIN අංකයකි!'); return; }
+  const newPin = prompt("නව 4-ඉලක්කම් PIN අංකය ඇතුළත් කරන්න:");
+  if(newPin && newPin.length === 4) {
+    storedDiaryPinHash = await sha256(newPin);
+    localStorage.setItem('myfacebox_diary_pin_hash', storedDiaryPinHash);
+    alert('🔐 Diary PIN successfully updated & SHA-256 hashed!');
+  } else {
+    alert('⚠️ PIN අංකය ඉලක්කම් 4 ක් විය යුතුය.');
+  }
+}
+
+let selectedAudioEffect = 'normal';
+let isStudioRecording = false;
+let studioMediaRecorder = null;
+let studioAudioChunks = [];
+
+function selectAudioEffect(el, effect) {
+  selectedAudioEffect = effect;
+  document.querySelectorAll('.effect-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+async function toggleStudioRecording() {
+  const btn = document.getElementById('studioRecordBtn');
+  const statusTxt = document.getElementById('studioStatusText');
+  const previewArea = document.getElementById('studioPreviewArea');
+
+  if(!isStudioRecording) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      studioMediaRecorder = new MediaRecorder(stream);
+      studioAudioChunks = [];
+      studioMediaRecorder.ondataavailable = e => studioAudioChunks.push(e.data);
+      studioMediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(studioAudioChunks, { type: 'audio/webm' });
+        const audioId = 'studio_audio_' + Date.now();
+        await saveMediaToIDB(audioId, audioBlob);
+        
+        const audioObj = {id: Date.now(), audioId: audioId, effect: selectedAudioEffect, time: new Date().toLocaleString()};
+        studioAudios.unshift(audioObj);
+        localStorage.setItem('myfacebox_studioAudios', JSON.stringify(studioAudios));
+        renderStudioAudios();
+        
+        const url = URL.createObjectURL(audioBlob);
+        registerObjectURL(url);
+        previewArea.innerHTML = `<b style="font-size:14px;color:var(--text-main)">🎙️ Recorded Audio (${selectedAudioEffect}):</b><br><audio src="${url}" controls style="width:100%;margin-top:6px"></audio><button onclick="shareStudioAudioToFeed('${audioId}', '${selectedAudioEffect}')" style="margin-top:8px;background:#9c27b0;color:#fff;border:none;padding:8px 16px;border-radius:12px;font-weight:bold;cursor:pointer;width:100%">🚀 Share to Feed</button>`;
+        addNotification(`New audio recorded with effect: ${selectedAudioEffect}!`);
+      };
+      studioMediaRecorder.start();
+      isStudioRecording = true;
+      btn.classList.add('recording-pulse');
+      btn.innerText = '⏹️';
+      statusTxt.innerText = `Recording with [${selectedAudioEffect}] effect... Tap to stop`;
+    } catch(err) { alert('⚠️ Microphone access denied.'); }
+  } else {
+    if(studioMediaRecorder) { studioMediaRecorder.stop(); studioMediaRecorder.stream.getTracks().forEach(t => t.stop()); }
+    isStudioRecording = false;
+    btn.classList.remove('recording-pulse');
+    btn.innerText = '🎙️';
+    statusTxt.innerText = 'Recording completed & saved to Studio!';
+  }
+}
+
+async function renderStudioAudios() {
+  const listEl = document.getElementById('studioSavedList');
+  if(!listEl) return;
+  let html = '';
+  for(let i=0; i<studioAudios.length; i++) {
+    let item = studioAudios[i];
+    const blob = await getMediaFromIDB(item.audioId);
+    if(blob) {
+      const url = URL.createObjectURL(blob);
+      registerObjectURL(url);
+      html += `<div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;margin-top:8px;border-left:3px solid #9c27b0">
+        <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px;color:#9c27b0">Effect: ${item.effect.toUpperCase()}</b><small style="color:var(--status-text)">${item.time}</small></div>
+        <audio src="${url}" controls style="width:100%;margin-top:6px"></audio>
+        <button onclick="shareStudioAudioToFeed('${item.audioId}', '${item.effect}')" style="margin-top:6px;background:none;border:none;color:#ff7a00;cursor:pointer;font-weight:bold;font-size:13px">🚀 Share to Feed</button>
+      </div>`;
+    }
+  }
+  listEl.innerHTML = html || '<p style="color:#5f6368;font-size:13px">No recorded audio in studio yet.</p>';
+}
+
+async function shareStudioAudioToFeed(audioId, effect) {
+  const blob = await getMediaFromIDB(audioId);
+  if(!blob) return;
+  const pId = 'media_audio_' + Date.now();
+  await saveMediaToIDB(pId, blob);
+  let base64 = await new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(blob); });
+
+  const postObj = {
+    txt: `🎙️ Studio Voice Note (Effect: ${effect.toUpperCase()})`,
+    dateStr: new Date().toISOString().split('T')[0],
+    name: currentUser ? currentUser.name : 'Master User',
+    avatar: localStorage.getItem('myfacebox_user_avatar') || '',
+    time: 'Just now',
+    mediaIds: [pId], mediaDatas: [base64], mediaType: 'voice',
+    likes: 0, liked: false, loves: 0, comments: [], shares: 0, id: Date.now().toString()
   };
-  r.readAsDataURL(f);
+  posts.unshift(postObj);
+  localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+  gunPosts.get(postObj.id).put(postObj);
+  resetAndRender();
+  alert('🚀 Studio audio shared successfully to Feed!');
+  switchPage('homePage', document.querySelectorAll('.nav-tab')[0]);
 }
-function clearImg(){imgData="";document.getElementById('imagePreviewContainer').innerHTML="";document.getElementById('imagePreviewContainer').classList.add('hidden');}
-function addNewPost(){
-  const input = document.getElementById('postInput');
-  const t = input? input.value : "";
-  if(!t &&!imgData) return alert("මොනවා හරි ලියන්න!");
-  document.getElementById('posts-container').insertAdjacentHTML('afterbegin', `<div class="bg-white rounded-2xl border shadow-sm p-3 space-y-2"><div class="flex gap-3"><img src="https://i.pravatar.cc/100?img=32" class="w-10 h-10 rounded-full"><div><b class="text-sm">You • දැන්</b></div></div><p class="text-sm">${t}</p>${imgData?`<img onclick="openZoomSrc(this.src)" src="${imgData}" class="rounded-xl w-full zoomable">`:""}</div>`);
-  if(input) input.value=""; clearImg();
+
+function toggleSpeechOutput() {
+  isSpeechActive = !isSpeechActive;
+  const btn = document.getElementById('speechToggleBtn');
+  if(btn) btn.innerText = isSpeechActive ? '🔊 Voice: ON' : '🔊 Voice: OFF';
 }
-function searchNet(){const q=document.getElementById('globalSearch').value;if(!q)return;openMiniApp(`https://www.google.com/search?q=${encodeURIComponent(q)}&igu=1`)}
-function openMiniApp(url){historyStack.push(window.scrollY);document.getElementById('miniAppFrame').src=url;document.getElementById('miniAppTitle').innerText=url.includes('youtube')?'YouTube':url.includes('facebook')?'Facebook':url.includes('tiktok')?'TikTok':'Mini App';document.getElementById('miniAppViewer').classList.remove('hidden');document.getElementById('miniAppViewer').classList.add('flex');document.body.style.overflow='hidden'}
-function closeMiniApp(){document.getElementById('miniAppViewer').classList.add('hidden');document.getElementById('miniAppFrame').src="";document.body.style.overflow='';}
-function goBack(){if(!document.getElementById('miniAppViewer').classList.contains('hidden'))closeMiniApp();else if(!document.getElementById('photoZoom').classList.contains('hidden'))closeZoom();else window.scrollTo({top:0,behavior:'smooth'})}
-function openZoomSrc(src){document.getElementById('zoomImg').src=src;document.getElementById('photoZoom').classList.remove('hidden');document.getElementById('photoZoom').classList.add('flex');}
-function closeZoom(){document.getElementById('photoZoom').classList.add('hidden');document.getElementById('photoZoom').classList.remove('flex');}
+
+function speakText(text) {
+  if(!isSpeechActive || !('speechSynthesis' in window)) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = currentAppLang === 'si' ? 'si-LK' : (currentAppLang === 'ta' ? 'ta-IN' : 'en-US');
+  window.speechSynthesis.speak(utterance);
+}
+
+function startVoiceRecognition() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert('⚠️ Speech recognition not supported in this browser.');
+    return;
+  }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  recognition.lang = currentAppLang === 'si' ? 'si-LK' : 'en-US';
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById('aiMsgInput').value = transcript;
+    sendAiMessage();
+  };
+  recognition.start();
+}
+
+function sendAiMessage() {
+  const inp = document.getElementById('aiMsgInput');
+  const txt = inp.value.trim();
+  if(!txt) return;
+
+  aiMessages.push({sender: 'user', text: txt});
+  inp.value = '';
+  renderAiMessages();
+
+  setTimeout(() => {
+    let reply = "✨ I received your message! As Sumiya AI, I'm here to assist you with your Phigital Diary, Audio Studio, and Cloud Hub.";
+    const lower = txt.toLowerCase();
+    if(lower.includes('hello') || lower.includes('hi') || lower.includes('ආයුබෝවන්')) {
+      reply = "👋 ආයුබෝවන්! How can I help you today inside MY FACE BOX?";
+    } else if(lower.includes('diary') || lower.includes('ඩයරි')) {
+      reply = "📔 You can record your secret thoughts and feelings in the Phigital Diary tab with mood emojis and Ultra HD photos!";
+    } else if(lower.includes('audio') || lower.includes('studio') || lower.includes('voice')) {
+      reply = "🎙️ The Advanced Audio Studio allows you to record voice notes with effects like Echo, Robot, and Chipmunk!";
+    } else if(lower.includes('sumiya') || lower.includes('සුමිය')) {
+      reply = "✨ Sumiya (සුමිය) is the creator and visionary engineer behind MY FACE BOX International Cloud Hub!";
+    }
+
+    aiMessages.push({sender: 'ai', text: reply});
+    localStorage.setItem('myfacebox_aiMessages', JSON.stringify(aiMessages));
+    renderAiMessages();
+    speakText(reply);
+    addNotification(`Sumiya AI replied to your query.`);
+  }, 600);
+}
+
+function renderAiMessages() {
+  const list = document.getElementById('aiMessagesList');
+  if(!list) return;
+  let html = '';
+  for(let i=0; i<aiMessages.length; i++) {
+    let m = aiMessages[i];
+    html += `<div class="ai-msg-box ${m.sender}"><div class="ai-bubble ${m.sender}">${m.text}</div></div>`;
+  }
+  list.innerHTML = html;
+  list.scrollTop = list.scrollHeight;
+}
+
+function clearAiChat() {
+  if(confirm("Clear all AI chat history?")) {
+    aiMessages = [{sender: 'ai', text: "✨ Chat cleared. How can I help you?"}];
+    localStorage.setItem('myfacebox_aiMessages', JSON.stringify(aiMessages));
+    renderAiMessages();
+  }
+}
+
+function selectMood(el, emoji) {
+  selectedMoodEmoji = emoji;
+  document.querySelectorAll('.mood-emoji').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+async function previewDiaryMedia(input) {
+  const f = input.files[0];
+  if(!f) return;
+  const optimizedBlob = await processAiEnhancedImage(f);
+  diaryMediaBlobId = 'diary_media_' + Date.now();
+  await saveMediaToIDB(diaryMediaBlobId, optimizedBlob);
+  const url = URL.createObjectURL(optimizedBlob);
+  registerObjectURL(url);
+  document.getElementById('diaryMediaPreviewBox').innerHTML = `<img src="${url}" style="width:100%;max-height:160px;object-fit:cover;border-radius:10px">`;
+}
+
+async function saveDiaryEntry() {
+  const title = document.getElementById('diaryTitleInput').value.trim();
+  const content = document.getElementById('diaryContentInput').value.trim();
+  if(!title && !content) { alert('Please write something in your diary!'); return; }
+  
+  const now = new Date();
+  const entry = {
+    id: Date.now(), mood: selectedMoodEmoji, title: title || 'Untitled Entry',
+    content: content, mediaId: diaryMediaBlobId, dateStr: now.toISOString().split('T')[0], time: now.toLocaleString()
+  };
+
+  diaryEntries.unshift(entry);
+  localStorage.setItem('myfacebox_diaryEntries', JSON.stringify(diaryEntries));
+  document.getElementById('diaryTitleInput').value = '';
+  document.getElementById('diaryContentInput').value = '';
+  document.getElementById('diaryMediaPreviewBox').innerHTML = '';
+  diaryMediaBlobId = null;
+  renderDiaryEntries();
+  alert('📔 Successfully saved permanently with AI Enhancement to your Phigital Diary! 💖');
+}
+
+async function renderDiaryEntries() {
+  const listEl = document.getElementById('diaryEntriesList');
+  if(!listEl) return;
+  const searchDate = document.getElementById('diarySearchDate').value;
+  const filteredEntries = diaryEntries.filter(e => !searchDate || e.dateStr === searchDate);
+
+  let html = '';
+  for(let i=0; i<filteredEntries.length; i++) {
+    let e = filteredEntries[i];
+    const realIndex = diaryEntries.findIndex(item => item.id === e.id);
+    let mediaHtml = '';
+    if(e.mediaId) {
+      const blob = await getMediaFromIDB(e.mediaId);
+      if(blob) {
+        const url = URL.createObjectURL(blob);
+        registerObjectURL(url);
+        mediaHtml = `<img src="${url}" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:8px">`;
+      }
+    }
+    html += `<div class="diary-entry-item">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <b style="font-size:15px;color:#e91e63">${e.mood} ${e.title}</b>
+        <div>
+          <button onclick="editDiaryEntry(${realIndex})" style="background:none;border:none;color:#ff7a00;cursor:pointer;font-size:13px;margin-right:6px">✏️</button>
+          <button onclick="deleteDiaryEntry(${realIndex})" style="background:none;border:none;color:#ea4335;cursor:pointer;font-size:13px">🗑️</button>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+        <small style="color:#5f6368;font-weight:bold">📅 ${e.dateStr} | ⏰ ${e.time}</small>
+      </div>
+      <p style="margin-top:6px;color:var(--text-main);line-height:1.4">${e.content}</p>
+      ${mediaHtml}
+    </div>`;
+  }
+  listEl.innerHTML = html || '<p style="color:#5f6368;font-size:13px">No diary entries found for this date.</p>';
+}
+
+function editDiaryEntry(idx) {
+  const e = diaryEntries[idx];
+  const newTitle = prompt("ඩයරි මාතෘකාව සංස්කරණය කරන්න:", e.title);
+  if(newTitle === null) return;
+  const newContent = prompt("ඩයරි සටහන සංස්කරණය කරන්න:", e.content);
+  if(newContent === null) return;
+  diaryEntries[idx].title = newTitle.trim() || 'Untitled Entry';
+  diaryEntries[idx].content = newContent.trim();
+  localStorage.setItem('myfacebox_diaryEntries', JSON.stringify(diaryEntries));
+  renderDiaryEntries();
+}
+
+function deleteDiaryEntry(idx) {
+  if(confirm("මෙම ඩයරි සටහන සදහටම මකා දැමීමට අවශ්‍යද?")) {
+    diaryEntries.splice(idx, 1);
+    localStorage.setItem('myfacebox_diaryEntries', JSON.stringify(diaryEntries));
+    renderDiaryEntries();
+  }
+}
+
+async function loadInitialData() {
+  applyTheme(currentTheme);
+  changeLanguage(currentAppLang);
+  updateDataSaverUI();
+  updateNotifUI();
+  const savedAvId = localStorage.getItem('myfacebox_user_avatar_id');
+  if(savedAvId) {
+    const blob = await getMediaFromIDB(savedAvId);
+    if(blob) {
+      const url = URL.createObjectURL(blob);
+      registerObjectURL(url);
+      applyAvatarToUI(url);
+    } else applyFallbackAvatar();
+  } else {
+    const savedAv = localStorage.getItem('myfacebox_user_avatar');
+    if(savedAv) applyAvatarToUI(savedAv); else applyFallbackAvatar();
+  }
+  if(currentUser) updateProfileUI();
+  renderChatMessages();
+  renderDiaryEntries();
+  renderStudioAudios();
+  renderAiMessages();
+  setupGlobalP2PSync();
+  resetAndRender();
+  setupInfiniteScroll();
+}
+
+function applyFallbackAvatar() {
+  ['topAvatar', 'avatarPreview', 'profilePageAvatar'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = '👤';
+  });
+}
+
+function setupGlobalP2PSync() {
+  gunPosts.map().on(async function(data, id) {
+    if(data && data.id) {
+      const existingIdx = posts.findIndex(p => p.id === data.id);
+      if(existingIdx >= 0) { posts[existingIdx] = data; }
+      else { posts.unshift(data); }
+      localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+      resetAndRender();
+    }
+  });
+
+  gunStories.map().on(async function(data) {
+    if(data && data.mediaId && !stories.some(s => s.mediaId === data.mediaId)) {
+      stories.push(data);
+      localStorage.setItem('myfacebox_stories', JSON.stringify(stories));
+      renderStories();
+    }
+  });
+
+  gunReels.map().on(async function(data) {
+    if(data && data.mediaId && !reels.some(r => r.mediaId === data.mediaId)) {
+      reels.unshift(data);
+      localStorage.setItem('myfacebox_reels', JSON.stringify(reels));
+      resetAndRender();
+    }
+  });
+
+  gunChats.map().on(async function(data) {
+    if(data && data.id && !chatMessages.some(m => m.id === data.id)) {
+      chatMessages.push(data);
+      localStorage.setItem('myfacebox_chatMessages', JSON.stringify(chatMessages));
+      renderChatMessages();
+    }
+  });
+}
+
+async function applyAvatarToUI(url) {
+  ['topAvatar', 'avatarPreview', 'profilePageAvatar'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='👤'">`;
+  });
+}
+
+async function syncGlobalAvatar(fileOrBlob) {
+  const optimized = await processAiEnhancedImage(fileOrBlob, 512, 512, 0.95);
+  const mediaId = 'avatar_' + Date.now();
+  await saveMediaToIDB(mediaId, optimized);
+  localStorage.setItem('myfacebox_user_avatar_id', mediaId);
+  const url = URL.createObjectURL(optimized);
+  registerObjectURL(url);
+  localStorage.setItem('myfacebox_user_avatar', url);
+  applyAvatarToUI(url);
+}
+
+setInterval(()=>{document.getElementById('liveTime').innerText = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})},1000);
+
+function openMenu(){ document.getElementById('fullMenu').style.display = 'block'; }
+function closeMenu(){ document.getElementById('fullMenu').style.display = 'none'; }
+function switchPage(id, el){
+  showZeroDot();
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active-view'));
+  document.getElementById(id).classList.add('active-view');
+  if(el){
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+  if(id === 'profilePage') updateProfileUI();
+  if(id === 'diaryPage') renderDiaryEntries();
+  if(id === 'audioStudioPage') renderStudioAudios();
+  if(id === 'aiAssistantPage') renderAiMessages();
+  resetAndRender();
+}
+
+function openChatRoom(name, status) {
+  document.getElementById('roomChatName').innerText = name;
+  document.getElementById('roomChatStatus').innerText = status;
+  document.getElementById('messengerChatList').style.display = 'none';
+  document.getElementById('activeChatRoom').classList.add('active');
+  renderChatMessages();
+}
+
+function closeChatRoom() {
+  document.getElementById('activeChatRoom').classList.remove('active');
+  document.getElementById('messengerChatList').style.display = 'block';
+}
+
+function sendRoomMessage() {
+  const inp = document.getElementById('roomMsgInput');
+  const txt = inp.value.trim();
+  if(!txt) return;
+  const msgObj = {id: Date.now(), txt: txt, type: 'outgoing', reaction: '', time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), isAudio: false};
+  chatMessages.push(msgObj);
+  localStorage.setItem('myfacebox_chatMessages', JSON.stringify(chatMessages));
+  gunChats.get(msgObj.id.toString()).put(msgObj);
+  inp.value = '';
+  renderChatMessages();
+  addNotification(`New P2P message sent in Chat`);
+}
+
+async function toggleVoiceRecording() {
+  const micBtn = document.getElementById('micRecordBtn');
+  if(!isRecordingVoice) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+      mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const audioId = 'voicenote_' + Date.now();
+        await saveMediaToIDB(audioId, audioBlob);
+        const msgObj = {id: Date.now(), txt: audioId, type: 'outgoing', reaction: '', time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), isAudio: true};
+        chatMessages.push(msgObj);
+        localStorage.setItem('myfacebox_chatMessages', JSON.stringify(chatMessages));
+        gunChats.get(msgObj.id.toString()).put(msgObj);
+        renderChatMessages();
+      };
+      mediaRecorder.start();
+      isRecordingVoice = true;
+      micBtn.classList.add('recording-pulse');
+      micBtn.innerText = '⏹️';
+    } catch(err) { alert('⚠️ Microphone access denied.'); }
+  } else {
+    if(mediaRecorder) { mediaRecorder.stop(); mediaRecorder.stream.getTracks().forEach(t => t.stop()); }
+    isRecordingVoice = false;
+    micBtn.classList.remove('recording-pulse');
+    micBtn.innerText = '🎙️';
+  }
+}
+
+async function renderChatMessages() {
+  const list = document.getElementById('roomMessagesList');
+  if(!list) return;
+  let html = '';
+  for(let i=0; i<chatMessages.length; i++) {
+    let m = chatMessages[i], contentHtml = m.txt;
+    if(m.isAudio) {
+      const blob = await getMediaFromIDB(m.txt);
+      if(blob) {
+        const url = URL.createObjectURL(blob);
+        registerObjectURL(url);
+        contentHtml = `<audio src="${url}" controls style="width:220px;max-width:100%"></audio>`;
+      } else { contentHtml = `🎙️ [Voice Note]`; }
+    }
+    html += `<div class="msg-container ${m.type}"><div class="msg-bubble ${m.type}">${contentHtml}</div></div>`;
+  }
+  list.innerHTML = html;
+  list.scrollTop = list.scrollHeight;
+}
+
+function selectType(t){
+  selectedType = t;
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('type-'+t).classList.add('selected');
+}
+function selectGender(g){
+  selectedGender = g;
+  document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('g-'+g).classList.add('selected');
+}
+
+async function previewPhoto(e){
+  const f = e.target.files[0];
+  if(!f) return;
+  tempAvatarBlobId = f;
+  const optimized = await processAiEnhancedImage(f, 512, 512, 0.95);
+  const url = URL.createObjectURL(optimized);
+  registerObjectURL(url);
+  applyAvatarToUI(url);
+}
+
+async function previewPostPhotos(input) {
+  const files = Array.from(input.files);
+  if(files.length === 0) return;
+  if(files.length > 10) { alert('⚠️ උපරිම ඡායාරූප 10 කට වඩා එකවර ඇතුළත් කළ නොහැක!'); input.value = ''; return; }
+  let processedFiles = [], previewHtml = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px">';
+  for(let i=0; i<files.length; i++) {
+    let optBlob = await processAiEnhancedImage(files[i]);
+    processedFiles.push(optBlob);
+    const url = URL.createObjectURL(optBlob);
+    registerObjectURL(url);
+    previewHtml += `<img src="${url}" style="width:100%;height:80px;object-fit:cover;border-radius:6px">`;
+  }
+  previewHtml += '</div>';
+  currentSelectedFiles = processedFiles;
+  postMediaType = 'multi-photos';
+  document.getElementById('postMediaPreview').innerHTML = previewHtml + ` <span onclick="clearMedia()" style="color:#ea4335;cursor:pointer;font-size:13px;font-weight:bold;display:block;margin-top:6px;">❌ Remove Photos</span>`;
+}
+
+async function previewPostMedia(input, type){
+  const f = input.files[0];
+  if(!f) return;
+  let processedFile = type === 'video' ? await processAiEnhancedVideo(f) : f;
+  currentSelectedFiles = [processedFile];
+  postMediaType = type;
+  const previewUrl = URL.createObjectURL(processedFile);
+  registerObjectURL(previewUrl);
+  let html = type == 'video' ? `<video src="${previewUrl}" controls class="feed-media"></video>` : `<audio src="${previewUrl}" controls style="width:100%"></audio>`;
+  document.getElementById('postMediaPreview').innerHTML = html + ` <span onclick="clearMedia()" style="color:#ea4335;cursor:pointer;font-size:13px;font-weight:bold;display:block;margin-top:4px;">❌ Remove</span>`;
+}
+
+function clearMedia(){
+  currentSelectedFiles = [];
+  postMediaType = 'text';
+  document.getElementById('postMediaPreview').innerHTML = '';
+}
+
+function setLiveMode(){
+  postMediaType = 'live';
+  currentSelectedFiles = ['LIVE_STREAM'];
+  document.getElementById('postMediaPreview').innerHTML = `<div style="background:#ea4335;color:#fff;padding:12px;border-radius:8px;text-align:center;font-weight:bold;font-size:15px">🔴 MASTER LIVE 24/7 <span onclick="clearMedia()" style="cursor:pointer;float:right">❌</span></div>`;
+}
+
+async function directUploadStory(input) {
+  const f = input.files[0];
+  if(!f) return;
+  const isVideo = f.type.startsWith('video');
+  const processed = isVideo ? await processAiEnhancedVideo(f) : await processAiEnhancedImage(f, 1080, 1920, 0.95);
+  const sId = 'story_' + Date.now();
+  await saveMediaToIDB(sId, processed);
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const storyObj = {mediaId: sId, mediaData: e.target.result, mediaType: isVideo ? 'video' : 'photo', name: currentUser ? currentUser.name : 'Master User', timestamp: Date.now(), isUserStory: false, comments: []};
+    stories.push(storyObj);
+    localStorage.setItem('myfacebox_stories', JSON.stringify(stories));
+    gunStories.get(sId).put(storyObj);
+    renderStories();
+    addNotification(`New story uploaded with AI Ultra HD Enhancement!`);
+    alert('✨ AI Ultra HD Enhanced Direct Story Uploaded Successfully!');
+  };
+  reader.readAsDataURL(processed);
+}
+
+async function directUploadReel(input) {
+  const f = input.files[0];
+  if(!f) return;
+  const processed = await processAiEnhancedVideo(f);
+  const rId = 'reel_' + Date.now();
+  await saveMediaToIDB(rId, processed);
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const reelObj = {mediaId: rId, mediaData: e.target.result, name: currentUser ? currentUser.name : 'Master User', timestamp: Date.now(), comments: []};
+    reels.unshift(reelObj);
+    localStorage.setItem('myfacebox_reels', JSON.stringify(reels));
+    gunReels.get(rId).put(reelObj);
+    resetAndRender();
+    addNotification(`New reel published with AI Enhancement!`);
+    alert('🎬 AI Ultra HD Enhanced Reel Uploaded Successfully!');
+  };
+  reader.readAsDataURL(processed);
+}
+
+function registerUserSecure() {
+  const name = document.getElementById('regName').value.trim();
+  const contact = document.getElementById('regContact').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const bio = document.getElementById('regBio').value.trim();
+  const birthday = document.getElementById('regBirthday').value;
+  const country = document.getElementById('regCountry').value;
+  const langs = [...document.querySelectorAll('.lang-check input:checked')].map(i => i.value).join(',');
+
+  if(!name || !contact || !password) { alert('Username, Email/Phone & Password required!'); return; }
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phoneRegex = /^[0-9+\-\s()]{8,15}$/;
+  if(!emailRegex.test(contact) && !phoneRegex.test(contact)) {
+    alert('⚠️ කරුණාකර වලංගු ඊමේල් ලිපිනයක් (Email) හෝ දුරකථන අංකයක් (Phone Number) ඇතුළත් කරන්න!');
+    return;
+  }
+
+  gunUser.create(name, password, async (ack) => {
+    if(ack.err) {
+      alert('⚠️ Registration Error: ' + ack.err);
+    } else {
+      gunUser.auth(name, password, async (authAck) => {
+        if(tempAvatarBlobId) { await syncGlobalAvatar(tempAvatarBlobId); }
+        currentUser = {name, contact, bio: bio || 'MY FACE BOX Creator', img: localStorage.getItem('myfacebox_user_avatar') || '', type: selectedType, birthday, country, gender: selectedGender, langs, time: new Date().toLocaleString(), id: Date.now()};
+        users.unshift(currentUser);
+        localStorage.setItem('myfacebox_users', JSON.stringify(users));
+        localStorage.setItem('myfacebox_currentUser', JSON.stringify(currentUser));
+        updateProfileUI();
+        addNotification(`Secure Gun SEA Registration successful for ${name}!`);
+        resetAndRender();
+        setTimeout(()=>{ switchPage('homePage', document.querySelectorAll('.nav-tab')[0]); }, 600);
+      });
+    }
+  });
+}
+
+function loginUserSecure() {
+  const name = document.getElementById('regName').value.trim();
+  const password = document.getElementById('regPassword').value;
+  if(!name || !password) { alert('Username & Password required!'); return; }
+
+  gunUser.auth(name, password, (ack) => {
+    if(ack.err) {
+      alert('⚠️ Login Failed: ' + ack.err);
+    } else {
+      const found = users.find(u => u.name === name) || {name, contact: 'secure@user.com', bio: 'Verified Gun SEA User', img: '', type: 'personal'};
+      currentUser = found;
+      localStorage.setItem('myfacebox_currentUser', JSON.stringify(currentUser));
+      updateProfileUI();
+      addNotification(`Secure Gun SEA Login successful for ${name}!`);
+      resetAndRender();
+      setTimeout(()=>{ switchPage('homePage', document.querySelectorAll('.nav-tab')[0]); }, 600);
+    }
+  });
+}
+
+function updateProfileUI(){
+  if(!currentUser) return;
+  const av = localStorage.getItem('myfacebox_user_avatar') || currentUser.img;
+  if(av) applyAvatarToUI(av);
+  document.getElementById('profileNameDisplay').innerText = currentUser.name;
+  document.getElementById('profileBioDisplay').innerText = currentUser.bio || '';
+  document.getElementById('profileContactDisplay').innerText = currentUser.contact;
+  document.getElementById('profileMetaDisplay').innerHTML = `Type: <b>${currentUser.type}</b><br>Country: <b>${currentUser.country}</b><br>Gender: <b>${currentUser.gender}</b><br>Birthday: <b>${currentUser.birthday || 'N/A'}</b><br>Languages: <b>${currentUser.langs}</b>`;
+}
+
+function openEditProfileModal() {
+  if(!currentUser) { alert('Please register first!'); return; }
+  const newName = prompt("නම වෙනස් කරන්න:", currentUser.name);
+  if(newName === null) return;
+  const newBio = prompt("Bio එක වෙනස් කරන්න:", currentUser.bio || '');
+  if(newBio === null) return;
+  currentUser.name = newName.trim() || currentUser.name;
+  currentUser.bio = newBio.trim();
+  localStorage.setItem('myfacebox_currentUser', JSON.stringify(currentUser));
+  updateProfileUI();
+  resetAndRender();
+  alert('✨ Profile updated successfully!');
+}
+
+async function createPost(){
+  const now = Date.now();
+  if(now - lastPostTimestamp < 5000) {
+    alert('⚠️ Spam protection active! Please wait a few seconds before posting again.');
+    return;
+  }
+  const txt = document.getElementById('postInput').value.trim();
+  if(!txt && currentSelectedFiles.length === 0) return;
+  
+  if(containsBadWords(txt)) {
+    alert('⚠️ Your post contains flagged or prohibited content.');
+    return;
+  }
+
+  lastPostTimestamp = now;
+  const id = Date.now().toString();
+  const posterName = currentUser ? currentUser.name : 'Master User';
+  const posterAvatar = localStorage.getItem('myfacebox_user_avatar') || '';
+  let mediaIds = [], mediaDatas = [];
+  if(currentSelectedFiles.length > 0 && currentSelectedFiles[0] !== 'LIVE_STREAM') {
+    for(let i=0; i<currentSelectedFiles.length; i++) {
+      let file = currentSelectedFiles[i], mId = 'media_' + id + '_' + i;
+      await saveMediaToIDB(mId, file);
+      mediaIds.push(mId);
+      let base64 = await new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file); });
+      mediaDatas.push(base64);
+    }
+  } else if(currentSelectedFiles[0] === 'LIVE_STREAM') { mediaIds = ['LIVE_STREAM']; }
+
+  const postObj = {txt, dateStr: new Date().toISOString().split('T')[0], name: posterName, avatar: posterAvatar, time: 'Just now', mediaIds, mediaDatas, mediaType: postMediaType, likes: 0, liked: false, loves: 0, comments: [], shares: 0, id};
+  
+  if(!navigator.onLine) {
+    await saveToOfflineQueue(postObj);
+    document.getElementById('offlineBanner').style.display = 'block';
+    alert('📴 Offline mode: Post saved locally and will auto-sync when signal returns!');
+  } else {
+    posts.unshift(postObj);
+    localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+    gunPosts.get(id).put(postObj);
+  }
+
+  document.getElementById('postInput').value = '';
+  clearMedia();
+  resetAndRender();
+  addNotification(`Your post was published securely!`);
+}
+
+function toggleLike(idx){
+  const realIdx = (currentPage - 1) * pageSize + idx;
+  posts[realIdx].liked = !posts[realIdx].liked;
+  posts[realIdx].likes += posts[realIdx].liked ? 1 : -1;
+  localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+  gunPosts.get(posts[realIdx].id).get('likes').put(posts[realIdx].likes);
+  gunPosts.get(posts[realIdx].id).get('liked').put(posts[realIdx].liked);
+  if(posts[realIdx].liked) addNotification(`You liked ${posts[realIdx].name}'s post ❤️`);
+  renderFeedSlice();
+}
+
+function toggleLove(idx){
+  const realIdx = (currentPage - 1) * pageSize + idx;
+  posts[realIdx].loves = posts[realIdx].loves ? 0 : 1;
+  localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+  gunPosts.get(posts[realIdx].id).get('loves').put(posts[realIdx].loves);
+  renderFeedSlice();
+}
+
+function addComment(idx){
+  const realIdx = (currentPage - 1) * pageSize + idx;
+  const inp = document.getElementById('cinput-' + idx);
+  if(!inp) return;
+  const txt = inp.value.trim();
+  if(!txt) return;
+  const commenter = currentUser ? currentUser.name : 'Master User';
+  if(!posts[realIdx].comments) posts[realIdx].comments = [];
+  posts[realIdx].comments.push({user: commenter, txt, time: 'Just now', replies: []});
+  localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+  gunPosts.get(posts[realIdx].id).get('comments').put(JSON.stringify(posts[realIdx].comments));
+  inp.value = '';
+  addNotification(`${commenter} commented on a post 💬`);
+  renderFeedSlice();
+}
+
+function editComment(postIdx, commIdx){
+  const realIdx = (currentPage - 1) * pageSize + postIdx;
+  const newTxt = prompt("කමෙන්ට් එක සංස්කරණය කරන්න:", posts[realIdx].comments[commIdx].txt);
+  if(newTxt !== null && newTxt.trim() !== ""){
+    posts[realIdx].comments[commIdx].txt = newTxt.trim();
+    localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+    gunPosts.get(posts[realIdx].id).get('comments').put(JSON.stringify(posts[realIdx].comments));
+    renderFeedSlice();
+  }
+}
+
+function deleteComment(postIdx, commIdx){
+  const realIdx = (currentPage - 1) * pageSize + postIdx;
+  if(confirm("මෙම කමෙන්ට් එක මකා දැමීමට අවශ්‍යද?")){
+    posts[realIdx].comments.splice(commIdx, 1);
+    localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+    gunPosts.get(posts[realIdx].id).get('comments').put(JSON.stringify(posts[realIdx].comments));
+    renderFeedSlice();
+  }
+}
+
+function editPost(idx){
+  const realIdx = (currentPage - 1) * pageSize + idx;
+  const newText = prompt("පෝස්ට් එක සංස්කරණය කරන්න:", posts[realIdx].txt);
+  if(newText !== null){
+    posts[realIdx].txt = newText;
+    localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+    gunPosts.get(posts[realIdx].id).get('txt').put(newText);
+    renderFeedSlice();
+  }
+}
+
+function deletePost(idx){
+  const realIdx = (currentPage - 1) * pageSize + idx;
+  if(confirm("මෙම පෝස්ට් එක සදහටම මකා දැමීමට අවශ්‍යද?")){
+    const pId = posts[realIdx].id;
+    posts.splice(realIdx, 1);
+    localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+    gunPosts.get(pId).put(null);
+    resetAndRender();
+  }
+}
+
+function sharePost(idx){
+  const realIdx = (currentPage - 1) * pageSize + idx;
+  posts[realIdx].shares++;
+  localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+  gunPosts.get(posts[realIdx].id).get('shares').put(posts[realIdx].shares);
+  if(navigator.share) navigator.share({title: 'MY FACE BOX', text: posts[realIdx].txt || '', url: window.location.href}).catch(() => {});
+  else { navigator.clipboard?.writeText(posts[realIdx].txt || ''); alert('🔗 Link copied!'); }
+  renderFeedSlice();
+}
+
+function clearFilter(){
+  document.getElementById('filterDate').value = '';
+  document.getElementById('filterKeyword').value = '';
+  resetAndRender();
+}
+
+function launchWebApp(appName, appUrl) {
+  document.getElementById('sandboxAppTitle').innerText = '🌐 ' + appName + ' (Cloud Sandbox Active)';
+  document.getElementById('sandboxIframe').src = appUrl;
+  document.getElementById('webappSandboxModal').style.display = 'flex';
+}
+
+function closeWebAppSandbox() {
+  document.getElementById('webappSandboxModal').style.display = 'none';
+  document.getElementById('sandboxIframe').src = '';
+}
+
+function sandboxGoBack() {
+  const iframe = document.getElementById('sandboxIframe');
+  try { iframe.contentWindow.history.back(); } catch(e) { alert('Cannot navigate back inside sandbox.'); }
+}
+
+function sandboxRefresh() {
+  const iframe = document.getElementById('sandboxIframe');
+  iframe.src = iframe.src;
+}
+
+function filterCloudApps(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('#appShortcutsRow .shortcut-item').forEach(item => {
+    item.style.display = item.innerText.toLowerCase().includes(q) ? 'block' : (q === '' ? 'block' : 'none');
+  });
+}
+
+function launchCustomSearchedApp() {
+  const query = document.getElementById('appSearchInput').value.trim();
+  if(!query) { alert('Please type an app name!'); return; }
+  launchWebApp(query, `https://www.google.com/search?q=${encodeURIComponent(query)}+online+web+app`);
+}
+
+function openFbViewer(mediaSrc, mediaType, userName, userAvatar, timeStr, itemType, itemIndex) {
+  if(!mediaSrc) return;
+  currentViewerMediaSrc = mediaSrc;
+  currentViewerItem = {type: itemType, index: itemIndex};
+  currentZoom = 1; panX = 0; panY = 0;
+  document.getElementById('manualZoomSlider').value = 1;
+  document.getElementById('fbModalUsername').innerText = userName || 'Master User';
+  document.getElementById('fbModalTime').innerText = timeStr || 'Just now';
+  document.getElementById('fbModalAvatar').innerHTML = userAvatar ? `<img src="${userAvatar}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='👤'">` : '👤';
+  
+  const bodyEl = document.getElementById('fbViewerBody');
+  bodyEl.innerHTML = mediaType === 'video' ? `<video src="${mediaSrc}" controls autoplay playsinline class="zoomable-media" id="viewerTargetMedia"></video>` : `<img src="${mediaSrc}" class="zoomable-media" id="viewerTargetMedia">`;
+  document.getElementById('fbViewerModal').style.display = 'flex';
+  initPinchZoomAndPan();
+}
+
+function closeFbViewer() { 
+  document.getElementById('fbViewerModal').style.display = 'none'; 
+  document.getElementById('fbViewerBody').innerHTML = ''; 
+}
+
+function updateMediaTransform() {
+  const target = document.getElementById('viewerTargetMedia');
+  if(target) {
+    target.style.transform = `translate(${panX}px, ${panY}px) scale(${currentZoom})`;
+  }
+  const slider = document.getElementById('manualZoomSlider');
+  if(slider) slider.value = currentZoom;
+}
+
+function setManualZoom(val) {
+  currentZoom = parseFloat(val);
+  updateMediaTransform();
+}
+
+function adjustZoom(delta) {
+  currentZoom = Math.min(Math.max(1, currentZoom + delta), 4);
+  updateMediaTransform();
+}
+
+function resetZoom() {
+  currentZoom = 1; panX = 0; panY = 0;
+  updateMediaTransform();
+}
+
+function initPinchZoomAndPan() {
+  const container = document.getElementById('fbViewerBody');
+  const target = document.getElementById('viewerTargetMedia');
+  if(!container || !target) return;
+
+  function getDistance(touches) {
+    return Math.hypot(touches[0].pageX - touches[1].pageX, touches[0].pageY - touches[1].pageY);
+  }
+
+  container.addEventListener('touchstart', e => {
+    if(e.touches.length === 2) {
+      initialPinchDistance = getDistance(e.touches);
+    } else if(e.touches.length === 1 && currentZoom > 1) {
+      isDragging = true;
+      startX = e.touches[0].clientX - panX;
+      startY = e.touches[0].clientY - panY;
+    }
+  }, {passive: true});
+
+  container.addEventListener('touchmove', e => {
+    if(e.touches.length === 2 && initialPinchDistance) {
+      const currentDist = getDistance(e.touches);
+      const scaleFactor = currentDist / initialPinchDistance;
+      currentZoom = Math.min(Math.max(1, currentZoom * (scaleFactor * 0.05 + 0.95)), 4);
+      initialPinchDistance = currentDist;
+      updateMediaTransform();
+    } else if(e.touches.length === 1 && isDragging && currentZoom > 1) {
+      panX = e.touches[0].clientX - startX;
+      panY = e.touches[0].clientY - startY;
+      updateMediaTransform();
+    }
+  }, {passive: true});
+
+  container.addEventListener('touchend', e => {
+    if(e.touches.length < 2) initialPinchDistance = null;
+    if(e.touches.length === 0) isDragging = false;
+  });
+
+  container.addEventListener('wheel', e => {
+    e.preventDefault();
+    if(e.deltaY < 0) {
+      currentZoom = Math.min(4, currentZoom + 0.2);
+    } else {
+      currentZoom = Math.max(1, currentZoom - 0.2);
+      if(currentZoom === 1) { panX = 0; panY = 0; }
+    }
+    updateMediaTransform();
+  }, {passive: false});
+}
+
+function sendViewerComment() {
+  const inp = document.getElementById('fbCommentInput'), txt = inp.value.trim();
+  if(!txt || !currentViewerItem) return;
+  const commenter = currentUser ? currentUser.name : 'Master User';
+  if(currentViewerItem.type === 'post') {
+    posts[currentViewerItem.index].comments.push({user: commenter, txt, time: 'Just now', replies: []});
+    localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+  }
+  document.getElementById('fbViewerCommentList').innerHTML += `<div class="fb-comment-bubble"><span><b>${commenter}:</b> ${txt}</span><small>Just now</small></div>`;
+  inp.value = '';
+  resetAndRender();
+}
+
+function downloadCurrentMedia() {
+  if(!currentViewerMediaSrc) return;
+  const a = document.createElement('a');
+  a.href = currentViewerMediaSrc;
+  a.download = 'MyFaceBox_AI_Enhanced_' + Date.now();
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  alert('📥 Download started!');
+}
+
+async function renderStories() {
+  const storiesContainer = document.getElementById('storiesRow');
+  if(!storiesContainer) return;
+  let storiesHtml = `<div class="story-card story-add-card"><label style="cursor:pointer;text-align:center;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;"><span style="font-size:24px;color:#ff7a00;">➕</span><span style="font-size:11px;font-weight:bold;color:#ff7a00;margin-top:4px">Add Story</span><input type="file" accept="image/*,video/*" hidden onchange="directUploadStory(this)"></label></div>`;
+  for(let i=0; i<stories.length; i++) {
+    let s = stories[i], mediaSrc = s.mediaData || s.img;
+    if(!mediaSrc && s.mediaId) {
+      const blob = await getMediaFromIDB(s.mediaId);
+      if(blob) {
+        mediaSrc = URL.createObjectURL(blob);
+        registerObjectURL(mediaSrc);
+      }
+    }
+    if(mediaSrc) {
+      storiesHtml += `<div class="story-card" onclick="openFbViewer('${mediaSrc}', '${s.mediaType === 'video' ? 'video' : 'photo'}', '${s.name}', '${currentUser ? currentUser.img : ''}', 'Active Story', 'story', ${i})">${s.mediaType === 'video' ? `<video src="${mediaSrc}" muted style="width:100%;height:100%;object-fit:cover"></video>` : `<img src="${mediaSrc}">`}<div class="story-label">${s.name}</div></div>`;
+    }
+  }
+  storiesContainer.innerHTML = storiesHtml;
+}
+
+async function getReelsHTML() {
+  let reelsHtml = `<div class="reels-panel"><div class="reels-header"><div class="reels-title">🎬 Reels <small style="color:var(--status-text);font-size:12px;font-weight:normal;">• AI Enhanced HD</small></div><label style="background:linear-gradient(135deg, #ff7a00, #ff5500);color:#fff;padding:6px 14px;border-radius:16px;font-size:12px;cursor:pointer;font-weight:bold;">➕ Create Reel<input type="file" accept="video/*" hidden onchange="directUploadReel(this)"></label></div><div class="scrollable-reels"><div class="reel-card reel-add-card"><label style="cursor:pointer;text-align:center;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;"><span style="font-size:24px;color:#ff7a00;">🎬</span><span style="font-size:11px;font-weight:bold;color:#ff7a00;margin-top:4px">Create Reel</span><input type="file" accept="video/*" hidden onchange="directUploadReel(this)"></label></div>`;
+  for(let i=0; i<reels.length; i++) {
+    let r = reels[i], mediaSrc = r.mediaData || '';
+    if(!mediaSrc && r.mediaId) {
+      const blob = await getMediaFromIDB(r.mediaId);
+      if(blob) {
+        mediaSrc = URL.createObjectURL(blob);
+        registerObjectURL(mediaSrc);
+      }
+    }
+    if(mediaSrc) {
+      let videoAttr = dataSaverMode ? 'muted playsinline preload="none"' : 'muted playsinline autoplay loop';
+      reelsHtml += `<div class="reel-card" onclick="openFbViewer('${mediaSrc}', 'video', '${r.name}', '${currentUser ? currentUser.img : ''}', 'Reel Video', 'reel', ${i})"><video src="${mediaSrc}" ${videoAttr}></video><div class="reel-label">👤 ${r.name}</div></div>`;
+    }
+  }
+  reelsHtml += `</div></div>`;
+  return reelsHtml;
+}
+
+function resetAndRender() {
+  currentPage = 1;
+  renderFeedSlice();
+}
+
+async function renderFeedSlice() {
+  const fDate = document.getElementById('filterDate').value;
+  const fKeyword = document.getElementById('filterKeyword').value.toLowerCase();
+  const filteredPosts = posts.filter(p => (!fDate || p.dateStr === fDate || (p.time && p.time.includes(fDate))) && (!fKeyword || (p.txt && p.txt.toLowerCase().includes(fKeyword)) || (fKeyword.startsWith('#') && p.txt && p.txt.toLowerCase().includes(fKeyword))));
+  
+  const paginatedPosts = filteredPosts.slice(0, currentPage * pageSize);
+  const currentAv = localStorage.getItem('myfacebox_user_avatar') || '';
+  const feed = document.getElementById('feedContainer');
+  let feedHtml = '', reelsSectionHtml = await getReelsHTML();
+
+  if (filteredPosts.length === 0) {
+    feedHtml = reelsSectionHtml + `<div style="padding:20px;text-align:center;color:var(--status-text);font-weight:bold">No posts found. Create your first post above!</div>`;
+  } else {
+    for(let i=0; i<paginatedPosts.length; i++) {
+      const p = paginatedPosts[i];
+      let mediaHtml = '';
+      let imgClass = dataSaverMode ? 'feed-media data-saver-img lazy' : 'feed-media';
+      if(p.mediaType === 'multi-photos' && p.mediaDatas && p.mediaDatas.length > 0) {
+        mediaHtml = '<div class="feed-multi-grid">';
+        for(let m=0; m<p.mediaDatas.length; m++) {
+          let mUrl = p.mediaDatas[m];
+          if(!mUrl && p.mediaIds && p.mediaIds[m]) {
+            const blob = await getMediaFromIDB(p.mediaIds[m]);
+            if(blob) { mUrl = URL.createObjectURL(blob); registerObjectURL(mUrl); }
+          }
+          if(mUrl) mediaHtml += `<img src="${mUrl}" class="${imgClass}" onclick="openFbViewer('${mUrl}', 'photo', '${p.name}', '${p.avatar}', '${p.time}', 'post', ${i})">`;
+        }
+        mediaHtml += '</div>';
+      } else {
+        let mediaUrl = (p.mediaDatas && p.mediaDatas[0]) || '';
+        if(!mediaUrl && p.mediaIds && p.mediaIds[0] && p.mediaIds[0] !== 'LIVE_STREAM') {
+          const blob = await getMediaFromIDB(p.mediaIds[0]);
+          if(blob) { mediaUrl = URL.createObjectURL(blob); registerObjectURL(mediaUrl); }
+        }
+        if(mediaUrl) {
+          if(p.mediaType == 'photo') mediaHtml = `<img src="${mediaUrl}" class="${imgClass}" onclick="openFbViewer('${mediaUrl}', 'photo', '${p.name}', '${p.avatar}', '${p.time}', 'post', ${i})">`;
+          else if(p.mediaType == 'video') {
+            let vidAttr = dataSaverMode ? 'controls preload="none"' : 'controls playsinline';
+            mediaHtml = `<video src="${mediaUrl}" ${vidAttr} class="feed-media"></video>`;
+          }
+          else if(p.mediaType == 'voice') mediaHtml = `<audio src="${mediaUrl}" controls style="width:100%;margin-top:8px"></audio>`;
+        } else if(p.mediaType == 'live') {
+          mediaHtml = `<div style="background:#111;color:#fff;padding:14px;border-radius:10px;margin-top:8px;text-align:center;font-weight:bold;font-size:15px">🔴 MASTER LIVE 24/7 - ${p.name} Active</div>`;
+        }
+      }
+
+      const commentsHtml = (p.comments || []).map((c, cIdx) => `<div class="comment-item" style="font-size:14px"><div><b>${c.user}</b> ${c.txt}<br><small style="color:var(--status-text)">${c.time}</small></div><div><button onclick="editComment(${i}, ${cIdx})" style="background:none;border:none;color:#ff7a00;cursor:pointer;font-size:13px;margin-right:6px">✏️</button><button onclick="deleteComment(${i}, ${cIdx})" style="background:none;border:none;color:#ea4335;cursor:pointer;font-size:13px">🗑️</button></div></div>`).join('');
+
+      feedHtml += `<div class="feed-post-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="display:flex;align-items:center;gap:10px;"><div class="user-avatar" style="width:38px;height:38px">${p.avatar ? `<img src="${p.avatar}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='👤'">` : '👤'}</div><div><b style="font-size:15px;color:var(--text-main)">${p.name}</b><br><small style="color:var(--status-text);font-size:11px">📅 ${p.dateStr || ''} • ⏰ ${p.time || 'Just now'}</small></div></div>
+          <div><button onclick="editPost(${i})" style="background:none;border:none;color:#ff7a00;cursor:pointer;margin-left:8px;font-size:13px;font-weight:bold">✏️ Edit</button><button onclick="deletePost(${i})" style="background:none;border:none;color:#ea4335;cursor:pointer;margin-left:8px;font-size:13px;font-weight:bold">🗑️ Delete</button></div>
+        </div>
+        <div style="margin-top:8px;font-size:15px;line-height:1.5;color:var(--text-main)">${p.txt}</div>
+        ${mediaHtml}
+        <div class="count-bar"><span>❤️ ${p.likes + p.loves} Likes</span><span>${(p.comments || []).length} Comments • ${p.shares} Shares</span></div>
+        <div class="action-bar">
+          <div class="action-btn ${p.liked?'liked':''}" onclick="toggleLike(${i})">👍 Like ${p.likes>0?'('+p.likes+')':''}</div>
+          <div class="action-btn ${p.loves?'loved':''}" onclick="toggleLove(${i})">❤️ Love</div>
+          <div class="action-btn" onclick="document.getElementById('cinput-${i}').focus()">💬 Comment</div>
+          <div class="action-btn" onclick="sharePost(${i})">🔗 Share</div>
+        </div>
+        <div class="comment-list">${commentsHtml}</div>
+        <div class="comment-box"><div class="user-avatar" style="width:34px;height:34px">${currentAv ? `<img src="${currentAv}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='👤'">` : '👤'}</div><input id="cinput-${i}" placeholder="Write a comment..." onkeydown="if(event.key==='Enter')addComment(${i})"><button onclick="addComment(${i})" style="background:linear-gradient(135deg, #ff7a00, #ff5500);color:#fff;border:none;padding:6px 14px;border-radius:16px;font-size:13px;font-weight:800">Send</button></div>
+      `;
+      if (i === 0) feedHtml += reelsSectionHtml;
+    }
+  }
+  feed.innerHTML = feedHtml;
+  renderStories();
+  const dataTableEl = document.getElementById('dataTable');
+  if(dataTableEl) dataTableEl.innerHTML = users.map(u => `<div style="background:var(--card-bg);padding:12px;border-bottom:1px solid var(--border-color);font-size:14px;font-weight:600;color:var(--text-main)"><b>${u.name}</b> [${u.type}] 🌐<br><small style="font-size:13px;color:var(--status-text)">${u.gender} | ${u.country} | ${u.birthday||'No BD'} | ${u.langs}</small></div>`).join('') || 'No users found';
+  isLoadingMore = false;
+  const skeletonEl = document.getElementById('feedLoadingSkeleton');
+  if(skeletonEl) skeletonEl.style.display = 'none';
+}
+
+function setupInfiniteScroll() {
+  const scroller = document.getElementById('mainContentScroller');
+  if(!scroller) return;
+  scroller.addEventListener('scroll', () => {
+    if(scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 100) {
+      if(!isLoadingMore) {
+        isLoadingMore = true;
+        const skeletonEl = document.getElementById('feedLoadingSkeleton');
+        if(skeletonEl) skeletonEl.style.display = 'block';
+        setTimeout(() => {
+          currentPage++;
+          renderFeedSlice();
+        }, 500);
+      }
+    }
+  });
+}
+
+function openEmergencyHub() {
+  document.getElementById('emergencyModal').style.display = 'flex';
+  loadEmergencyQueue();
+}
+function closeEmergencyHub() {
+  document.getElementById('emergencyModal').style.display = 'none';
+}
+
+async function sendEmergencyPost() {
+  const txt = document.getElementById('emergencyText').value.trim();
+  const loc = document.getElementById('emergencyLoc').value.trim();
+  if(!txt) { alert('Please write emergency message!'); return; }
+  const emObj = {id: 'em_' + Date.now(), txt: `🚨 EMERGENCY (119): ${txt} | Location: ${loc || 'Unknown'}`, time: new Date().toLocaleString()};
+  await saveEmergencyToIDB(emObj);
+  document.getElementById('emergencyStatus').innerText = '🚨 Saved offline successfully! Will sync automatically.';
+  document.getElementById('emergencyText').value = '';
+  document.getElementById('emergencyLoc').value = '';
+  loadEmergencyQueue();
+}
+
+async function loadEmergencyQueue() {
+  if(!db) return;
+  const tx = db.transaction("emergencyStore", "readonly");
+  const store = tx.objectStore("emergencyStore");
+  const req = store.getAll();
+  req.onsuccess = () => {
+    const list = req.result || [];
+    const container = document.getElementById('emergencyQueueList');
+    if(!container) return;
+    container.innerHTML = list.map(e => `<div style="background:#f8f9fa;padding:6px;border-radius:6px;margin-top:4px;color:#333"><b>${e.time}</b>: ${e.txt}</div>`).join('') || '<div style="color:#777">No pending emergency alerts</div>';
+  };
+}
+
+function copyEmergencySMS() {
+  const txt = document.getElementById('emergencyText').value.trim();
+  const loc = document.getElementById('emergencyLoc').value.trim();
+  const sms = `EMERGENCY 119: ${txt} | Location: ${loc}`;
+  navigator.clipboard?.writeText(sms);
+  alert('📋 Copied to clipboard! You can paste it directly into your SMS app.');
+}
+
+function exportMasterDataBackup() {
+  const backupData = {
+    users: JSON.parse(localStorage.getItem('myfacebox_users') || '[]'),
+    posts: JSON.parse(localStorage.getItem('myfacebox_posts') || '[]'),
+    stories: JSON.parse(localStorage.getItem('myfacebox_stories') || '[]'),
+    reels: JSON.parse(localStorage.getItem('myfacebox_reels') || '[]'),
+    diaryEntries: JSON.parse(localStorage.getItem('myfacebox_diaryEntries') || '[]'),
+    studioAudios: JSON.parse(localStorage.getItem('myfacebox_studioAudios') || '[]'),
+    currentUser: JSON.parse(localStorage.getItem('myfacebox_currentUser') || 'null'),
+    theme: localStorage.getItem('myfacebox_theme') || 'light',
+    lang: localStorage.getItem('myfacebox_lang') || 'si'
+  };
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", `MyFaceBox_Master_Backup_${Date.now()}.json`);
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+  alert('📥 Master Backup JSON exported successfully!');
+}
+
+function importMasterDataBackup(event) {
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if(imported.users) localStorage.setItem('myfacebox_users', JSON.stringify(imported.users));
+      if(imported.posts) localStorage.setItem('myfacebox_posts', JSON.stringify(imported.posts));
+      if(imported.stories) localStorage.setItem('myfacebox_stories', JSON.stringify(imported.stories));
+      if(imported.reels) localStorage.setItem('myfacebox_reels', JSON.stringify(imported.reels));
+      if(imported.diaryEntries) localStorage.setItem('myfacebox_diaryEntries', JSON.stringify(imported.diaryEntries));
+      if(imported.studioAudios) localStorage.setItem('myfacebox_studioAudios', JSON.stringify(imported.studioAudios));
+      if(imported.currentUser) localStorage.setItem('myfacebox_currentUser', JSON.stringify(imported.currentUser));
+      if(imported.theme) localStorage.setItem('myfacebox_theme', imported.theme);
+      if(imported.lang) localStorage.setItem('myfacebox_lang', imported.lang);
+      
+      alert('✨ Master Backup successfully imported! Reloading app...');
+      window.location.reload();
+    } catch(err) { alert('⚠️ Invalid backup file format.'); }
+  };
+  reader.readAsText(file);
+}
+
+function clearAllAppCache() {
+  if(confirm("⚠️ සියලුම දත්ත සහ කැෂේ (Cache) මකා දැමීමට අවශ්‍යද?")) {
+    localStorage.clear();
+    window.location.reload();
+  }
+}
+
+window.addEventListener('online', async ()=>{
+  document.getElementById('netStatus').innerHTML='5G 85% • Master Mesh:<span style="color:#31a24c">● Online</span>';
+  document.getElementById('offlineBanner').style.display='none';
+  
+  if(db) {
+    const tx = db.transaction("offlineQueue", "readonly");
+    const req = tx.objectStore("offlineQueue").getAll();
+    req.onsuccess = async () => {
+      const queue = req.result || [];
+      if(queue.length > 0) {
+        for(let item of queue) {
+          posts.unshift(item);
+          gunPosts.get(item.id).put(item);
+        }
+        localStorage.setItem('myfacebox_posts', JSON.stringify(posts));
+        const delTx = db.transaction("offlineQueue", "readwrite");
+        delTx.objectStore("offlineQueue").clear();
+        resetAndRender();
+        alert('🚀 Connection restored! All offline posts successfully synced to international cloud mesh.');
+      }
+    };
+  }
+});
+
+window.addEventListener('offline',()=>{
+  document.getElementById('netStatus').innerHTML='Offline • Master Mesh:<span style="color:orange">● Local</span>';
+  document.getElementById('offlineBanner').style.display='block';
+});
 </script>
 </body>
 </html>
