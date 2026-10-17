@@ -1,36 +1,3 @@
-            value TEXT
-        );
-        """)
-        
-        cursor.execute("SELECT value FROM app_data WHERE key = 'posts'")
-        if not cursor.fetchone():
-            initial_posts = [
-                {
-                    "id": 1,
-                    "user_name": "Sumiya. M.R.A",
-                    "profile_pic": "https://pravatar.cc",
-                    "time": "මිනිතත්තු කිහිපයකට පෙර",
-                    "text": "My Face Box Live Content 🚀",
-                    "media_url": "https://unsplash.com",
-                    "media_type": "image",
-                    "likes": 1,
-                    "comments": 0,
-                    "shares": 1
-                }
-            ]
-            placeholder = "%s" if hasattr(cursor, 'mogrify') else "?"
-            cursor.execute(f"INSERT INTO app_data (key, value) VALUES ('posts', {placeholder})", (json.dumps(initial_posts),))
-
-        cursor.execute("SELECT value FROM app_data WHERE key = 'stories'")
-        if not cursor.fetchone():
-            initial_stories = []
-            placeholder = "%s" if hasattr(cursor, 'mogrify') else "?"
-            cursor.execute(f"INSERT INTO app_data (key, value) VALUES ('stories', {placeholder})", (json.dumps(initial_stories),))
-
-        conn.commit()
-        cursor.close()
-        conn.close()
-        print("DB Initialized Successfully!")
     except Exception as e:
         print(f"DB Initialization Error: {e}")
 
@@ -498,3 +465,36 @@ python3 -m http.server 5000
 ls
 cd MyFaceBox
 python3 -m http.server 5000
+cd ~/myfacebox
+cp /storage/emulated/0/index.html ./public/
+node server.js
+cd ~/myfacebox
+cp /storage/emulated/0/index.html ./public/
+node server.js
+cp /storage/emulated/0/index.html ~/
+node server.js
+node server.js --debug
+node server.js
+ls -la
+cp /storage/emulated/0/index.html ./public/
+bash run.sh
+rm ~/index.html
+node server.js
+bash start_facebox.sh
+ps aux | grep node
+netstat -tuln
+killall node
+node server.js
+node server.js --trace-warnings
+cat server.log
+cp /sdcard/index.html ~/my-face-box/
+cd ~/my-face-box
+git add index.html
+git commit -m "Update index.html design"
+git push origin main
+ls
+cp /sdcard/index.html .
+cp index.html public/
+git add .
+git commit -m "Add updated index.html to public folder"
+git push origin main
