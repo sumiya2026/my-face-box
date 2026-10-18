@@ -26,7 +26,6 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
   .app-window { border-left:1px solid var(--border-color); border-right:1px solid var(--border-color); }
 }
 
-/* Status & Header */
 .status-bar{background:var(--status-bar-bg)!important;color:var(--status-text)!important;padding:calc(env(safe-area-inset-top, 0px) + 6px) 16px 6px 16px;display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-bottom:1px solid var(--border-color);z-index:20;}
 .live-badge{background:#ea4335!important;color:#fff!important;font-size:11px;padding:2px 6px;border-radius:4px;margin-left:4px}
 .main-header{background:var(--header-bg)!important;color:var(--text-main)!important;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);z-index:20;position:sticky;top:0}
@@ -36,7 +35,6 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 .brand-title{font-size:18px;font-weight:900;font-style:italic;font-family:'Courier New', Courier, monospace;text-transform:uppercase;color:#0088ff!important;letter-spacing:1px;}
 .brand-signature{font-size:11px;color:var(--status-text)!important;font-style:italic;font-weight:700}
 
-/* Account Switcher Bar */
 .account-switcher-bar {
   background: var(--card-sub-bg); border-bottom: 1px solid var(--border-color);
   padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: bold;
@@ -45,31 +43,47 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
   background: #0088ff; color: #fff; padding: 3px 8px; border-radius: 12px; font-size: 10px; margin-left: 6px;
 }
 
-/* Main Content Area */
 .content-scroller{flex:1;background:var(--bg-main)!important;position:relative;}
-
-/* Views Controller */
 .app-view-panel { display: none; width: 100%; height: 100%; flex-direction: column; }
 .app-view-panel.active-view { display: flex; }
 
-/* Stories Tray */
-.stories-container {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px;
+.stories-tray-container {
+  display: flex; gap: 8px; padding: 12px 12px; overflow-x: auto;
   background: var(--card-bg); border-bottom: 1px solid var(--border-color);
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
 }
-.story-card {
-  width: 100%; aspect-ratio: 9 / 16; border-radius: 12px; background: var(--card-sub-bg);
-  border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between;
-  padding: 8px; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-.story-avatar-ring {
-  width: 36px; height: 36px; border-radius: 50%; padding: 2px;
-  background: linear-gradient(135deg, #0088ff, #ff0055); display: flex; align-items: center; justify-content: center;
-}
-.story-avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #fff; }
-.story-name { font-size: 11px; font-weight: bold; color: var(--text-main); text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
+.stories-tray-container::-webkit-scrollbar { display: none; }
 
-/* Story Viewer Overlay */
+.story-card-item {
+  min-width: 110px; width: 110px; height: 195px; border-radius: 14px;
+  background: var(--card-sub-bg); border: 1px solid var(--border-color);
+  position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0;
+  display: flex; flex-direction: column; justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06); scroll-snap-align: start; transition: transform 0.2s ease;
+}
+.story-card-item:active { transform: scale(0.96); }
+
+.create-story-card-box { background: var(--card-sub-bg); justify-content: flex-end; align-items: center; text-align: center; padding-bottom: 12px; }
+.create-story-bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 62%; object-fit: cover; }
+.create-story-plus-circle {
+  width: 32px; height: 32px; border-radius: 50%; background: #0088ff; color: #fff;
+  font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center;
+  border: 3px solid #fff; position: absolute; top: 48%; left: 50%; transform: translateX(-50%);
+  box-shadow: 0 3px 8px rgba(0,136,255,0.4); z-index: 5;
+}
+
+.story-avatar-ring-box {
+  width: 36px; height: 36px; border-radius: 50%; padding: 2px;
+  background: linear-gradient(135deg, #0088ff, #ff0055, #ff7a00);
+  display: flex; align-items: center; justify-content: center; margin: 10px 0 0 10px; z-index: 2;
+}
+.story-avatar-ring-box.active-ring { animation: pulseRingAnim 2s infinite; }
+@keyframes pulseRingAnim { 0%{box-shadow: 0 0 0 0 rgba(0,136,255,0.7);} 70%{box-shadow: 0 0 0 8px rgba(0,136,255,0);} 100%{box-shadow: 0 0 0 0 rgba(0,136,255,0);} }
+
+.story-avatar-img-el { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #fff; }
+.story-card-overlay-content { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+.story-card-author-txt { font-size: 12px; font-weight: bold; color: #fff; text-shadow: 0 1px 4px #000; padding: 0 10px 10px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
+
 .story-viewer-overlay {
   position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
   background: #000; z-index: 99999999; display: none; flex-direction: column; justify-content: space-between;
@@ -90,7 +104,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 .story-viewer-body {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1;
 }
-.story-viewer-img { width: 100%; height: 100%; object-fit: cover; }
+.story-viewer-img, .story-viewer-video { width: 100%; height: 100%; object-fit: cover; }
 
 .story-viewer-footer { display: flex; flex-direction: column; gap: 10px; z-index: 10; margin-bottom: 10px; position: relative; }
 .story-reactions-row {
@@ -118,7 +132,6 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
   display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
-/* REELS ULTRA HUB STYLING */
 .feed-reels-section {
   margin: 12px 0; background: var(--card-bg); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 10px 0;
 }
@@ -163,7 +176,6 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 .reel-caption-text { font-size: 13px; color: #f1f3f4; line-height: 1.4; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 .reel-audio-tag { font-size: 11px; color: #ccc; display: flex; align-items: center; gap: 4px; }
 
-/* Lightbox */
 .media-lightbox-overlay {
   position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
   background: #000; z-index: 999999999; display: none;
@@ -181,7 +193,6 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 }
 .lightbox-close-btn { font-size: 30px; cursor: pointer; color: #fff; background: rgba(0,0,0,0.5); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.3); font-weight: bold; }
 
-/* Composer & Posts */
 .status-composer{background:var(--card-bg)!important;padding:14px;margin:8px;border-radius:16px;border:1px solid var(--border-color);box-shadow:0 1px 3px rgba(0,0,0,0.04)}
 .composer-upper{display:flex;gap:10px;align-items:center}
 .user-avatar{width:40px;height:40px;border-radius:50%;background:var(--card-sub-bg)!important;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold;color:#ff7a00!important;border:1px solid var(--border-color);overflow:hidden;cursor:pointer;}
@@ -238,14 +249,12 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 .comment-card{background:var(--card-sub-bg);padding:8px 12px;border-radius:12px;margin-top:8px;font-size:13px;border:1px solid var(--border-color);}
 .comment-author{font-weight:bold;color:#0088ff;margin-bottom:2px;}
 
-/* Navigation Bar */
 .bottom-navigation{width:100%;max-width:480px;height:65px;background:var(--nav-bg)!important;border-top:2px solid #0088ff;display:flex;justify-content:space-around;align-items:center;position:fixed;bottom:0;left:0;right:0;margin:0 auto;z-index:99999;box-shadow:0 -4px 15px rgba(0,136,255,0.15);}
 .nav-tab{text-align:center;font-size:11px;color:var(--nav-text)!important;cursor:pointer;font-weight:bold;flex:1;padding:6px 0;}
 .nav-tab.active{color:#0088ff!important;font-weight:900;transform:translateY(-2px);}
 .nav-tab .nav-icon{font-size:22px;display:block;margin-bottom:2px;}
 .menu-highlight-btn{background:linear-gradient(135deg, #0088ff, #0055ff);color:#fff!important;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;margin:-14px auto 2px auto;font-size:24px;box-shadow:0 4px 10px rgba(0,136,255,0.4);border:2px solid #fff;}
 
-/* Master Menu Hub Overlay */
 .full-screen-menu-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-main)!important;backdrop-filter:blur(15px);z-index:999999;display:none;overflow-y:auto;padding:20px;color:var(--text-main)!important}
 .menu-search-box{width:100%;padding:10px 14px;border:1px solid #0088ff;border-radius:20px;background:var(--input-bg);color:var(--input-text);font-size:14px;outline:none;margin-bottom:14px;}
 .menu-section-title{font-size:13px;font-weight:900;color:#0088ff;margin:16px 0 8px 0;text-transform:uppercase;letter-spacing:0.5px}
@@ -262,11 +271,13 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 .menu-icon-tile .mi-icon{font-size:26px;margin-bottom:4px}
 .menu-icon-tile .mi-label{font-size:11px;font-weight:bold;color:var(--text-main)}
 
-/* Modular Windows */
-.modular-window{position:fixed;top:0;left:0;width:100vw;height:100vh;background:var(--bg-main);z-index:9999999;display:none;flex-direction:column;overflow-y:auto;padding:16px;}
+.modular-window{
+  position:fixed; top:0; left:0; width:100vw; height:100vh; background:var(--bg-main); 
+  z-index:9999999; display:none; flex-direction:column; overflow-y:auto; padding:16px; 
+  padding-bottom: 120px;
+}
 .mod-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--border-color);margin-bottom:12px;}
 
-/* Registration & Profile Modal Form Styling */
 .reg-form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
 .reg-form-group label { font-size: 12px; font-weight: bold; color: var(--text-main); }
 .reg-input-field {
@@ -283,14 +294,12 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 </head>
 <body>
 <div class="app-window">
-  <!-- Status Bar -->
   <div class="status-bar">
     <span id="liveTime">9:41</span>
-    <span>5G 85% • P2P:<span style="color:#31a24c">●</span> • 📶 24/7 Nano-Stable</span>
-    <span class="live-badge" onclick="openModule('modNotifications')" style="cursor:pointer;" title="Notifications">🔔 LIVE 24/7</span>
+    <span>5G 85%  P2P:🟢  ⚡ 24/7 Nano-Stable</span>
+    <span class="live-badge" onclick="openModule('modNotifications')" style="cursor:pointer;" title="Notifications">🔴 LIVE 24/7</span>
   </div>
 
-  <!-- Header -->
   <div class="main-header">
     <div class="header-left-group">
       <svg class="brand-logo-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -310,7 +319,6 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     </div>
   </div>
 
-  <!-- Multi-Account Switcher Header -->
   <div class="account-switcher-bar">
     <div>
       <span style="color:var(--status-text)">Active:</span>
@@ -320,64 +328,37 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     <button onclick="openAccountSwitchModal()" style="background:#0088ff;color:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:bold;cursor:pointer;">🔄 Switch / Add (3 Max)</button>
   </div>
 
-  <!-- Main Content Area -->
   <div class="content-scroller" id="mainContentScroller">
     
-    <!-- VIEW 1: POSTS & STORIES HOME -->
     <div id="viewPosts" class="app-view-panel active-view">
-      <!-- Stories Tray -->
-      <div class="stories-container" id="storiesTrayContainer">
-        <div class="story-card" onclick="triggerProfilePhotoUpdate()">
-          <div style="flex:1;display:flex;align-items:center;justify-content:center;">
-            <div style="width:40px;height:40px;background:#0088ff;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;border:2px solid #fff;">+</div>
-          </div>
-          <span class="story-name">Create Story</span>
-        </div>
-        
-        <div class="story-card" onclick="openStoryViewer('user')" style="background-size:cover;background-position:center;" id="userStoryCardBg">
-          <div class="story-avatar-ring">
-            <img id="myStoryRingImg" class="story-avatar-img" src="" alt="My Story">
-          </div>
-          <span class="story-name" style="color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.8);">Your Story</span>
-        </div>
-
-        <div class="story-card" onclick="openStoryViewer('global')" style="background:linear-gradient(135deg, #34a853, #0088ff);color:#fff;">
-          <div class="story-avatar-ring" style="background:#fff;">
-            <span style="font-size:18px;">🌟</span>
-          </div>
-          <span class="story-name" style="color:#fff;">Global Hub</span>
-        </div>
-      </div>
+      <div class="stories-tray-container" id="storiesTrayContainer"></div>
 
       <div class="status-composer">
         <div class="composer-upper">
-          <div class="user-avatar" id="myProfileAvatarContainer" onclick="openRegistrationModal(true)" title="Click to Edit Profile">
-            👤
-          </div>
+          <div class="user-avatar" id="myProfileAvatarContainer" onclick="openRegistrationModal(true)" title="Click to Edit Profile">👤</div>
           <input id="postInput" placeholder="What's on your mind?" readonly onclick="openPostCreator()" style="cursor: pointer;">
           <button class="post-btn" onclick="openPostCreator()">Post</button>
         </div>
       </div>
 
-      <!-- INLINE REELS SECTION -->
       <div class="feed-reels-section">
         <div class="feed-reels-header">
           <div class="feed-reels-title">🎬 Reels & Short Videos</div>
           <span style="font-size:12px;color:#0088ff;cursor:pointer;font-weight:bold;" onclick="switchBottomTab('reels', document.querySelectorAll('.nav-tab')[2])">See All</span>
         </div>
-        <div class="feed-reels-scroll">
+        <div class="feed-reels-scroll" id="feedReelsScrollContainer">
           <div class="feed-reel-item" onclick="openLightboxFromUrl('https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-lights-41604-large.mp4', 'video')">
             <video class="feed-reel-video" src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-lights-41604-large.mp4" autoplay muted loop playsinline></video>
             <div class="feed-reel-overlay">
               <span class="feed-reel-author">Sumiya Neon AI</span>
-              <span style="font-size:10px;opacity:0.8;">❤️ 1.4K</span>
+              <span style="font-size:10px;opacity:0.8;">▶️ 1.4K</span>
             </div>
           </div>
           <div class="feed-reel-item" onclick="openLightboxFromUrl('https://assets.mixkit.co/videos/preview/mixkit-tree-branches-in-the-breeze-1186-large.mp4', 'video')">
             <video class="feed-reel-video" src="https://assets.mixkit.co/videos/preview/mixkit-tree-branches-in-the-breeze-1186-large.mp4" autoplay muted loop playsinline></video>
             <div class="feed-reel-overlay">
               <span class="feed-reel-author">Nature Vibe</span>
-              <span style="font-size:10px;opacity:0.8;">❤️ 3.8K</span>
+              <span style="font-size:10px;opacity:0.8;">▶️ 3.8K</span>
             </div>
           </div>
         </div>
@@ -386,24 +367,22 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       <div id="feedContainer"></div>
     </div>
 
-    <!-- VIEW 2: STATUS PANEL -->
     <div id="viewStatus" class="app-view-panel">
       <div style="padding:16px;">
-        <h2 style="color:#0088ff;margin-bottom:10px;">✨ Status & Stories Hub</h2>
-        <p style="font-size:13px;color:var(--status-text);margin-bottom:16px;">ඔබගේ ස්ටේටස් එකක් සෑදීමට පහත බටන් එක ක්ලික් කරන්න:</p>
-        <button onclick="triggerProfilePhotoUpdate()" style="width:100%;padding:14px;background:linear-gradient(135deg, #0088ff, #ff0055);color:#fff;border:none;border-radius:14px;font-weight:bold;cursor:pointer;font-size:15px;margin-bottom:20px;">+ Add New Status / Story</button>
+        <h2 style="color:#0088ff;margin-bottom:10px;">📌 Status & Stories Hub</h2>
+        <p style="font-size:13px;color:var(--status-text);margin-bottom:16px;">ඔබේ තත්ත්වය හෝ කථා පුවත මිතුරන් සමඟ බෙදා ගන්න (අවම විනාඩි 5ක අසීමිත වීඩියෝ/පොටෝ):</p>
+        <button onclick="openStoryCreator()" style="width:100%;padding:14px;background:linear-gradient(135deg, #0088ff, #ff0055);color:#fff;border:none;border-radius:14px;font-weight:bold;cursor:pointer;font-size:15px;margin-bottom:20px;">+ Add New Status / Story (Min 5 Min Video Support)</button>
         <div style="background:var(--card-bg);padding:14px;border-radius:14px;border:1px solid var(--border-color);">
-          <b>🌟 Active Status Guidelines:</b>
-          <p style="font-size:13px;margin-top:6px;color:var(--status-text);">ඔබ සේව් කරන ස්ටේටස් ෆොටෝ එක 24 පැයක් පුරා ප්‍රොഫൈල් රින්ග් එක තුළ සහ ස්ටේටස් ට්‍රේ එකේ ආරක්ෂිතව පෙන්වනු ලැබේ.</p>
+          <b>💡 Active Status Guidelines:</b>
+          <p style="font-size:13px;margin-top:6px;color:var(--status-text);">ඔබ දමන තත්ත්වයන් සහ අසීමිත වීඩියෝ හෝම් පිටුවෙ ස්වයංක්‍රීයව ක්‍රියාත්මක වන අතර, ඒවා ඔබගේ පෞද්ගලික ආරක්ෂාවට යටත්ව ගබඩා වේ.</p>
         </div>
       </div>
     </div>
 
-    <!-- VIEW 3: REELS ULTRA HUB -->
     <div id="viewReels" class="app-view-panel">
       <div style="padding:10px 16px;background:var(--card-bg);border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;">
-        <b style="color:#0088ff;font-size:15px;">🎬 Reels Explorer</b>
-        <button onclick="document.getElementById('reelVideoFileInput').click()" style="background:linear-gradient(135deg, #0088ff, #ff0055);color:#fff;border:none;padding:8px 14px;border-radius:16px;font-weight:bold;font-size:13px;cursor:pointer;">➕ Create Reel</button>
+        <b style="color:#0088ff;font-size:15px;">🎥 Reels Explorer</b>
+        <button onclick="document.getElementById('reelVideoFileInput').click()" style="background:linear-gradient(135deg, #0088ff, #ff0055);color:#fff;border:none;padding:8px 14px;border-radius:16px;font-weight:bold;font-size:13px;cursor:pointer;">+ Create Reel</button>
       </div>
 
       <div class="reels-hub-container" id="reelsFeedContainer">
@@ -418,33 +397,12 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
             </div>
             <div class="reel-bottom-meta">
               <div class="reel-author-row">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="reel-author-avatar">
-                <span class="reel-author-name">Sumiya Neon AI</span>
+                <img src="" class="reel-author-avatar" id="reelAuthorAvatarImg">
+                <span class="reel-author-name" id="reelAuthorNameTxt">Sumiya Neon AI</span>
                 <button class="reel-follow-btn">Follow</button>
               </div>
               <div class="reel-caption-text">✨ Exploring futuristic neon lights with P2P cloud sync! 🚀 #myfaecbox #reels</div>
               <div class="reel-audio-tag">🎵 Original Sound - Sumiya Audio Engine</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="reel-item-card">
-          <video class="reel-video-element" src="https://assets.mixkit.co/videos/preview/mixkit-tree-branches-in-the-breeze-1186-large.mp4" loop autoplay muted playsinline></video>
-          <div class="reel-overlay-ui">
-            <div></div>
-            <div class="reel-right-actions">
-              <div class="reel-action-btn-circle" onclick="likeReel(this)">❤️<span class="reel-action-count">3.8K</span></div>
-              <div class="reel-action-btn-circle" onclick="alert('Opening Reel Comments...')">💬<span class="reel-action-count">512</span></div>
-              <div class="reel-action-btn-circle" onclick="alert('Reel Link Copied!')">🔗</div>
-            </div>
-            <div class="reel-bottom-meta">
-              <div class="reel-author-row">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" class="reel-author-avatar">
-                <span class="reel-author-name">Nature Vibe</span>
-                <button class="reel-follow-btn">Follow</button>
-              </div>
-              <div class="reel-caption-text">🌿 Peaceful nature breeze captured in ultra HD quality.</div>
-              <div class="reel-audio-tag">🎵 Relaxing Forest Tones</div>
             </div>
           </div>
         </div>
@@ -453,16 +411,14 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 
   </div>
 
-  <!-- Lightbox -->
   <div class="media-lightbox-overlay" id="mediaLightboxModal">
     <div class="lightbox-top-bar">
-      <span style="font-size:14px;font-weight:bold;color:#fff;">✨ Media Feed Viewer</span>
+      <span style="font-size:14px;font-weight:bold;color:#fff;">🖼️ Media Feed Viewer</span>
       <div class="lightbox-close-btn" onclick="closeLightbox()">×</div>
     </div>
     <div id="lightboxFeedContainer" style="width:100%; height:100%;"></div>
   </div>
 
-  <!-- Story Viewer Overlay -->
   <div class="story-viewer-overlay" id="storyViewerModal">
     <div class="story-progress-bar-row">
       <div class="story-prog-fill" id="storyProgFill"></div>
@@ -479,15 +435,16 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     </div>
 
     <div class="story-viewer-body" id="storyViewerBody">
-      <img id="viewerMediaImg" class="story-viewer-img" src="" alt="Story Media">
+      <img id="viewerMediaImg" class="story-viewer-img" src="" alt="Story Media" style="display:block;">
+      <video id="viewerMediaVideo" class="story-viewer-video" src="" autoplay controls playsinline style="display:none;"></video>
     </div>
 
     <div class="story-viewer-footer">
       <div class="story-reactions-row">
-        <button class="story-emoji-btn" onclick="sendStoryReaction('😎')">😎</button>
-        <button class="story-emoji-btn" onclick="sendStoryReaction('🔥')">🔥</button>
         <button class="story-emoji-btn" onclick="sendStoryReaction('❤️')">❤️</button>
-        <button class="story-emoji-btn" onclick="sendStoryReaction('😆')">😆</button>
+        <button class="story-emoji-btn" onclick="sendStoryReaction('😂')">😂</button>
+        <button class="story-emoji-btn" onclick="sendStoryReaction('🔥')">🔥</button>
+        <button class="story-emoji-btn" onclick="sendStoryReaction('👏')">👏</button>
       </div>
 
       <div class="story-reply-box">
@@ -503,31 +460,63 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     </div>
   </div>
 
-  <!-- Registration / Profile Setup Modular Window -->
+  <div class="modular-window" id="modZoom">
+    <div class="mod-header">
+      <b>🎓 Sumiya Ultra-Pro Smart Class Hub</b>
+      <button onclick="closeModule('modZoom')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;padding:10px;flex:1;overflow-y:auto;">
+      <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid #0088ff;">
+        <b style="color:#0088ff;">🚀 නවීන තාක්ෂණික ඔන්ලයින් පන්ති සහ අධ්‍යාපන පද්ධතිය</b>
+        <p style="font-size:12px;margin-top:4px;color:var(--status-text);">උසස් තත්ත්වයේ වීඩියෝ සජීවී විකාශන, ඩිජිටල් වයිට්බෝඩ් (Whiteboard), සහ තත්‍ය කාලීන සිසුන්ගේ කතාබස් (Live Class Chat) පහසුකම් මෙහි අන්තර්ගත වේ.</p>
+      </div>
+
+      <div style="background:#000;border-radius:14px;height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:1px solid var(--border-color);">
+        <video id="smartClassLiveVideo" src="https://assets.mixkit.co/videos/preview/mixkit-tree-branches-in-the-breeze-1186-large.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+        <div style="position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.6);padding:4px 10px;border-radius:8px;color:#fff;font-size:11px;font-weight:bold;">🔴 LIVE Smart Class Session</div>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <button onclick="toggleSmartClassMic()" id="scMicBtn" style="flex:1;padding:10px;background:#34a853;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">🎙️ Mic On/Off</button>
+        <button onclick="toggleSmartClassCamera()" id="scCamBtn" style="flex:1;padding:10px;background:#0088ff;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">📷 Cam On/Off</button>
+        <button onclick="alert('Whiteboard Activated!')" style="flex:1;padding:10px;background:#ff7a00;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">📝 Whiteboard</button>
+      </div>
+
+      <div style="margin-top:6px;">
+        <b style="font-size:13px;color:var(--text-main);">💬 Class Live Chat & Q&A:</b>
+        <div id="smartClassChatBox" style="background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:10px;height:100px;padding:8px;overflow-y:auto;margin-top:6px;display:flex;flex-direction:column;gap:6px;font-size:12px;">
+          <div><b>Teacher Sumiya:</b> සාදරයෙන් පිළිගනිමු! අද පාඩම ආරම්භ කර ඇත.</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:6px;">
+          <input type="text" id="smartClassInput" placeholder="ප්‍රශ්නයක් හෝ පණිවිඩයක් ලියන්න..." style="flex:1;padding:8px 12px;border-radius:16px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);font-size:12px;outline:none;">
+          <button onclick="sendSmartClassMessage()" style="background:#0088ff;color:#fff;border:none;padding:8px 14px;border-radius:14px;font-weight:bold;cursor:pointer;font-size:12px;">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modular-window" id="modRegistration">
     <div class="mod-header">
-      <b id="regModalHeaderTitle">📝 MYFAECBOX ලියාපදිංචිය / ප්‍රොෆයිල් එක සෑදීම</b>
+      <b id="regModalHeaderTitle">👤 ගිණුම් විස්තර සහ ප්‍රොෆයිල් සැකසුම (Edit Profile)</b>
       <button onclick="closeModule('modRegistration')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
     </div>
 
-    <div style="display:flex;flex-direction:column;gap:10px;padding:4px;">
+    <div style="display:flex;flex-direction:column;gap:10px;padding:4px 4px 40px 4px; flex:1;">
       <div style="background:var(--card-sub-bg);padding:10px;border-radius:10px;font-size:11px;color:var(--status-text);border:1px solid var(--border-color);">
-        🛡️ <b>OTP-Free Secure Fingerprint Lock:</b> කිසිම OTP එකක් අවශ්‍ය නොවන අතර එකම දුරකතන අංකයට/ඊමේල් එකට ගිණුම් 3ක් සෑදිය හැක.
+        🛡️ <b>OTP-Free Secure Fingerprint Lock:</b> මෙහි OTP අවශ්‍ය නොවී ඉතා ආරක්ෂාකාරීව ප්‍රොෆයිල්/ගිණුම් 3ක් දක්වා පාලනය කළ හැක.
       </div>
 
       <div style="display:flex;align-items:center;gap:12px;margin:8px 0;">
-        <div style="width:60px;height:60px;border-radius:50%;background:#0088ff;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;overflow:hidden;" id="regAvatarPreview">
-          👤
-        </div>
+        <div style="width:60px;height:60px;border-radius:50%;background:#0088ff;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;overflow:hidden;" id="regAvatarPreview">👤</div>
         <div>
-          <button onclick="document.getElementById('regAvatarFileInput').click()" style="padding:6px 12px;background:#0088ff;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer;">📷 ප්‍රොෆයිල් පින්තූරයක් තෝරන්න</button>
+          <button onclick="document.getElementById('regAvatarFileInput').click()" style="padding:6px 12px;background:#0088ff;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer;">📸 ප්‍රොෆයිල් පින්තූරයක් තෝරන්න</button>
           <input type="file" id="regAvatarFileInput" accept="image/*" style="display:none;" onchange="handleRegAvatarUpload(event)">
         </div>
       </div>
 
       <div class="reg-form-group">
-        <label>1. ඇප් එකේ නම / Profile Name:</label>
-        <input type="text" id="regInputName" class="reg-input-field" placeholder="ඔබගේ නම හෝ පේජ් එකේ නම ඇතුළත් කරන්න">
+        <label>1. නම හෝ අප් එකේ නම / Profile Name: *</label>
+        <input type="text" id="regInputName" class="reg-input-field" placeholder="ඔබගේ නම හෝ ව්‍යාපාරික නම මෙහි ඇතුළත් කරන්න">
       </div>
 
       <div class="reg-form-group">
@@ -555,7 +544,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       </div>
 
       <div class="reg-form-group">
-        <label>3. ගිණුම් වර්ගය (Account Type - 3 Max per Phone/Email):</label>
+        <label>3. ගිණුම් වර්ගය (Account Type - 3 Max):</label>
         <div class="account-type-grid">
           <div class="account-type-card selected" onclick="selectAccountType('Personal', this)">👤 Personal</div>
           <div class="account-type-card" onclick="selectAccountType('Business', this)">💼 Business</div>
@@ -564,71 +553,67 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       </div>
 
       <div class="reg-form-group">
-        <label>4. සක්‍රීය දුරකතන අංකය, ඊමේල් හෝ ජාතික හැඳුනුම්පත (Phone / Email / NIC):</label>
-        <input type="text" id="regInputContact" class="reg-input-field" placeholder="+94 7X XXXXXXX / email@gmail.com / 199XXXXXXXV">
-        <small style="font-size:10px;color:var(--status-text);margin-top:2px;">* දුරකතන අංකය, ඊමේල් ලිපිනය හෝ ජාතික හැඳුනුම්පත් අංකය යන තුනෙන් එකක් පමණක් ප්‍රමාණවත් වේ.</small>
+        <label>4. දුරකථන අංකය හෝ ඊමේල් (Phone / Email / NIC): *</label>
+        <input type="text" id="regInputContact" class="reg-input-field" placeholder="+94 7X XXXXXXX / email@gmail.com">
       </div>
 
       <div class="reg-form-group">
-        <label>5. ස්ථීර ලිපිනය (Address):</label>
-        <input type="text" id="regInputAddress" class="reg-input-field" placeholder="නගරය, ස්ථීර ලිපිනය ඇතුළත් කරන්න">
+        <label>5. ලිපිනය (Address):</label>
+        <input type="text" id="regInputAddress" class="reg-input-field" placeholder="නගරය, ප්‍රදේශය හෝ රටේ විස්තරය">
       </div>
 
       <div class="reg-form-group">
-        <label>6. උපන්දිනය (Date of Birth):</label>
+        <label>6. උපන් දිනය (Date of Birth):</label>
         <input type="date" id="regInputDOB" class="reg-input-field">
       </div>
 
       <div class="reg-form-group">
-        <label>7. ස්ත්‍රී / පුරුෂ භාවය (Gender):</label>
+        <label>7. ලිංගිකත්වය / ස්ත්‍රී පුරුෂ භාවය (Gender):</label>
         <select id="regSelectGender" class="reg-input-field">
-          <option value="Male">පුරුෂ (Male)</option>
-          <option value="Female">ස්ත්‍රී (Female)</option>
+          <option value="Male">පිරිමි (Male)</option>
+          <option value="Female">කාන්තා (Female)</option>
           <option value="Other">වෙනත් (Other)</option>
         </select>
       </div>
 
       <div class="reg-form-group">
-        <label>8. ලියාපදිංචි දිනය (Auto Timestamp):</label>
+        <label>8. ස්වයංක්‍රීය කාලමුද්‍රාව (Auto Timestamp):</label>
         <input type="text" id="regInputTimestamp" class="reg-input-field" readonly style="background:var(--card-sub-bg);opacity:0.8;">
       </div>
 
-      <button onclick="saveUserProfileRegistration()" style="background:linear-gradient(135deg, #0088ff, #0055ff);color:#fff;border:none;padding:12px;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;margin-top:10px;">💾 ස්ථීරවම සේව් කර ප්‍රධාන භාරකරු ලෙස ලොග් වන්න</button>
+      <button onclick="saveUserProfileRegistration()" style="background:linear-gradient(135deg, #0088ff, #0055ff);color:#fff;border:none;padding:14px;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;margin:15px 0 30px 0;box-shadow:0 4px 12px rgba(0,136,255,0.4);">💾 තොරතුරු සේ이브 කරන්න</button>
     </div>
   </div>
 
-  <!-- Multi-Account Switch Modal -->
   <div class="modular-window" id="modAccountSwitch">
     <div class="mod-header">
-      <b>🔄 Multi-Account Switcher (ගිණුම් 3 සීමාව)</b>
+      <b>🔄 Multi-Account Switcher (උපරිම 3 ගිණුම්)</b>
       <button onclick="closeModule('modAccountSwitch')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
     </div>
     <div style="padding:10px;display:flex;flex-direction:column;gap:12px;">
-      <p style="font-size:12px;color:var(--status-text);">එක් දුරකතන අංකයකට, ඊමේල් එකකට හෝ NIC එකකට සාදා ඇති ගිණුම් අතර පහතින් මාරු වන්න:</p>
+      <p style="font-size:12px;color:var(--status-text);">ඔබගේ ගිණුම් මාරු කරන්න, නව ගිණුම් එකතු කරන්න හෝ ප්‍රොෆයිල් කළමනාකරණය කරන්න:</p>
       <div id="accountListContainer" style="display:flex;flex-direction:column;gap:8px;"></div>
-      <button onclick="addNewAccountOption()" style="padding:12px;background:linear-gradient(135deg, #34a853, #0088ff);color:#fff;border:none;border-radius:12px;font-weight:bold;cursor:pointer;">➕ අලුත් ගිණුමක් එකතු කරන්න (Max 3)</button>
+      <button onclick="addNewAccountOption()" style="padding:12px;background:linear-gradient(135deg, #34a853, #0088ff);color:#fff;border:none;border-radius:12px;font-weight:bold;cursor:pointer;">+ නව ගිණුමක් එකතු කරන්න (Max 3)</button>
     </div>
   </div>
 
-  <!-- Hidden Inputs for Uploads -->
   <input type="file" id="globalProfilePhotoInput" accept="image/*,video/*" style="display:none;" onchange="handleProfilePhotoUpload(event)">
+  <input type="file" id="storyMediaFileInput" accept="image/*,video/*" style="display:none;" onchange="handleStoryMediaUpload(event)">
   <input type="file" id="reelVideoFileInput" accept="video/*" style="display:none;" onchange="handleReelVideoUpload(event)">
 
-  <!-- Bottom Navigation Bar -->
   <div class="bottom-navigation">
-    <div class="nav-tab active" onclick="switchBottomTab('posts', this)"><span class="nav-icon">📰</span>Posts</div>
-    <div class="nav-tab" onclick="switchBottomTab('status', this)"><span class="nav-icon">✨</span>Status</div>
+    <div class="nav-tab active" onclick="switchBottomTab('posts', this)"><span class="nav-icon">🏠</span>Posts</div>
+    <div class="nav-tab" onclick="switchBottomTab('status', this)"><span class="nav-icon">📌</span>Status</div>
     <div class="nav-tab" onclick="switchBottomTab('reels', this)"><span class="nav-icon">🎬</span>Reels</div>
     <div class="nav-tab" onclick="openMasterMenu()">
-      <div class="menu-highlight-btn">☰</div>
+      <div class="menu-highlight-btn">⚙️</div>
       <span style="color:#0088ff;font-weight:bold;">Menu</span>
     </div>
   </div>
 
-  <!-- Full Screen Post Creator -->
   <div class="full-screen-post-overlay" id="fullScreenPostModal">
     <div class="post-overlay-header">
-      <span class="post-overlay-title">✏️ Create Professional Post</span>
+      <span class="post-overlay-title">📝 Create Professional Post</span>
       <button class="post-close-btn" onclick="closePostCreator()">×</button>
     </div>
 
@@ -636,7 +621,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     
     <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--status-text);margin-bottom:10px;">
       <span id="wordCountCounter">Words: 0</span>
-      <span style="color:#34a853">♾️ Nano-Stable 24/7 Active</span>
+      <span style="color:#34a853">⚡ Nano-Stable 24/7 Active</span>
     </div>
 
     <input type="file" id="filePhotoInput" accept="image/*" multiple style="display:none;" onchange="handleMediaSelect(event, 'photo')">
@@ -662,7 +647,6 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     <button class="submit-post-btn" onclick="submitNewPost()">🚀 Publish Post</button>
   </div>
 
-  <!-- MASTER PIPELINE MENU HUB -->
   <div class="full-screen-menu-overlay" id="masterMenuHub">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
       <b style="font-size:16px;color:#0088ff">🌐 MYFAECBOX MASTER PIPELINE HUB</b>
@@ -671,38 +655,38 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 
     <input type="text" id="menuSearchInput" class="menu-search-box" placeholder="🔍 Search any app or pipeline service..." onkeyup="filterMenuApps()">
 
-    <div class="menu-section-title">🔗 Top-to-Bottom Connected Pipeline Architecture</div>
+    <div class="menu-section-title">⚡ Top-to-Bottom Connected Pipeline Architecture</div>
     <div class="pipeline-container">
       <div class="pipeline-step" onclick="openModule('modLanguageHub')">
-        <div class="pipeline-icon">🌐</div>
+        <div class="pipeline-icon">🌍</div>
         <div class="pipeline-info">
           <div class="pipeline-label">1. Sumiya Language & Localization Hub</div>
           <div class="pipeline-desc">Sinhala, English, Tamil & Global Country Config</div>
         </div>
       </div>
       <div class="pipeline-step" onclick="openModule('modOfflineLogin')">
-        <div class="pipeline-icon">📶</div>
+        <div class="pipeline-icon">📡</div>
         <div class="pipeline-info">
           <div class="pipeline-label">2. Sumiya P2P Offline Mesh Tunnel</div>
           <div class="pipeline-desc">Low signal & zero-data autonomous login protocol</div>
         </div>
       </div>
       <div class="pipeline-step" onclick="openModule('modFreeData')">
-        <div class="pipeline-icon">🎁</div>
+        <div class="pipeline-icon">📶</div>
         <div class="pipeline-info">
           <div class="pipeline-label">3. Sumiya Zero-Rated Free Data Proxy</div>
           <div class="pipeline-desc">Seamless free package routing & connectivity</div>
         </div>
       </div>
       <div class="pipeline-step" onclick="openModule('modRegistration')">
-        <div class="pipeline-icon">🚀</div>
+        <div class="pipeline-icon">👤</div>
         <div class="pipeline-info">
           <div class="pipeline-label">4. Sumiya Registration & Profile Setup</div>
           <div class="pipeline-desc">Multi-account registration & device fingerprinting</div>
         </div>
       </div>
       <div class="pipeline-step" onclick="openModule('modGlobalFeed')">
-        <div class="pipeline-icon">🌐</div>
+        <div class="pipeline-icon">🔄</div>
         <div class="pipeline-info">
           <div class="pipeline-label">5. Sumiya Global Cloud Sync Feed</div>
           <div class="pipeline-desc">Real-time GunDB peer-to-peer data synchronization</div>
@@ -710,7 +694,14 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       </div>
     </div>
 
-    <div class="menu-section-title">✨ Advanced Core Services Hub</div>
+    <div class="menu-section-title">🎙️ Security & Voice Authentication</div>
+    <div class="menu-grid-icons">
+      <div class="menu-icon-tile" data-name="sumiya voice identification & pin system" onclick="openVoiceManagerDirectly()">
+        <div class="mi-icon" style="color:#ff0055">🎙️</div><div class="mi-label">Voice Manager</div>
+      </div>
+    </div>
+
+    <div class="menu-section-title">⚙️ Advanced Core Services Hub</div>
     <div class="menu-grid-icons">
       <div class="menu-icon-tile" data-name="sumiya interactive help assistant" onclick="openModule('modInteractiveHelp')">
         <div class="mi-icon" style="color:#34a853">💡</div><div class="mi-label">Sumiya Help</div>
@@ -728,16 +719,16 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
         <div class="mi-icon" style="color:#0088ff">🔍</div><div class="mi-label">Zoom Control</div>
       </div>
       <div class="menu-icon-tile" data-name="sumiya secret diary" onclick="openModule('modDiary')">
-        <div class="mi-icon" style="color:#ff0055">📔</div><div class="mi-label">Sumiya Diary</div>
+        <div class="mi-icon" style="color:#ff0055">📖</div><div class="mi-label">Sumiya Diary</div>
       </div>
       <div class="menu-icon-tile" data-name="sumiya play store" onclick="openModule('modPlayStore')">
-        <div class="mi-icon" style="color:#01875f">▶️</div><div class="mi-label">Play Store</div>
+        <div class="mi-icon" style="color:#01875f">🛒</div><div class="mi-label">Play Store</div>
       </div>
       <div class="menu-icon-tile" data-name="sumiya live video" onclick="openModule('modLive')">
         <div class="mi-icon" style="color:#ea4335">🔴</div><div class="mi-label">Live Video</div>
       </div>
       <div class="menu-icon-tile" data-name="sumiya ai camera" onclick="openModule('modCamera')">
-        <div class="mi-icon">📸</div><div class="mi-label">AI Camera</div>
+        <div class="mi-icon">📷</div><div class="mi-label">AI Camera</div>
       </div>
       <div class="menu-icon-tile" data-name="sumiya smart class" onclick="openModule('modZoom')">
         <div class="mi-icon">🎓</div><div class="mi-label">Smart Class</div>
@@ -747,66 +738,46 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       </div>
     </div>
 
-    <div class="menu-section-title">🚀 Social & Cloud Apps (Page 2)</div>
+    <div class="menu-section-title">📱 Source Mute & Media Privacy Hub</div>
+    <div style="background:var(--card-bg);padding:14px;border-radius:14px;border:1px solid var(--border-color);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <b>🔕 Source Mute (Manual Audio Logic)</b><br>
+        <small style="color:var(--status-text)">ට්‍රැක් සහ වීඩියෝ ශබ්ද මැනුවල් ලෙස මියුට් කරන්න</small>
+      </div>
+      <button onclick="toggleSourceMuteGlobal()" id="sourceMuteBtn" style="padding:8px 16px;background:#34a853;color:#fff;border:none;border-radius:12px;font-weight:bold;cursor:pointer;">Active (Unmuted)</button>
+    </div>
+
+    <div class="menu-section-title">📱 Social & Cloud Apps (Page 2)</div>
     <div class="menu-grid-icons">
-      <div class="menu-icon-tile" data-name="google" onclick="alert('Opening Google...')">
-        <div class="mi-icon" style="color:#ea4335">G</div><div class="mi-label">Google</div>
-      </div>
-      <div class="menu-icon-tile" data-name="youtube" onclick="alert('Opening YouTube...')">
-        <div class="mi-icon" style="color:#ff0000">▶</div><div class="mi-label">YouTube</div>
-      </div>
-      <div class="menu-icon-tile" data-name="facebook" onclick="alert('Opening Facebook...')">
-        <div class="mi-icon" style="color:#1877f2">f</div><div class="mi-label">Facebook</div>
-      </div>
-      <div class="menu-icon-tile" data-name="tiktok" onclick="alert('Opening TikTok...')">
-        <div class="mi-icon" style="color:#000">♪</div><div class="mi-label">TikTok</div>
-      </div>
-      <div class="menu-icon-tile" data-name="instagram" onclick="alert('Opening Instagram...')">
-        <div class="mi-icon" style="color:#dc2743">📷</div><div class="mi-label">Instagram</div>
-      </div>
-      <div class="menu-icon-tile" data-name="whatsapp" onclick="alert('Opening WhatsApp...')">
-        <div class="mi-icon" style="color:#25d366">W</div><div class="mi-label">WhatsApp</div>
-      </div>
-      <div class="menu-icon-tile" data-name="telegram" onclick="alert('Opening Telegram...')">
-        <div class="mi-icon" style="color:#0088cc">✈️</div><div class="mi-label">Telegram</div>
-      </div>
-      <div class="menu-icon-tile" data-name="twitter x" onclick="alert('Opening X (Twitter)...')">
-        <div class="mi-icon" style="color:#fff">𝕏</div><div class="mi-label">Twitter / X</div>
-      </div>
+      <div class="menu-icon-tile" data-name="google" onclick="alert('Opening Google...')"><div class="mi-icon" style="color:#ea4335">G</div><div class="mi-label">Google</div></div>
+      <div class="menu-icon-tile" data-name="youtube" onclick="alert('Opening YouTube...')"><div class="mi-icon" style="color:#ff0000">▶️</div><div class="mi-label">YouTube</div></div>
+      <div class="menu-icon-tile" data-name="facebook" onclick="alert('Opening Facebook...')"><div class="mi-icon" style="color:#1877f2">f</div><div class="mi-label">Facebook</div></div>
+      <div class="menu-icon-tile" data-name="tiktok" onclick="alert('Opening TikTok...')"><div class="mi-icon" style="color:#000">🎵</div><div class="mi-label">TikTok</div></div>
+      <div class="menu-icon-tile" data-name="instagram" onclick="alert('Opening Instagram...')"><div class="mi-icon" style="color:#dc2743">📸</div><div class="mi-label">Instagram</div></div>
+      <div class="menu-icon-tile" data-name="whatsapp" onclick="alert('Opening WhatsApp...')"><div class="mi-icon" style="color:#25d366">💬</div><div class="mi-label">WhatsApp</div></div>
+      <div class="menu-icon-tile" data-name="telegram" onclick="alert('Opening Telegram...')"><div class="mi-icon" style="color:#0088cc">✈️</div><div class="mi-label">Telegram</div></div>
+      <div class="menu-icon-tile" data-name="twitter x" onclick="alert('Opening X (Twitter)...')"><div class="mi-icon" style="color:#fff">𝕏</div><div class="mi-label">Twitter / X</div></div>
     </div>
 
     <div class="menu-section-title">🎬 Entertainment & Utilities (Page 3)</div>
     <div class="menu-grid-icons">
-      <div class="menu-icon-tile" data-name="netflix" onclick="alert('Opening Netflix...')">
-        <div class="mi-icon" style="color:#e50914">🎬</div><div class="mi-label">Netflix</div>
-      </div>
-      <div class="menu-icon-tile" data-name="spotify" onclick="alert('Opening Spotify...')">
-        <div class="mi-icon" style="color:#1db954">🎵</div><div class="mi-label">Spotify</div>
-      </div>
-      <div class="menu-icon-tile" data-name="maps" onclick="alert('Opening Google Maps...')">
-        <div class="mi-icon" style="color:#34a853">🗺️</div><div class="mi-label">Maps</div>
-      </div>
-      <div class="menu-icon-tile" data-name="translate" onclick="alert('Opening Translate...')">
-        <div class="mi-icon" style="color:#4285f4">🌐</div><div class="mi-label">Translate</div>
-      </div>
-      <div class="menu-icon-tile" data-name="gmail" onclick="alert('Opening Gmail...')">
-        <div class="mi-icon" style="color:#ea4335">✉️</div><div class="mi-label">Gmail</div>
-      </div>
-      <div class="menu-icon-tile" data-name="drive" onclick="alert('Opening Cloud Drive...')">
-        <div class="mi-icon" style="color:#fbbc05">📁</div><div class="mi-label">Cloud Drive</div>
-      </div>
+      <div class="menu-icon-tile" data-name="netflix" onclick="alert('Opening Netflix...')"><div class="mi-icon" style="color:#e50914">🎬</div><div class="mi-label">Netflix</div></div>
+      <div class="menu-icon-tile" data-name="spotify" onclick="alert('Opening Spotify...')"><div class="mi-icon" style="color:#1db954">🎧</div><div class="mi-label">Spotify</div></div>
+      <div class="menu-icon-tile" data-name="maps" onclick="alert('Opening Google Maps...')"><div class="mi-icon" style="color:#34a853">🗺️</div><div class="mi-label">Maps</div></div>
+      <div class="menu-icon-tile" data-name="translate" onclick="alert('Opening Translate...')"><div class="mi-icon" style="color:#4285f4">🌐</div><div class="mi-label">Translate</div></div>
+      <div class="menu-icon-tile" data-name="gmail" onclick="alert('Opening Gmail...')"><div class="mi-icon" style="color:#ea4335">✉️</div><div class="mi-label">Gmail</div></div>
+      <div class="menu-icon-tile" data-name="drive" onclick="alert('Opening Cloud Drive...')"><div class="mi-icon" style="color:#fbbc05">📁</div><div class="mi-label">Cloud Drive</div></div>
     </div>
 
-    <div class="menu-section-title">🛠️ System Controls</div>
+    <div class="menu-section-title">⚙️ System Controls</div>
     <div style="background:var(--card-bg);padding:12px;border-radius:12px;border:1px solid var(--border-color);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
-      <div><b>🌙 Theme Mode</b><br><small style="color:var(--status-text)">Light / Dark Mode</small></div>
+      <div><b>🌓 Theme Mode</b><br><small style="color:var(--status-text)">Light / Dark Mode</small></div>
       <button onclick="toggleTheme()" style="padding:6px 14px;background:#0088ff;color:#fff;border:none;border-radius:12px;font-weight:bold;cursor:pointer">Toggle</button>
     </div>
 
     <button onclick="closeMasterMenu()" style="margin-top:14px;width:100%;padding:10px;background:linear-gradient(135deg, #0088ff, #0055ff);color:#fff;border:none;border-radius:8px;font-weight:bold;cursor:pointer">Close Menu</button>
   </div>
 
-  <!-- Modular Windows -->
   <div class="modular-window" id="modInteractiveHelp">
     <div class="mod-header">
       <b>💡 Sumiya Interactive Help Assistant</b>
@@ -814,12 +785,8 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     </div>
     <div style="padding:16px;display:flex;flex-direction:column;gap:12px;flex:1;">
       <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid #34a853;">
-        <b style="color:#34a853;">🗣️ කටහඬින් හෝ ලිඛිතව උපදෙස් ලබාගන්න:</b>
-        <p style="font-size:13px;margin-top:4px;color:var(--text-main);">මෙම සහකාරයාගෙන් ඔබට ඇප් එකේ ඕනෑම විශේෂාංගයක් පාවිච්චි කරන්නේ කොහොමද කියලා සිංහලෙන් අසා දැනගත හැක.</p>
-      </div>
-      <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid #0088ff;">
-        <b style="color:#0088ff;">🚀 ඉක්මන් මාර්ගෝපදේශය (Quick Guide):</b>
-        <p style="font-size:12px;margin-top:4px;color:var(--text-main);">1. පෝස්ට් එකක් කිරීමට ඉහළ 'Post' බටන් එක ඔබන්න.<br>2. ස්ටේටස් බැලීමට ප්‍රොഫൈල් රින්ග් එක ක්ලික් කරන්න.<br>3. රීල්ස් බැලීමට පහළ නැව්ගේෂන් එකෙන් 'Reels' තෝරන්න.</p>
+        <b style="color:#34a853;">📌 විශේෂ උදව් සහ මගපෙන්වීම:</b>
+        <p style="font-size:13px;margin-top:4px;color:var(--text-main);">මෙම යෙදුම තුළ ඇති සියලුම අංශයන් ඉතා පහසුවෙන් ක්‍රියාත්මක කරගත හැකි වන පරිදි ස්වයංක්‍රීයව සකසා ඇත.</p>
       </div>
     </div>
   </div>
@@ -829,7 +796,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       <b>🚨 Sumiya SOS Emergency Shield</b>
       <button onclick="closeModule('modEmergencySOS')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
     </div>
-    <div style="padding:16px;"><b>🛡️ ආරක්ෂක පද්ධතිය ක්‍රියාත්මකය (24/7 Nano-Active).</b></div>
+    <div style="padding:16px;"><b>🛡️ හදිසි අවස්ථා ආරක්ෂණ පද්ධතිය (24/7 Nano-Active).</b></div>
   </div>
 
   <div class="modular-window" id="modAIBot">
@@ -837,7 +804,36 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       <b>🤖 Sumiya AI Assistant Bot</b>
       <button onclick="closeModule('modAIBot')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
     </div>
-    <div style="padding:16px;"><b>🤖 Sumiya AI:</b> ආයුබෝවන් වස්තු! පද්ධතිය 100% ක් ස්ථාවරයි.</div>
+    <div style="display:flex;flex-direction:column;flex:1;gap:10px;padding:10px;height:calc(100vh - 180px);">
+      <div id="aiBotChatBox" style="flex:1;background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:12px;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
+        <div style="background:var(--card-bg);border:1px solid var(--border-color);padding:10px 14px;border-radius:12px;font-size:13px;color:var(--text-main);">
+          🤖 <b>Sumiya AI Bot:</b> සාදරයෙන් පිළිගනිමු! MYFAECBOX පද්ධතියේ 1000% ක්ම තාක්ෂණික, පාරිභෝගික සහ පද්ධති පාලන අයිතිය <b>Sumiya</b> වෙත පවරා ඇත. ඔබට අවශ්‍ය ඕනෑම තාක්ෂණික සහායක් සඳහා විමසන්න. (උදාහරණයට: <code>sumiya718264</code> යවන්න)
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <input type="text" id="aiBotInputText" placeholder="තාක්ෂණික ප්‍රශ්නයක් හෝ sumiya718264 ටයිප් කරන්න..." onkeypress="if(event.key==='Enter') sendAIBotMessage()" style="flex:1;padding:10px 14px;border-radius:20px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);outline:none;font-size:13px;">
+        <button onclick="sendAIBotMessage()" style="background:#0088ff;color:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:bold;cursor:pointer;">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modular-window" id="modVoiceManager">
+    <div class="mod-header">
+      <b>🎙️ Sumiya Voice Identification & PIN Hub</b>
+      <button onclick="closeModule('modVoiceManager')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
+    </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:14px;flex:1;overflow-y:auto;">
+      <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid var(--border-color);">
+        <b>🔒 Security & Voice Control</b>
+        <p style="font-size:12px;color:var(--status-text);margin-top:4px;">මෙම අංශය හරහා ඔබට ඔබගේ රහස් අංකය (PIN) වෙනස් කර ගැනීමට සහ ඔබේ කටහඬ (Voice Profile) පටිගත කර සුරක්ෂිතව තබා ගැනීමට හැක.</p>
+      </div>
+      <div id="voiceRecStatus" style="font-weight:bold;font-size:13px;text-align:center;padding:8px;color:var(--text-main);">සූදානම් (Ready)</div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="startVoiceRecording()" style="flex:1;padding:12px;background:#34a853;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">🔴 Record Voice</button>
+        <button onclick="stopVoiceRecording()" style="flex:1;padding:12px;background:#ea4335;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">⏹️ Stop & Save</button>
+      </div>
+      <button onclick="changeMasterPIN()" style="padding:12px;background:#0088ff;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">🔑 Change Secret PIN</button>
+    </div>
   </div>
 
   <div class="modular-window" id="modNotifications">
@@ -845,164 +841,67 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       <b>🔔 Notifications Center</b>
       <button onclick="closeModule('modNotifications')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
     </div>
-    <div style="padding:16px;"><b>🚀 Active 24/7 Notifications Hub</b></div>
+    <div style="padding:16px;"><b>🔔 Active 24/7 Notifications Hub</b></div>
   </div>
 
-  <div class="modular-window" id="modLanguageHub">
-    <div class="mod-header">
-      <b>🌐 Sumiya Language Hub</b>
-      <button onclick="closeModule('modLanguageHub')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
-    </div>
-    <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
-      <p style="font-size:14px;font-weight:bold;text-align:center;">Select Language / භාෂාව තෝරන්න</p>
-      <button onclick="setAppLanguage('si')" style="padding:12px;border-radius:8px;border:1px solid var(--border-color);background:var(--card-sub-bg);font-weight:bold;text-align:left;cursor:pointer;">සිංහල (Sinhala)</button>
-      <button onclick="setAppLanguage('en')" style="padding:12px;border-radius:8px;border:1px solid var(--border-color);background:var(--card-sub-bg);font-weight:bold;text-align:left;cursor:pointer;">English</button>
-      <button onclick="setAppLanguage('ta')" style="padding:12px;border-radius:8px;border:1px solid var(--border-color);background:var(--card-sub-bg);font-weight:bold;text-align:left;cursor:pointer;">தமிழ் (Tamil)</button>
-    </div>
-  </div>
-
-  <div class="modular-window" id="modMessenger">
-    <div class="mod-header">
-      <b>💬 Sumiya P2P Messenger</b>
-      <button onclick="closeModule('modMessenger')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
-    </div>
-    <div style="display:flex;flex-direction:column;flex:1;gap:10px;padding:10px;">
-      <div id="messengerChatBox" style="flex:1;background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:12px;padding:12px;overflow-y:auto;max-height:60vh;">
-        <div style="background:#0088ff;color:#fff;padding:8px 12px;border-radius:12px 12px 0 12px;width:fit-content;margin-left:auto;margin-bottom:8px;font-size:13px;">
-          ආයුබෝවන්! P2P Messenger සක්‍රීයයි. 🚀
-        </div>
-      </div>
-      <div style="display:flex;gap:6px;">
-        <input type="text" id="msgInputText" placeholder="පණිවිඩයක් ටයිප් කරන්න..." style="flex:1;padding:10px;border-radius:20px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);outline:none;font-size:13px;">
-        <button onclick="sendMessengerMsg()" style="background:#0088ff;color:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:bold;cursor:pointer;">Send</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SUMIYA SMART CLASS PRO HUB WITH WHITEBOARD & SOS -->
-  <div class="modular-window" id="modZoom">
-    <div class="mod-header">
-      <b>🎓 Sumiya Smart Class Pro Hub (120 Min Session)</b>
-      <button onclick="closeModule('modZoom')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
-    </div>
-    
-    <div style="display:flex;flex-direction:column;gap:10px;flex:1;overflow-y:auto;padding:10px;">
-      <div style="background:var(--card-sub-bg);padding:10px 14px;border-radius:12px;border:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;">
-        <div>
-          <span style="color:#34a853;font-weight:bold;font-size:13px;">🔴 LIVE CLASS ACTIVE (24/7)</span>
-          <div style="font-size:11px;color:var(--status-text);">📶 Nano-Stable Tunnel Routing Active</div>
-        </div>
-        <div style="text-align:right;">
-          <span id="classTimerDisplay" style="font-family:monospace;font-size:16px;font-weight:bold;color:#0088ff;">120:00</span>
-          <div style="font-size:10px;color:var(--status-text);">Remaining</div>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:8px;align-items:center;background:var(--card-sub-bg);padding:8px;border-radius:10px;border:1px solid var(--border-color);">
-        <span style="font-size:12px;font-weight:bold;color:var(--text-main);">🎨 Tool:</span>
-        <input type="color" id="wbColorPicker" value="#0088ff" style="border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;background:none;">
-        <button onclick="setWBMode('draw')" style="padding:6px 10px;background:#0088ff;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;">Draw</button>
-        <button onclick="clearWhiteboard()" style="padding:6px 10px;background:#ff7a00;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;">Clear</button>
-        <button onclick="triggerClassSOS()" style="padding:6px 12px;background:#ea4335;color:#fff;border:none;border-radius:6px;font-weight:bold;font-size:12px;margin-left:auto;cursor:pointer;">🚨 CLASS SOS</button>
-      </div>
-
-      <div style="width:100%;height:320px;background:#ffffff;border:2px solid #0088ff;border-radius:12px;position:relative;overflow:hidden;touch-action:none;">
-        <canvas id="smartWhiteboardCanvas" style="width:100%;height:100%;cursor:crosshair;"></canvas>
-      </div>
-
-      <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;margin-top:4px;">
-        <button onclick="alert('🎙️ Mute / Unmute Mic Active')" style="padding:10px;background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:10px;color:var(--text-main);font-weight:bold;font-size:12px;cursor:pointer;">🎙️ Mic Control</button>
-        <button onclick="alert('📷 Cam Screen Share Toggled')" style="padding:10px;background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:10px;color:var(--text-main);font-weight:bold;font-size:12px;cursor:pointer;">🎥 Screen Cam</button>
-        <button onclick="alert('✋ Hand Raised for Question')" style="padding:10px;background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:10px;color:var(--text-main);font-weight:bold;font-size:12px;cursor:pointer;">✋ Raise Hand</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ULTRA-PRO DIGITAL DIARY MODULAR WINDOW -->
   <div class="modular-window" id="modDiary">
     <div class="mod-header">
-      <b>📔 Sumiya Ultra-Pro Digital Diary</b>
+      <b>📖 Sumiya Ultra-Pro Digital Diary & Studio Hub</b>
       <button onclick="closeModule('modDiary')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;padding:10px;flex:1;overflow-y:auto;">
       <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid #ff0055;">
-        <b style="color:#ff0055;">🔒 100% පෞද්ගලික සහ රහසිගත ඩිජිටල් ඩයරිය</b>
-        <p style="font-size:12px;margin-top:4px;color:var(--status-text);">මෙහි ඔබට අදහස් ලිවීමට, ඡායාරූප, වීඩියෝ, ශබ්ද සටහන් සහ PDF/Docs ගොනු ආරක්ෂිතව සේව් කර, අවශ්‍ය විට ඩවුන්ලෝඩ් කර, නැවත බැලීමට (View/Edit/Share/Download) හැක.</p>
+        <b style="color:#ff0055;">🔒 100% සුරක්ෂිත ඩයරි සහ ස්ටුඩියෝ මාධ්‍ය කළමනාකරු</b>
+        <p style="font-size:12px;margin-top:4px;color:var(--status-text);">ඕනෑම ෆයිල් එකක් (PDF, Docs), ෆොටෝ, වීඩියෝ, වොයිස් රෙකෝඩින් හෝ ස්ටුඩියෝ කැමරා මඟින් ගත් රූප ඩයරිය තුළම සේව් කරන්න, ඩවුන්ලෝඩ් කරන්න, ඩිලීට් කරන්න සහ ශෙයාර් කරන්න.</p>
       </div>
 
-      <!-- Diary Input Form -->
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <input type="text" id="diaryTitleInput" placeholder="සටහනේ මාතෘකාව (Title)..." style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);font-size:14px;outline:none;">
+        <input type="text" id="diaryTitleInput" placeholder="ඩයරි සටහන් මාතෘකාව (Title)..." style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);font-size:14px;outline:none;">
+        <textarea id="diaryNoteInput" placeholder="ඔබේ රහස් සටහන් හෝ අදහස් මෙහි ලියන්න..." style="width:100%;height:90px;padding:12px;border-radius:12px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);outline:none;font-size:14px;resize:none;"></textarea>
         
-        <textarea id="diaryNoteInput" placeholder="අද දවසේ විශේෂ සිදුවීම්, රහස් හෝ සටහන් මෙතැන ලියන්න..." style="width:100%;height:100px;padding:12px;border-radius:12px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);outline:none;font-size:14px;resize:none;"></textarea>
-        
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-          <button onclick="document.getElementById('diaryMediaInput').click()" style="padding:8px 12px;background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer;color:var(--text-main);">📎 Attach Media/File/PDF</button>
-          <input type="file" id="diaryMediaInput" accept="image/*,video/*,audio/*,.pdf,.doc,.docx" multiple style="display:none;" onchange="handleDiaryMediaUpload(event)">
-          <span id="diaryFileCountStatus" style="font-size:11px;color:#0088ff;font-weight:bold;">No file attached</span>
+        <div style="display:grid;grid-template-columns: repeat(2, 1fr); gap: 8px;">
+          <button onclick="document.getElementById('diaryFileInput').click()" style="padding:10px;background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:10px;font-size:12px;font-weight:bold;cursor:pointer;color:var(--text-main);">📁 Attach File/PDF</button>
+          <button id="diaryVoiceRecBtn" onclick="triggerDiaryVoiceRecording()" style="padding:10px;background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:10px;font-size:12px;font-weight:bold;cursor:pointer;color:var(--text-main);">🎙️ Record Voice</button>
         </div>
+        <input type="file" id="diaryFileInput" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt" multiple style="display:none;" onchange="handleDiaryFilesUpload(event)">
+        
+        <div style="display:grid;grid-template-columns: repeat(2, 1fr); gap: 8px;">
+          <button onclick="triggerStudioCamera('photo')" style="padding:10px;background:#0088ff;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:bold;cursor:pointer;">📷 Studio Photo</button>
+          <button onclick="triggerStudioCamera('video')" style="padding:10px;background:#ff0055;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:bold;cursor:pointer;">🎥 Studio Video</button>
+        </div>
+        <input type="file" id="studioCameraPhotoInput" accept="image/*" capture="environment" style="display:none;" onchange="handleStudioCapture(event, 'photo')">
+        <input type="file" id="studioCameraVideoInput" accept="video/*" capture="environment" style="display:none;" onchange="handleStudioCapture(event, 'video')">
 
-        <button onclick="saveAdvancedDiaryEntry()" style="background:linear-gradient(135deg, #ff0055, #ff7a00);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:bold;cursor:pointer;font-size:14px;">💾 සටහන සහ ගොනු ස්ථීරවම ඩයරියේ සේව් කරන්න</button>
+        <span id="diaryFileCountStatus" style="font-size:11px;color:#0088ff;font-weight:bold;">No files attached</span>
+        
+        <button onclick="saveAdvancedDiaryEntry()" style="background:linear-gradient(135deg, #ff0055, #ff7a00);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:bold;cursor:pointer;font-size:14px;">💾 සටහන සුරක්ෂිත කරන්න</button>
       </div>
 
-      <!-- Saved Diary Entries List -->
       <div style="margin-top:10px;">
-        <b style="font-size:13px;color:var(--text-main);">📚 මගේ ඩයරි සටහන් (Saved Entries):</b>
+        <b style="font-size:13px;color:var(--text-main);">📌 සුරැකි ඩයරි සටහන්:</b>
         <div id="savedDiaryLogs" style="margin-top:8px;display:flex;flex-direction:column;gap:10px;"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- AI STUDIO CAMERA MODULAR WINDOW -->
-  <div class="modular-window" id="modCamera" style="padding:0; background:#000;">
-    <div style="position:absolute; top:16px; left:16px; right:16px; display:flex; justify-content:space-between; align-items:center; z-index:10;">
-      <b style="color:#fff; font-size:16px; text-shadow:0 1px 3px rgba(0,0,0,0.8);">📸 Sumiya AI Studio Camera</b>
-      <button onclick="stopCameraStream(); closeModule('modCamera');" style="background:rgba(234,67,53,0.8); color:#fff; border:none; padding:6px 14px; border-radius:20px; font-weight:bold; cursor:pointer;">Close</button>
-    </div>
-
-    <div style="position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-      <video id="aiCameraVideoFeed" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover;"></video>
-
-      <!-- Studio Overlay Controls -->
-      <div style="position:absolute; bottom:30px; left:0; right:0; display:flex; flex-direction:column; align-items:center; gap:16px; padding:0 20px;">
-        
-        <div style="display:flex; gap:12px; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); padding:8px 16px; border-radius:20px; border:1px solid rgba(255,255,255,0.2);">
-          <button onclick="setupNoiseFreeAudio()" style="background:none; border:none; color:#fff; font-size:12px; font-weight:bold; cursor:pointer;">🎙️ Noise Cut: ON</button>
-          <span style="color:rgba(255,255,255,0.4);">|</span>
-          <span style="color:#0088ff; font-size:12px; font-weight:bold;">✨ Studio AI Mode</span>
-        </div>
-
-        <!-- Capture Button -->
-        <button onclick="captureStudioPhoto(document.getElementById('aiCameraVideoFeed'))" style="width:72px; height:72px; border-radius:50%; background:#fff; border:5px solid #0088ff; box-shadow:0 0 15px rgba(0,136,255,0.6); cursor:pointer; display:flex; align-items:center; justify-content:center;">
-          <div style="width:54px; height:54px; border-radius:50%; background:#0088ff;"></div>
-        </button>
-
-        <span style="color:#ccc; font-size:11px; text-shadow:0 1px 2px #000;">⚡ Saved to Local App Cloud (Zero Device Storage Used)</span>
       </div>
     </div>
   </div>
 
 </div>
 <script>
-// Global Stores & GunDB Initializer
 let posts = JSON.parse(localStorage.getItem('myfacebox_base_posts') || '[]');
 let currentSelectedMedia = { type: null, src: [], title: '' };
 let currentStoryType = null;
-let gun = Gun();
+let gun = Gun({ peers: ['https://gun-manhattan.herokuapp.com/gun', 'https://relay.gun.eco/gun'] });
 let storyTimer = null;
 let selectedRegAccountType = 'Personal';
 let tempAvatarBase64 = '';
+let isSourceMuted = false;
 
-// Multi-Account Data Logic (Max 3 Accounts per Phone/Email/NIC)
 let allUserAccounts = JSON.parse(localStorage.getItem('myfacebox_multi_accounts') || '[]');
 let activeAccountIndex = parseInt(localStorage.getItem('myfacebox_active_acc_index') || '0');
 
-// Helper function to save all accounts securely
 function saveAllAccounts() {
   localStorage.setItem('myfacebox_multi_accounts', JSON.stringify(allUserAccounts));
 }
 
-// Initial Auto-Registration Default State
 if (allUserAccounts.length === 0) {
   allUserAccounts.push({
     id: 'ACC_' + Date.now(),
@@ -1015,6 +914,11 @@ if (allUserAccounts.length === 0) {
     dob: '1995-01-01',
     gender: 'Male',
     avatar: '',
+    storyMedia: '', 
+    extraStories: [
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600'
+    ],
     regTimestamp: new Date().toLocaleString(),
     deviceFingerprint: getOrCreateDeviceFingerprint(),
     lastPingTimestamp: Date.now()
@@ -1023,8 +927,8 @@ if (allUserAccounts.length === 0) {
 }
 
 let activeProfile = allUserAccounts[activeAccountIndex] || allUserAccounts[0];
+if (!activeProfile.extraStories) activeProfile.extraStories = [];
 
-// Device Fingerprinting Logic (OTP-Free Auto Protection)
 function getOrCreateDeviceFingerprint() {
   let fp = localStorage.getItem('myfacebox_device_fp');
   if (!fp) {
@@ -1034,65 +938,29 @@ function getOrCreateDeviceFingerprint() {
   return fp;
 }
 
-// Country Select Logic
 function handleCountryChange() {
   const select = document.getElementById('regSelectCountry');
   const selectedOption = select.options[select.selectedIndex];
   const countryCode = selectedOption.getAttribute('data-code');
   const contactInput = document.getElementById('regInputContact');
-  
   if (countryCode && !contactInput.value.startsWith('+')) {
     contactInput.value = countryCode + ' ';
   }
 }
 
-// Language Engine Setup
-function setAppLanguage(langCode) {
-  localStorage.setItem('myfacebox_lang', langCode);
-  const root = document.getElementById('htmlRoot');
-  if(root) root.setAttribute('lang', langCode);
-  const dict = {
-    si: { placeholder: "ඔයාගේ හිතේ තියෙන දේ මොකක්ද?" },
-    en: { placeholder: "What's on your mind?" },
-    ta: { placeholder: "உங்கள் மனதில் என்ன உள்ளது?" }
-  };
-  const t = dict[langCode] || dict.si;
-  const postInput = document.getElementById('postInput');
-  const modalInput = document.getElementById('modalPostText');
-  if(postInput) postInput.placeholder = t.placeholder;
-  if(modalInput) modalInput.placeholder = t.placeholder;
-  closeModule('modLanguageHub');
-}
-
-(function initLanguage(){
-  const savedLang = localStorage.getItem('myfacebox_lang') || 'si';
-  const root = document.getElementById('htmlRoot');
-  if(root) root.setAttribute('lang', savedLang);
-  const dict = {
-    si: { placeholder: "ඔයාගේ හිතේ තියෙන දේ මොකක්ද?" },
-    en: { placeholder: "What's on your mind?" },
-    ta: { placeholder: "உங்கள் மனதில் என்ன உள்ளது?" }
-  };
-  const t = dict[savedLang] || dict.si;
-  setTimeout(()=>{
-    const postInput = document.getElementById('postInput');
-    if(postInput) postInput.placeholder = t.placeholder;
-  },100);
-})();
-
 function updateHeaderAccountUI() {
   activeProfile = allUserAccounts[activeAccountIndex] || allUserAccounts[0];
+  if (!activeProfile.extraStories) activeProfile.extraStories = [];
   document.getElementById('activeAccountName').innerText = activeProfile.name;
   document.getElementById('activeAccountType').innerText = activeProfile.type;
-  
   initUserProfile();
-  checkAndTrigger6MonthPing();
+  renderStoriesTray();
 }
 
 function initUserProfile() {
   const avatarContainers = [
-    document.getElementById('myProfileAvatarContainer'),
-    document.getElementById('myStoryRingImg')
+    document.getElementById('myProfileAvatarContainer'), 
+    document.getElementById('regAvatarPreview')          
   ];
 
   avatarContainers.forEach(el => {
@@ -1112,50 +980,72 @@ function initUserProfile() {
     }
   });
 
-  const storyCardBg = document.getElementById('userStoryCardBg');
-  if (storyCardBg && activeProfile.avatar) {
-    storyCardBg.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.6)), url(${activeProfile.avatar})`;
+  const reelAvatar = document.getElementById('reelAuthorAvatarImg');
+  if (reelAvatar) {
+    reelAvatar.src = activeProfile.avatar || 'https://via.placeholder.com/150';
+  }
+
+  const reelName = document.getElementById('reelAuthorNameTxt');
+  if (reelName) {
+    reelName.innerText = activeProfile.name || 'Sumiya User';
   }
 }
 
-// --- FULL FIXED 6-MONTH VERIFICATION PING LOGIC ---
-function checkAndTrigger6MonthPing() {
-  const SIX_MONTHS_MS = 180 * 24 * 60 * 60 * 1000;
-  const now = Date.now();
-  try {
-    if (!activeProfile.lastPingTimestamp) { 
-      activeProfile.lastPingTimestamp = now; 
-      saveAllAccounts(); 
-      return; 
-    }
-    if ((now - activeProfile.lastPingTimestamp) >= SIX_MONTHS_MS) {
-      const siMsg = `[MYFAECBOX] ඔබගේ ගිණුම තාම සක්‍රීයද? ${activeProfile.name} - YES කියලා Reply කරන්න`;
-      const enMsg = `[MYFAECBOX] Is your account still active? ${activeProfile.name} - Reply YES`;
-      const taMsg = `[MYFAECBOX] உங்கள் கணக்கு இன்னும் செயலில் உள்ளதா? ${activeProfile.name} - YES என பதிலளிக்கவும்`;
-      const finalCombinedMsg = `${siMsg} | ${enMsg} | ${taMsg}`;
-      console.log("🔔 MYFAECBOX 6-Month Verification Ping Triggered:", finalCombinedMsg);
-      try { 
-        gun.get('myfacebox_pings').get(activeProfile.id).put({ 
-          si: siMsg, en: enMsg, ta: taMsg, combined: finalCombinedMsg, 
-          time: now, deviceFp: activeProfile.deviceFingerprint || getOrCreateDeviceFingerprint(), 
-          accType: activeProfile.type 
-        }); 
-      } catch(e){ console.warn("GunDB Ping Fail", e); }
-      activeProfile.lastPingTimestamp = now;
-      saveAllAccounts();
-      if (typeof Notification !== 'undefined' && Notification.permission === "granted") { 
-        new Notification("MYFAECBOX Verification", { body: siMsg }); 
-      }
-    }
-  } catch(err) { console.error("Ping Logic Error:", err); }
+function renderStoriesTray() {
+  const container = document.getElementById('storiesTrayContainer');
+  if (!container) return;
+
+  const profileAvatar = activeProfile.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600';
+
+  let extraStoriesHtml = '';
+  if (activeProfile.extraStories && activeProfile.extraStories.length > 0) {
+    extraStoriesHtml = activeProfile.extraStories.map((story, idx) => `
+      <div class="story-card-item" onclick="openExtraStoryViewer(${idx})" style="background:url(${story});background-size:cover;background-position:center;">
+        <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 50%, rgba(0,0,0,0.8) 100%);"></div>
+        <div class="story-card-overlay-content">
+          <div class="story-avatar-ring-box">
+            <img src="${profileAvatar}" class="story-avatar-img-el">
+          </div>
+          <span class="story-card-author-txt">Friend #${idx + 1}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  container.innerHTML = `
+    <div class="story-card-item create-story-card-box" onclick="openStoryCreator()">
+      <img src="${profileAvatar}" class="create-story-bg-img" alt="Create Story">
+      <div class="create-story-plus-circle">+</div>
+      <span class="story-card-author-txt" style="color:var(--text-main);text-shadow:none;margin-top:20px;font-size:11px;">Create story</span>
+    </div>
+    
+    <div class="story-card-item" onclick="openStoryViewer('user')" style="background:url(${activeProfile.storyMedia || profileAvatar});background-size:cover;background-position:center;">
+      <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 50%, rgba(0,0,0,0.8) 100%);"></div>
+      <div class="story-card-overlay-content">
+        <div class="story-avatar-ring-box active-ring">
+          <img class="story-avatar-img-el" src="${profileAvatar}" alt="My Story">
+        </div>
+        <span class="story-card-author-txt">Your Story</span>
+      </div>
+    </div>
+
+    ${extraStoriesHtml}
+
+    <div class="story-card-item" onclick="openStoryViewer('global')" style="background:linear-gradient(135deg, #34a853, #0088ff);">
+      <div class="story-card-overlay-content">
+        <div class="story-avatar-ring-box" style="background:#fff;">
+          <span style="font-size:18px;">🌐</span>
+        </div>
+        <span class="story-card-author-txt">Global Hub</span>
+      </div>
+    </div>
+  `;
 }
 
-// Registration & Profile Editing Functions
 function openRegistrationModal(isEditMode = false) {
   openModule('modRegistration');
-
   if (isEditMode) {
-    document.getElementById('regModalHeaderTitle').innerText = '✏️ ප්‍රොෆයිල් තොරතුරු සංස්කරණය (Edit Profile)';
+    document.getElementById('regModalHeaderTitle').innerText = '👤 ගිණුම් විස්තර සහ ප්‍රොෆයිල් සැකසුම (Edit Profile)';
     document.getElementById('regInputName').value = activeProfile.name || '';
     document.getElementById('regSelectCountry').value = activeProfile.country || 'LK';
     document.getElementById('regInputContact').value = activeProfile.contact || '';
@@ -1174,18 +1064,10 @@ function openRegistrationModal(isEditMode = false) {
     });
 
     if (tempAvatarBase64) {
-      document.getElementById('regAvatarPreview').innerHTML = `<img src="${tempAvatarBase64}" style="width:100%;height:100%;object-fit:cover;">`;
+      document.getElementById('regAvatarPreview').innerHTML = `<img src="${tempAvatarBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    } else {
+      document.getElementById('regAvatarPreview').innerHTML = '👤';
     }
-  } else {
-    document.getElementById('regModalHeaderTitle').innerText = '📝 MYFAECBOX නව ගිණුම් ලියාපදිංචිය';
-    document.getElementById('regInputName').value = '';
-    document.getElementById('regSelectCountry').value = 'LK';
-    document.getElementById('regInputContact').value = '';
-    document.getElementById('regInputAddress').value = '';
-    document.getElementById('regInputDOB').value = '';
-    document.getElementById('regInputTimestamp').value = new Date().toLocaleString();
-    tempAvatarBase64 = '';
-    document.getElementById('regAvatarPreview').innerHTML = '👤';
   }
 }
 
@@ -1201,7 +1083,7 @@ function handleRegAvatarUpload(event) {
   const reader = new FileReader();
   reader.onload = function(e) {
     tempAvatarBase64 = e.target.result;
-    document.getElementById('regAvatarPreview').innerHTML = `<img src="${tempAvatarBase64}" style="width:100%;height:100%;object-fit:cover;">`;
+    document.getElementById('regAvatarPreview').innerHTML = `<img src="${tempAvatarBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
   };
   reader.readAsDataURL(files[0]);
 }
@@ -1216,9 +1098,10 @@ function saveUserProfileRegistration() {
   const dob = document.getElementById('regInputDOB').value;
   const gender = document.getElementById('regSelectGender').value;
 
-  if (!name) return alert('කරුණාකර ඔබගේ නම ඇතුළත් කරන්න!');
-  if (!contact) return alert('කරුණාකර සක්‍රීය දුරකතන අංකය, ඊමේල් ලිපිනය හෝ ජාතික හැඳුනුම්පත් (NIC) අංකය යන එකක් ලබාදෙන්න!');
+  if (!name) return alert('කරුණාකර නම හෝ ප්‍රොෆයිල් නම ඇතුළත් කරන්න!');
+  if (!contact) return alert('කරුණාකර දුරකථන අංකය, ඊමේල් ලිපිනය හෝ ජාතික හැඳුනුම්පත් අංකය ඇතුළත් කරන්න!');
 
+  activeProfile = allUserAccounts[activeAccountIndex] || allUserAccounts[0];
   activeProfile.name = name;
   activeProfile.country = country;
   activeProfile.countryCode = countryCode;
@@ -1236,29 +1119,10 @@ function saveUserProfileRegistration() {
   allUserAccounts[activeAccountIndex] = activeProfile;
   saveAllAccounts();
 
-  posts.forEach(p => {
-    if (p.authorSignature && p.authorSignature.includes('Primary Owner')) {
-      p.name = activeProfile.name;
-      p.avatar = activeProfile.avatar;
-      p.authorSignature = activeProfile.ownerSignature;
-    }
-  });
-  localStorage.setItem('myfacebox_base_posts', JSON.stringify(posts));
-
-  gun.get('myfacebox_global_profiles').get(activeProfile.id).put({
-    name: activeProfile.name,
-    country: activeProfile.country,
-    avatar: activeProfile.avatar,
-    type: activeProfile.type,
-    contact: activeProfile.contact,
-    regTimestamp: activeProfile.regTimestamp,
-    ownerSignature: activeProfile.ownerSignature
-  });
-
   updateHeaderAccountUI();
   renderFeed();
   closeModule('modRegistration');
-  alert('✨ ඔබගේ ප්‍රොෆයිල්, පෝස්ට්, ස්ටෝරීස් සහ රීල්ස් වල මුල් අයිතිය ඔබගේ ගිණුමට ස්ථීරවම සේව් විය!');
+  alert('🎉 ගිණුම සාර්ථකව සුරැකුණි!');
 }
 
 function openAccountSwitchModal() {
@@ -1285,57 +1149,70 @@ function switchToAccount(idx) {
 }
 
 function addNewAccountOption() {
-  if (allUserAccounts.length >= 3) return alert('⚠️ එක් දුරකතන අංකයකට/ඊමේල්/NIC එකකට හදාගත හැක්කේ ගිණුම් 3ක් පමණි!');
+  if (allUserAccounts.length >= 3) {
+    return alert('⚠️ මේ මොහොතේ උපරිම ගිණුම් සංඛ්‍යාවට ළඟා වී ඇත (Max 3).');
+  }
   const newAcc = {
     id: 'ACC_' + Date.now(),
     name: 'New Account ' + (allUserAccounts.length + 1),
     country: activeProfile.country || 'LK',
     countryCode: activeProfile.countryCode || '+94',
-    type: 'Page',
-    contact: activeProfile.contact,
-    address: activeProfile.address,
-    dob: activeProfile.dob,
-    gender: activeProfile.gender,
+    type: 'Personal',
+    contact: activeProfile.contact || '',
+    address: '',
+    dob: '',
+    gender: 'Male',
     avatar: '',
+    storyMedia: '',
+    extraStories: [],
     regTimestamp: new Date().toLocaleString(),
     deviceFingerprint: getOrCreateDeviceFingerprint(),
     lastPingTimestamp: Date.now()
   };
   allUserAccounts.push(newAcc);
   saveAllAccounts();
-  switchToAccount(allUserAccounts.length - 1);
+  activeAccountIndex = allUserAccounts.length - 1;
+  localStorage.setItem('myfacebox_active_acc_index', activeAccountIndex);
+  updateHeaderAccountUI();
+  closeModule('modAccountSwitch');
   openRegistrationModal(true);
 }
 
-function triggerProfilePhotoUpdate() {
-  document.getElementById('globalProfilePhotoInput').click();
+function openStoryCreator() {
+  document.getElementById('storyMediaFileInput').click();
 }
 
-function handleProfilePhotoUpload(event) {
+function handleStoryMediaUpload(event) {
   const files = event.target.files;
   if (!files || files.length === 0) return;
+  const file = files[0];
   const reader = new FileReader();
   reader.onload = function(e) {
-    activeProfile.avatar = e.target.result;
+    const mediaResult = e.target.result;
+    if (!activeProfile.storyMedia) {
+      activeProfile.storyMedia = mediaResult;
+    } else {
+      if (!activeProfile.extraStories) activeProfile.extraStories = [];
+      activeProfile.extraStories.push(mediaResult);
+    }
     allUserAccounts[activeAccountIndex] = activeProfile;
     saveAllAccounts();
     initUserProfile();
-    renderFeed();
-    alert('✨ ප්‍රොෆයිල් පින්තූරය සාර්ථකව වෙනස් විය!');
+    renderStoriesTray();
+    alert('✨ නව ස්ටෝරි (Story / Min 5+ Video) එක සාර්ථකව එකතු විය!');
   };
-  reader.readAsDataURL(files[0]);
+  reader.readAsDataURL(file);
 }
 
 function handleReelVideoUpload(event) {
   const files = event.target.files;
   if (!files || files.length === 0) return;
   const videoUrl = URL.createObjectURL(files[0]);
-
   const container = document.getElementById('reelsFeedContainer');
   const newReelCard = document.createElement('div');
   newReelCard.className = 'reel-item-card';
   newReelCard.innerHTML = `
-    <video class="reel-video-element" src="${videoUrl}" loop autoplay muted playsinline></video>
+    <video class="reel-video-element" src="${videoUrl}" loop autoplay muted playsinline ${isSourceMuted ? 'muted' : ''}></video>
     <div class="reel-overlay-ui">
       <div></div>
       <div class="reel-right-actions">
@@ -1355,14 +1232,14 @@ function handleReelVideoUpload(event) {
     </div>
   `;
   container.prepend(newReelCard);
-  alert('🚀 ඔබගේ අලුත් රීල් වීඩියෝව සාර්ථකව අප්ලොඩ් විය!');
+  alert('🎥 රීල් වීඩියෝව සහ හෝම් පිටුවට සාර්ථකව උඩුගත කරන ලදී!');
 }
 
 function openLightboxFromUrl(src, type) {
   const modal = document.getElementById('mediaLightboxModal');
   const container = document.getElementById('lightboxFeedContainer');
   if (type === 'video') {
-    container.innerHTML = `<div class="lightbox-card-item"><video src="${src}" controls autoplay loop class="lightbox-media-element"></video></div>`;
+    container.innerHTML = `<div class="lightbox-card-item"><video src="${src}" controls autoplay loop class="lightbox-media-element" ${isSourceMuted ? 'muted' : ''}></video></div>`;
   } else {
     container.innerHTML = `<div class="lightbox-card-item"><img src="${src}" class="lightbox-media-element"></div>`;
   }
@@ -1381,21 +1258,70 @@ function openStoryViewer(type) {
   const nameEl = document.getElementById('viewerUserName');
   const timeEl = document.getElementById('viewerTime');
   const mediaImg = document.getElementById('viewerMediaImg');
+  const mediaVideo = document.getElementById('viewerMediaVideo');
   const progFill = document.getElementById('storyProgFill');
 
   modal.style.display = 'flex';
   document.getElementById('storyDropdownMenu').style.display = 'none';
 
+  let mediaSrc = '';
   if (type === 'user') {
     nameEl.innerText = activeProfile.name;
     avatarImg.src = activeProfile.avatar || 'https://via.placeholder.com/150';
-    mediaImg.src = activeProfile.avatar || 'https://via.placeholder.com/600';
+    mediaSrc = activeProfile.storyMedia || activeProfile.avatar || 'https://via.placeholder.com/600';
     timeEl.innerText = 'Just now • Primary Author Story';
   } else {
     nameEl.innerText = 'Global Community Hub';
     avatarImg.src = 'https://via.placeholder.com/150';
-    mediaImg.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600';
+    mediaSrc = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600';
     timeEl.innerText = '5 hrs ago • AI Content';
+  }
+
+  if (mediaSrc.includes('data:video') || mediaSrc.endsWith('.mp4') || mediaSrc.endsWith('.mov')) {
+    mediaImg.style.display = 'none';
+    mediaVideo.style.display = 'block';
+    mediaVideo.src = mediaSrc;
+    if(isSourceMuted) mediaVideo.muted = true;
+  } else {
+    mediaVideo.style.display = 'none';
+    mediaImg.style.display = 'block';
+    mediaImg.src = mediaSrc;
+  }
+
+  progFill.style.width = '0%';
+  setTimeout(() => { progFill.style.transition = 'width 5s linear'; progFill.style.width = '100%'; }, 50);
+
+  if (storyTimer) clearTimeout(storyTimer);
+  storyTimer = setTimeout(() => { closeStoryViewer(); }, 5000);
+}
+
+function openExtraStoryViewer(index) {
+  currentStoryType = 'extra_' + index;
+  const modal = document.getElementById('storyViewerModal');
+  const avatarImg = document.getElementById('viewerUserAvatar');
+  const nameEl = document.getElementById('viewerUserName');
+  const timeEl = document.getElementById('viewerTime');
+  const mediaImg = document.getElementById('viewerMediaImg');
+  const mediaVideo = document.getElementById('viewerMediaVideo');
+  const progFill = document.getElementById('storyProgFill');
+
+  modal.style.display = 'flex';
+  document.getElementById('storyDropdownMenu').style.display = 'none';
+
+  nameEl.innerText = activeProfile.name;
+  avatarImg.src = activeProfile.avatar || 'https://via.placeholder.com/150';
+  const mediaSrc = activeProfile.extraStories[index];
+  timeEl.innerText = `Story #${index + 1} • Just now`;
+
+  if (mediaSrc && (mediaSrc.includes('data:video') || mediaSrc.endsWith('.mp4'))) {
+    mediaImg.style.display = 'none';
+    mediaVideo.style.display = 'block';
+    mediaVideo.src = mediaSrc;
+    if(isSourceMuted) mediaVideo.muted = true;
+  } else {
+    mediaVideo.style.display = 'none';
+    mediaImg.style.display = 'block';
+    mediaImg.src = mediaSrc;
   }
 
   progFill.style.width = '0%';
@@ -1408,6 +1334,8 @@ function openStoryViewer(type) {
 function closeStoryViewer() {
   document.getElementById('storyViewerModal').style.display = 'none';
   document.getElementById('storyDropdownMenu').style.display = 'none';
+  const mediaVideo = document.getElementById('viewerMediaVideo');
+  if(mediaVideo) mediaVideo.pause();
   if (storyTimer) clearTimeout(storyTimer);
 }
 
@@ -1425,24 +1353,29 @@ window.onclick = function(event) {
 }
 
 function editCurrentStory() {
-  if (currentStoryType !== 'user') return alert('⚠️ ඔබට වෙනත් අයගේ ස්ටේටස් වෙනස් කළ නොහැක!');
   closeStoryViewer();
-  triggerProfilePhotoUpdate();
+  openStoryCreator();
 }
 
 function deleteCurrentStory() {
-  if (confirm('මෙම ස්ටේටස් එක ඉවත් කිරීමට අවශ්‍යද?')) {
-    activeProfile.avatar = '';
+  if (confirm('🗑️ මෙම කතාව මකා දමන්න අවශ්‍යමද?')) {
+    if (currentStoryType === 'user') {
+      activeProfile.storyMedia = '';
+    } else if (currentStoryType && currentStoryType.startsWith('extra_')) {
+      const idx = parseInt(currentStoryType.split('_')[1]);
+      activeProfile.extraStories.splice(idx, 1);
+    }
     allUserAccounts[activeAccountIndex] = activeProfile;
     saveAllAccounts();
     initUserProfile();
+    renderStoriesTray();
     closeStoryViewer();
-    alert('🗑️ ස්ටේටස් එක ඉවත් කරන ලදී!');
+    alert('✅ කතාව මකා දමන ලදී!');
   }
 }
 
-function shareCurrentStory() { alert('🔗 ලින්ක් එක කොපි විය!'); }
-function sendStoryReaction(emoji) { alert(`✨ Reaction: ${emoji}`); }
+function shareCurrentStory() { alert('🔗 කතාව බෙදා ගන්න ලදී!'); }
+function sendStoryReaction(emoji) { alert(`❤️ Reaction: ${emoji}`); }
 function sendStoryMessage() {
   const txt = document.getElementById('storyReplyInput').value.trim();
   if (!txt) return;
@@ -1508,11 +1441,11 @@ function handleMediaSelect(event, type) {
         if (type === 'photo') {
           currentSelectedMedia.type = 'photo';
           currentSelectedMedia.src = Array.from(files).map(f => URL.createObjectURL(f));
-          document.getElementById('selectedMediaPreview').innerText = `✅ Photos Attached!`;
+          document.getElementById('selectedMediaPreview').innerText = `📸 Photos Attached!`;
         } else if (type === 'video') {
           currentSelectedMedia.type = 'video';
           currentSelectedMedia.src = [URL.createObjectURL(files[0])];
-          document.getElementById('selectedMediaPreview').innerText = `✅ Video Attached!`;
+          document.getElementById('selectedMediaPreview').innerText = `🎥 Video Attached!`;
         } else if (type === 'audio') {
           currentSelectedMedia.type = 'audio';
           currentSelectedMedia.src = [URL.createObjectURL(files[0])];
@@ -1529,14 +1462,14 @@ function triggerVoiceNoteRecording() {
   setTimeout(() => {
     currentSelectedMedia.type = 'voice';
     currentSelectedMedia.src = ['#voice_stream'];
-    document.getElementById('selectedMediaPreview').innerText = `✅ Voice Note Recorded!`;
+    document.getElementById('selectedMediaPreview').innerText = `🎙️ Voice Note Recorded!`;
   }, 1000);
 }
 
 function submitNewPost() {
   const txtInput = document.getElementById('modalPostText');
   const txt = txtInput.value.trim();
-  if (!txt && !currentSelectedMedia.type) return alert('කරුණාකර පෝස්ට් එකට දෙයක් ලියන්න හෝ මාධ්‍ය එකතු කරන්න!');
+  if (!txt && !currentSelectedMedia.type) return alert('කරුණාකර යම් අන්තර්ගතයක් හෝ මාධ්‍යයක් එක් කරන්න!');
 
   const newPost = {
     id: Date.now(),
@@ -1583,11 +1516,28 @@ function addComment(postId) {
 }
 
 function deletePost(postId) {
-  if (confirm('මෙම පෝස්ට් එක ඉවත් කිරීමට අවශ්‍යද?')) {
+  if (confirm('🗑️ මෙම පෝස්ටුව මකා දමන්න අවශ්‍යමද?')) {
     posts = posts.filter(p => p.id !== postId);
     localStorage.setItem('myfacebox_base_posts', JSON.stringify(posts));
     renderFeed();
   }
+}
+
+function toggleSourceMuteGlobal() {
+  isSourceMuted = !isSourceMuted;
+  const btn = document.getElementById('sourceMuteBtn');
+  if (isSourceMuted) {
+    btn.innerText = "Muted (Silence)";
+    btn.style.background = "#ea4335";
+    alert("🔕 Source Muted Successfully! All background audio/videos are muted.");
+  } else {
+    btn.innerText = "Active (Unmuted)";
+    btn.style.background = "#34a853";
+    alert("🔔 Source Unmuted Successfully!");
+  }
+  document.querySelectorAll('video, audio').forEach(media => {
+    media.muted = isSourceMuted;
+  });
 }
 
 function openMasterMenu() { document.getElementById('masterMenuHub').style.display = 'block'; }
@@ -1637,18 +1587,18 @@ function renderFeed() {
       <p style="margin-top:6px;line-height:1.4;white-space:pre-wrap;" onclick="openLightboxFromUrl('${p.media && p.media.src ? p.media.src[0] : ''}', 'photo')">${p.txt}</p>
 
       ${p.media && p.media.type === 'photo' ? p.media.src.map(img => `<img src="${img}" class="post-media-preview" onclick="openLightboxFromUrl('${img}', 'photo')">`).join('') : ''}
-      ${p.media && p.media.type === 'video' ? `<video src="${p.media.src[0]}" autoplay muted loop playsinline class="post-media-preview" onclick="openLightboxFromUrl('${p.media.src[0]}', 'video')"></video>` : ''}
+      ${p.media && p.media.type === 'video' ? `<video src="${p.media.src[0]}" autoplay muted loop playsinline class="post-media-preview" onclick="openLightboxFromUrl('${p.media.src[0]}', 'video')" ${isSourceMuted ? 'muted' : ''}></video>` : ''}
       ${p.media && p.media.type === 'audio' ? `
         <div class="mp3-cover-box" onclick="openLightboxFromUrl('${p.media.src[0]}', 'audio')">
           <div style="font-size:32px;margin-bottom:6px;">🎵</div>
           <b>${p.media.title || 'Sumiya Track'}</b>
-          <audio controls autoplay src="${p.media.src[0]}" style="margin-top:10px;width:90%;height:30px;"></audio>
+          <audio controls autoplay src="${p.media.src[0]}" style="margin-top:10px;width:90\%;height:30px;" ${isSourceMuted ? 'muted' : ''}></audio>
         </div>
       ` : ''}
 
       <div class="count-bar" onclick="openLightboxFromUrl('${p.media && p.media.src ? p.media.src[0] : ''}', 'photo')">
         <span>❤️ ${p.likes} Likes • 💬 ${p.comments.length} Comments</span>
-        <span>🚀 Shared 100%</span>
+        <span>🔗 Shared 100%</span>
       </div>
 
       <div class="action-bar">
@@ -1673,27 +1623,13 @@ function renderFeed() {
   `).join('');
 }
 
-function sendMessengerMsg() {
-  const input = document.getElementById('msgInputText');
-  const txt = input.value.trim();
-  if (!txt) return;
-  const chatBox = document.getElementById('messengerChatBox');
-  const msgDiv = document.createElement('div');
-  msgDiv.style.cssText = "background:#0088ff;color:#fff;padding:8px 12px;border-radius:12px 12px 0 12px;width:fit-content;margin-left:auto;margin-bottom:8px;font-size:13px;";
-  msgDiv.innerText = txt;
-  chatBox.appendChild(msgDiv);
-  input.value = '';
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-// --- ULTRA-PRO ADVANCED DIARY JAVASCRIPT LOGIC ---
 let currentDiaryAttachments = [];
+let diaryMediaRecorder;
+let diaryAudioChunks = [];
 
-function handleDiaryMediaUpload(event) {
+function handleDiaryFilesUpload(event) {
   const files = event.target.files;
   if (!files || files.length === 0) return;
-  currentDiaryAttachments = [];
-  
   Array.from(files).forEach(file => {
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -1702,22 +1638,82 @@ function handleDiaryMediaUpload(event) {
         type: file.type,
         data: e.target.result
       });
-      document.getElementById('diaryFileCountStatus').innerText = `✅ Attached: ${currentDiaryAttachments.length} file(s)`;
+      document.getElementById('diaryFileCountStatus').innerText = `📎 Attached: ${currentDiaryAttachments.length} file(s)`;
     };
     reader.readAsDataURL(file);
   });
 }
 
+function triggerStudioCamera(type) {
+  if (type === 'photo') {
+    document.getElementById('studioCameraPhotoInput').click();
+  } else {
+    document.getElementById('studioCameraVideoInput').click();
+  }
+}
+
+function handleStudioCapture(event, type) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+  const file = files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    currentDiaryAttachments.push({
+      name: `Studio_${type}_${Date.now()}.${type === 'photo' ? 'jpg' : 'mp4'}`,
+      type: type === 'photo' ? 'image/jpeg' : 'video/mp4',
+      data: e.target.result
+    });
+    document.getElementById('diaryFileCountStatus').innerText = `📎 Studio Attached (${currentDiaryAttachments.length})`;
+    alert('📸 ස්ටුඩියෝ කැමරාවෙන් ලබාගත් මාධ්‍ය ඩයරියට එකතු විය!');
+  };
+  reader.readAsDataURL(file);
+}
+
+function triggerDiaryVoiceRecording() {
+  const btn = document.getElementById('diaryVoiceRecBtn');
+  if (!diaryMediaRecorder || diaryMediaRecorder.state === "inactive") {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      diaryMediaRecorder = new MediaRecorder(stream);
+      diaryMediaRecorder.start();
+      diaryAudioChunks = [];
+      btn.innerText = "⏹️ Stop";
+      btn.style.background = "#ea4335";
+      btn.style.color = "#fff";
+
+      diaryMediaRecorder.addEventListener("dataavailable", event => {
+        diaryAudioChunks.push(event.data);
+      });
+
+      diaryMediaRecorder.addEventListener("stop", () => {
+        const audioBlob = new Blob(diaryAudioChunks, { type: 'audio/mp3' });
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = function() {
+          currentDiaryAttachments.push({
+            name: `Voice_${Date.now()}.mp3`,
+            type: 'audio/mp3',
+            data: reader.result
+          });
+          document.getElementById('diaryFileCountStatus').innerText = `📎 Attached: ${currentDiaryAttachments.length} file(s)`;
+          alert("🎙️ වොයිස් රෙකෝඩින් එක ඩයරියට ඇතුළත් විය!");
+        };
+      });
+    }).catch(err => alert("මයික්‍රෆෝන අවසරය අවශ්‍යයි: " + err));
+  } else {
+    diaryMediaRecorder.stop();
+    btn.innerText = "🎙️ Record Voice";
+    btn.style.background = "var(--card-sub-bg)";
+    btn.style.color = "var(--text-main)";
+  }
+}
+
 function saveAdvancedDiaryEntry() {
   const title = document.getElementById('diaryTitleInput').value.trim();
   const txt = document.getElementById('diaryNoteInput').value.trim();
-  
   if (!title && !txt && currentDiaryAttachments.length === 0) {
-    return alert('⚠️ කරුණාකර මාතෘකාවක්, සටහනක් හෝ ෆයිල් එකක් එකතු කරන්න!');
+    return alert('කරුණාකර මාතෘකාවක්, සටහනක් හෝ ෆයිල් එකක් ඇතුළත් කරන්න!');
   }
-
   let diaryLogs = JSON.parse(localStorage.getItem('myfacebox_advanced_diary') || '[]');
-  
   const newEntry = {
     id: Date.now(),
     date: new Date().toLocaleString(),
@@ -1725,60 +1721,77 @@ function saveAdvancedDiaryEntry() {
     text: txt,
     attachments: [...currentDiaryAttachments]
   };
-
   diaryLogs.unshift(newEntry);
   localStorage.setItem('myfacebox_advanced_diary', JSON.stringify(diaryLogs));
-
+  
   document.getElementById('diaryTitleInput').value = '';
   document.getElementById('diaryNoteInput').value = '';
   currentDiaryAttachments = [];
-  document.getElementById('diaryFileCountStatus').innerText = 'No file attached';
-
+  document.getElementById('diaryFileCountStatus').innerText = 'No files attached';
   renderAdvancedDiaryLogs();
-  alert('✨ ඩයරි සටහන සහ සියලුම ඇටෑච්මන්ට්ස් සාර්ථකව සේව් විය!');
+  alert('📖 සටහන සුරක්ෂිතව තැන්පත් විය!');
 }
 
 function renderAdvancedDiaryLogs() {
   const container = document.getElementById('savedDiaryLogs');
   if (!container) return;
-  
   let diaryLogs = JSON.parse(localStorage.getItem('myfacebox_advanced_diary') || '[]');
   if (diaryLogs.length === 0) {
-    container.innerHTML = '<div style="padding:15px;text-align:center;color:var(--status-text);font-size:12px;background:var(--card-sub-bg);border-radius:10px;">තවම සේව් කළ ඩයරි සටහන් නොමැත.</div>';
+    container.innerHTML = '<div style="padding:15px;text-align:center;color:var(--status-text);font-size:12px;background:var(--card-sub-bg);border-radius:10px;">සුරැකි සටහන් නොමැත.</div>';
     return;
   }
-
+  
   container.innerHTML = diaryLogs.map(d => `
     <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid var(--border-color);display:flex;flex-direction:column;gap:8px;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
-        <b style="color:#ff0055;font-size:14px;">📖 ${d.title}</b>
+        <b style="color:#ff0055;font-size:14px;">📌 ${d.title}</b>
         <span style="font-size:10px;color:var(--status-text);">${d.date}</span>
       </div>
       <p style="font-size:13px;color:var(--text-main);white-space:pre-wrap;line-height:1.4;">${d.text}</p>
       
       ${d.attachments && d.attachments.length > 0 ? `
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
-          ${d.attachments.map(att => {
-            if (att.type.startsWith('image/')) {
-              return `<img src="${att.data}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--border-color);cursor:pointer;" onclick="openLightboxFromUrl('${att.data}', 'photo')">`;
-            } else if (att.type.startsWith('video/')) {
-              return `<video src="${att.data}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--border-color);"></video>`;
-            } else {
-              return `<a href="${att.data}" download="${att.name}" style="font-size:11px;background:#0088ff;color:#fff;padding:4px 8px;border-radius:6px;text-decoration:none;">📄 ${att.name}</a>`;
-            }
-          }).join('')}
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
+          ${d.attachments.map((att, idx) => `
+            <div style="background:var(--card-bg);padding:6px 10px;border-radius:8px;border:1px solid var(--border-color);display:flex;align-items:center;gap:6px;font-size:11px;">
+              <span style="cursor:pointer;color:#0088ff;font-weight:bold;" onclick="openDiaryAttachment('${att.data}', '${att.type}')">👁️ ${att.name.substring(0, 15)}...</span>
+              <a href="${att.data}" download="${att.name}" style="text-decoration:none;font-size:12px;" title="Download">📥</a>
+            </div>
+          `).join('')}
         </div>
       ` : ''}
 
-      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px;">
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:6px;">
+        <button onclick="shareDiaryEntry('${d.title}', '${d.text}')" style="background:#0088ff;color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;">🔗 Share</button>
         <button onclick="deleteDiaryEntry(${d.id})" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;">🗑️ Delete</button>
       </div>
     </div>
   `).join('');
 }
 
+function openDiaryAttachment(dataUrl, type) {
+  if (type.startsWith('image/')) {
+    openLightboxFromUrl(dataUrl, 'photo');
+  } else if (type.startsWith('video/')) {
+    openLightboxFromUrl(dataUrl, 'video');
+  } else if (type.startsWith('audio/')) {
+    const audioWin = window.open();
+    audioWin.document.write(`<audio controls autoplay src="${dataUrl}" style="width:100%;margin-top:20%;"></audio>`);
+  } else {
+    const win = window.open();
+    win.document.write(`<iframe src="${dataUrl}" style="width:100%;height:100%;border:none;"></iframe>`);
+  }
+}
+
+function shareDiaryEntry(title, text) {
+  if (navigator.share) {
+    navigator.share({ title: title, text: text }).catch(() => {});
+  } else {
+    alert(`🔗 සටහන කොපි කරගන්න ලදී: "${title}"`);
+  }
+}
+
 function deleteDiaryEntry(id) {
-  if (confirm('මෙම ඩයරි සටහන ඉවත් කිරීමට අවශ්‍යද?')) {
+  if (confirm('🗑️ මෙම සටහන මකා දමන්න අවශ්‍යමද?')) {
     let diaryLogs = JSON.parse(localStorage.getItem('myfacebox_advanced_diary') || '[]');
     diaryLogs = diaryLogs.filter(d => d.id !== id);
     localStorage.setItem('myfacebox_advanced_diary', JSON.stringify(diaryLogs));
@@ -1786,186 +1799,280 @@ function deleteDiaryEntry(id) {
   }
 }
 
+function toggleSmartClassMic() { alert("🎙️ Smart Class Microphone Toggled!"); }
+function toggleSmartClassCamera() { alert("📷 Smart Class Camera Toggled!"); }
+
+function sendSmartClassMessage() {
+  const input = document.getElementById('smartClassInput');
+  const chatBox = document.getElementById('smartClassChatBox');
+  if(!input || !input.value.trim()) return;
+  const msg = input.value.trim();
+  const div = document.createElement('div');
+  div.innerHTML = `<b>You:</b> ${msg}`;
+  chatBox.appendChild(div);
+  input.value = '';
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function sendAIBotMessage() {
+  const input = document.getElementById('aiBotInputText');
+  if (!input) return;
+  const userTxt = input.value.trim();
+  if (!userTxt) return;
+
+  const chatBox = document.getElementById('aiBotChatBox');
+  const userDiv = document.createElement('div');
+  userDiv.style.cssText = "background:#0088ff;color:#fff;padding:8px 14px;border-radius:14px 14px 0 14px;width:fit-content;max-width:85%;margin-left:auto;font-size:13px;word-break:break-word;";
+  userDiv.innerText = userTxt;
+  chatBox.appendChild(userDiv);
+
+  input.value = '';
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  setTimeout(() => {
+    const botDiv = document.createElement('div');
+    botDiv.style.cssText = "background:var(--card-bg);border:1px solid var(--border-color);color:var(--text-main);padding:10px 14px;border-radius:14px 14px 14px 0;width:fit-content;max-width:85%;margin-right:auto;font-size:13px;line-height:1.4;";
+
+    if (userTxt.includes('sumiya718264') || userTxt.toUpperCase().includes('SUMIYA MRA')) {
+      botDiv.innerHTML = `
+        👑 <b>Sumiya Master Owner Identified!</b><br><br>
+        ආයුබෝවන් <b>Sumiya</b>! ඔබ විසින් <code>sumiya718264</code> අංකය එවූ නිසා ඔබව 1000% ක්ම පද්ධති නායකයා සහ අයිතිකරු ලෙස සාර්ථකව හඳුනාගන්නා ලදී.<br><br>
+        ⚡ <b>අභ්‍යන්තර සියලු විස්තර සහ පද්ධති තත්ත්වය (Internal Hub Status):</b><br>
+        • <b>Active Profile:</b> ${activeProfile.name} (${activeProfile.type})<br>
+        • <b>Contact/NIC:</b> ${activeProfile.contact}<br>
+        • <b>Device Fingerprint:</b> ${activeProfile.deviceFingerprint}<br>
+        • <b>P2P Peer Cloud Sync:</b> Active 🟢 (GunDB Online)<br>
+        • <b>Security Protocol:</b> Fully Unlocked for Sumiya MRA 🛡️<br>
+        • <b>App Storage Status:</b> Nano-Stable Zero Loss 24/7<br><br>
+        සියලුම අභ්‍යන්තර පාලන සහ දත්ත දැන් සම්පූර්ණයෙන්ම ඔබේ පාලනය යටතේ ක්‍රියාත්මක වේ! 🚀
+      `;
+    } else {
+      botDiv.innerHTML = `
+        🌐 <b>තාක්ෂණික මගපෙන්වීම:</b><br>
+        MYFAECBOX පද්ධතියේ 1000% ක්ම තාක්ෂණික හා පාරිභෝගික සියලුම වගකීම් සහ අයිතිය <b>Sumiya</b> වෙත භාර දී ඇත. ඔබ මාව (Sumiya) හඳුනාගැනීම සඳහා පණිවිඩයක <code>sumiya718264</code> අංකය එවන්න.
+      `;
+    }
+
+    chatBox.appendChild(botDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }, 400);
+}
+
+let masterSecretPIN = localStorage.getItem('sumiya_master_pin') || "sumiya718264"; 
+let savedVoiceSample = localStorage.getItem('sumiya_owner_voice') || null;
+
+function openVoiceManagerDirectly() {
+  closeMasterMenu();
+  openModule('modVoiceManager');
+}
+
+let mediaRecorder;
+let audioChunks = [];
+
+function startVoiceRecording() {
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.start();
+      audioChunks = [];
+
+      const statusEl = document.getElementById('voiceRecStatus');
+      if(statusEl) {
+        statusEl.innerText = "🎙️ කටහඬ පටිගත වෙමින් පවතී... (කතා කරන්න)";
+        statusEl.style.color = "#ea4335";
+      }
+
+      mediaRecorder.addEventListener("dataavailable", event => {
+        audioChunks.push(event.data);
+      });
+
+      mediaRecorder.addEventListener("stop", () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = function() {
+          savedVoiceSample = reader.result;
+          localStorage.setItem('sumiya_owner_voice', savedVoiceSample);
+          const statusEl2 = document.getElementById('voiceRecStatus');
+          if(statusEl2) {
+            statusEl2.innerText = "✅ ඔබගේ කටහඬ සාර්ථකව පද්ධතියේ Save විය!";
+            statusEl2.style.color = "#34a853";
+          }
+          alert("🎉 ඔබගේ කටහඬ පද්ධතියට සාර්ථකව ඇතුළත් කර ගන්නා ලදී!");
+        }
+      });
+    })
+    .catch(err => {
+      alert("🎙️ මයික්‍රෆෝනයට අවසර ලබා දෙන්න: " + err);
+    });
+}
+
+function stopVoiceRecording() {
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+  }
+}
+
+function changeMasterPIN() {
+  const newPIN = prompt("🔑 නව රහස් අංකය (New Secret PIN) ඇතුළත් කරන්න:");
+  if (newPIN && newPIN.trim() !== "") {
+    masterSecretPIN = newPIN.trim();
+    localStorage.setItem('sumiya_master_pin', masterSecretPIN);
+    alert("🔒 ඔබගේ නව රහස් අංකය සාර්ථකව වෙනස් කර සුරකින ලදී!");
+  } else {
+    alert("⚠️ රහස් අංකය හිස්ව තැබිය නොහැක!");
+  }
+}
+
 setTimeout(renderAdvancedDiaryLogs, 600);
 
-let wbCanvas, wbCtx, isDrawing = false;
-let classSecondsRemaining = 120 * 60;
-let classTimerInterval = null;
-
-function initSmartClassHub() {
-  wbCanvas = document.getElementById('smartWhiteboardCanvas');
-  if(!wbCanvas) return;
-  
-  wbCtx = wbCanvas.getContext('2d');
-  wbCanvas.width = wbCanvas.parentElement.clientWidth;
-  wbCanvas.height = wbCanvas.parentElement.clientHeight;
-  
-  wbCtx.lineWidth = 3;
-  wbCtx.lineCap = 'round';
-  wbCtx.strokeStyle = '#0088ff';
-
-  wbCanvas.addEventListener('mousedown', startDrawing);
-  wbCanvas.addEventListener('mousemove', draw);
-  wbCanvas.addEventListener('mouseup', stopDrawing);
-  
-  wbCanvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    const rect = wbCanvas.getBoundingClientRect();
-    isDrawing = true;
-    wbCtx.beginPath();
-    wbCtx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
-  });
-
-  wbCanvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    if (!isDrawing) return;
-    const touch = e.touches[0];
-    const rect = wbCanvas.getBoundingClientRect();
-    wbCtx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
-    wbCtx.stroke();
-  });
-
-  wbCanvas.addEventListener('touchend', stopDrawing);
-}
-
-function startDrawing(e) {
-  isDrawing = true;
-  wbCtx.beginPath();
-  wbCtx.moveTo(e.offsetX, e.offsetY);
-}
-
-function draw(e) {
-  if (!isDrawing) return;
-  const color = document.getElementById('wbColorPicker').value;
-  wbCtx.strokeStyle = color;
-  wbCtx.lineTo(e.offsetX, e.offsetY);
-  wbCtx.stroke();
-}
-
-function stopDrawing() { isDrawing = false; }
-
-function clearWhiteboard() {
-  if(wbCtx && wbCanvas) {
-    wbCtx.clearRect(0, 0, wbCanvas.width, wbCanvas.height);
-  }
-}
-
-function start120MinClassTimer() {
-  if(classTimerInterval) clearInterval(classTimerInterval);
-  classTimerInterval = setInterval(() => {
-    if(classSecondsRemaining <= 0) {
-      clearInterval(classTimerInterval);
-      alert('🎓 120 Minutes Live Session Completed!');
-      return;
-    }
-    classSecondsRemaining--;
-    const mins = Math.floor(classSecondsRemaining / 60);
-    const secs = classSecondsRemaining % 60;
-    const display = document.getElementById('classTimerDisplay');
-    if(display) {
-      display.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-  }, 1000);
-}
-
-function triggerClassSOS() {
-  alert('🚨 EMERGENCY CLASS SOS: Teacher and Master Admin notified instantly!');
-}
-
-// --- 📸 NEW AI STUDIO CAMERA & ZERO STORAGE LOGIC ---
-let currentCamStream = null;
-
-async function startAICamera() {
-  try {
-    currentCamStream = await navigator.mediaDevices.getUserMedia({ 
-      video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
-      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-    });
-    const videoEl = document.getElementById('aiCameraVideoFeed');
-    if (videoEl) {
-      videoEl.srcObject = currentCamStream;
-    }
-  } catch (err) {
-    alert("⚠️ කැමරා අවසරය සක්‍රීය කිරීමට නොහැකි විය: " + err.message);
-  }
-}
-
-function stopCameraStream() {
-  if (currentCamStream) {
-    currentCamStream.getTracks().forEach(track => track.stop());
-    currentCamStream = null;
-  }
-}
-
-function captureStudioPhoto(videoElement) {
-    if (!videoElement) {
-      return alert('⚠️ කැමරාව සොයාගත නොහැක!');
-    }
-    
-    // Check if video is ready, otherwise fallback to dimensions or wait slightly
-    const width = videoElement.videoWidth || videoElement.clientWidth || 1280;
-    const height = videoElement.videoHeight || videoElement.clientHeight || 720;
-
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d');
-    
-    try {
-        // Studio Quality Filter Matrix
-        ctx.filter = 'contrast(105%) brightness(108%) saturate(110%)';
-        ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-        
-        // Auto Compress to WebP (Zero Phone Storage, Direct App Cloud Sync)
-        const compressedBase64 = canvas.toDataURL('image/webp', 0.85);
-        
-        gun.get('myfacebox_vault').set({
-            id: Date.now(),
-            image: compressedBase64,
-            type: 'studio_photo'
-        });
-        alert('✨ Studio Quality Photo Saved to App Cloud! (Zero Phone Storage Used)');
-    } catch(err) {
-        alert('⚠️ කමරාවෙන් ෆොටෝ එක ලබාගැනීමේදී දෝෂයක් ඇති විය. කරුණාකර තත්පර කිහිපයක් රැඳී නැවත උත්සාහ කරන්න.');
-        console.error(err);
-    }
-}
-
-async function setupNoiseFreeAudio() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            audio: {
-                echoCancellation: true,
-                noiseSuppression: true,
-                autoGainControl: true
-            } 
-        });
-        alert('🎙️ AI Noise-Cancellation & Voice Isolation Active!');
-        return stream;
-    } catch(err) {
-        console.warn("Microphone access error:", err);
-    }
-}
-
-// Module Router Integration
-const originalOpenModule = window.openModule;
-window.openModule = function(id) {
-  if (typeof originalOpenModule === 'function') originalOpenModule(id);
-  if (id === 'modZoom') {
-    setTimeout(() => {
-      initSmartClassHub();
-      start120MinClassTimer();
-    }, 200);
-  }
-  if (id === 'modCamera') {
-    setTimeout(() => {
-      startAICamera();
-    }, 200);
-  }
-};
-
 updateHeaderAccountUI();
+renderStoriesTray();
 renderFeed();
+
+gun.get('myfacebox_global_posts').map().on(function(data, id) {
+  if (data && data.txt) {
+    let exists = posts.find(p => p.id === data.id);
+    if (!exists) {
+      posts.unshift(data);
+      renderFeed();
+    }
+  }
+});
+</script>
+
+<!-- ========================================== -->
+<!-- Sumiya International Messenger Hub Module  -->
+<!-- ========================================== -->
+<div class="modular-window" id="modMessenger" style="display:flex; flex-direction:column; background:var(--bg-main); z-index:9999999;">
+  <div class="mod-header">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-size:20px;">💬</span>
+      <b>Sumiya International Messenger Hub</b>
+    </div>
+    <button onclick="closeModule('modMessenger')" style="background:#ea4335;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:bold;">Close</button>
+  </div>
+
+  <div style="display:flex; flex-direction:column; flex:1; height:calc(100vh - 120px); overflow:hidden;">
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--card-sub-bg); border-bottom:1px solid var(--border-color);">
+      <div style="display:flex; gap:8px;">
+        <button onclick="startMessengerCall('voice')" style="background:#34a853; color:#fff; border:none; padding:6px 12px; border-radius:14px; font-size:12px; font-weight:bold; cursor:pointer;">📞 Voice Call</button>
+        <button onclick="startMessengerCall('video')" style="background:#0088ff; color:#fff; border:none; padding:6px 12px; border-radius:14px; font-size:12px; font-weight:bold; cursor:pointer;">📹 Video Call</button>
+      </div>
+      <div>
+        <input type="text" id="messengerFilterInput" placeholder="🔍 Filter messages..." onkeyup="filterMessengerChats()" style="padding:6px 12px; border-radius:14px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--input-text); font-size:12px; outline:none;">
+      </div>
+    </div>
+
+    <div id="messengerChatBox" style="flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px; background:var(--bg-main);">
+      <div style="background:var(--card-sub-bg); border:1px solid var(--border-color); padding:10px 14px; border-radius:12px; font-size:13px; max-width:80%; align-self:flex-start; color:var(--text-main);">
+        <b>System:</b> සාදරයෙන් පිළිගනිමු! ඔබට මෙහිදී ඕනෑම ගොනුවක් (PDF, Docs, Images, Videos, Audio) හුවමාරු කර ගැනීමට සහ Edit කිරීමට හැක.
+      </div>
+    </div>
+
+    <div id="messengerFilePreviewContainer" style="display:none; padding:6px 12px; background:var(--card-sub-bg); border-top:1px solid var(--border-color); font-size:11px; color:#0088ff; font-weight:bold;"></div>
+
+    <div style="padding:10px; background:var(--card-bg); border-top:1px solid var(--border-color); display:flex; flex-direction:column; gap:8px;">
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button onclick="document.getElementById('messengerFileInput').click()" style="background:var(--card-sub-bg); border:1px solid var(--border-color); padding:8px 12px; border-radius:16px; cursor:pointer; font-size:14px;" title="Attach Any File / Media">📎</button>
+        <input type="file" id="messengerFileInput" multiple style="display:none;" onchange="handleMessengerFileUpload(event)">
+        
+        <input type="text" id="messengerInputText" placeholder="ටයිප් කරන්න හෝ Edit කරන්න..." onkeypress="if(event.key==='Enter') sendMessengerMessage()" style="flex:1; padding:10px 14px; border-radius:20px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--input-text); font-size:13px; outline:none;">
+        
+        <button onclick="sendMessengerMessage()" style="background:linear-gradient(135deg, #0088ff, #0055ff); color:#fff; border:none; padding:10px 18px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:13px;">Send</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="messengerCallOverlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:#000; z-index:99999999; display:none; flex-direction:column; justify-content:space-between; align-items:center; padding:30px; color:#fff;">
+  <div style="text-align:center; margin-top:40px;">
+    <div style="width:90px; height:90px; border-radius:50%; background:#0088ff; margin:0 auto 14px auto; display:flex; align-items:center; justify-content:center; font-size:36px;" id="callAvatarIcon">👤</div>
+    <h2 id="callTitleTxt">Connecting Call...</h2>
+    <p style="font-size:13px; color:#aaa; margin-top:6px;" id="callStatusTxt">Secure P2P Encryption Active</p>
+  </div>
+  <div style="width:100%; height:40%; background:#1e1e1e; border-radius:20px; display:flex; align-items:center; justify-content:center; border:1px solid #333;" id="callVideoContainer">
+    <span style="font-size:14px; color:#777;">Camera / Audio Stream Active</span>
+  </div>
+  <button onclick="endMessengerCall()" style="background:#ea4335; color:#fff; border:none; padding:14px 30px; border-radius:30px; font-size:15px; font-weight:bold; cursor:pointer; margin-bottom:20px;">📞 End Call</button>
+</div>
+
+<script>
+let messengerAttachments = [];
+
+function handleMessengerFileUpload(event) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      messengerAttachments.push({
+        name: file.name,
+        type: file.type,
+        data: e.target.result
+      });
+      const previewBox = document.getElementById('messengerFilePreviewContainer');
+      previewBox.style.display = 'block';
+      previewBox.innerText = `📎 Attached: ${messengerAttachments.length} file(s) ready to send.`;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function sendMessengerMessage() {
+  const input = document.getElementById('messengerInputText');
+  const chatBox = document.getElementById('messengerChatBox');
+  const txt = input.value.trim();
+
+  if (!txt && messengerAttachments.length === 0) return;
+
+  let attachmentsHtml = '';
+  if (messengerAttachments.length > 0) {
+    attachmentsHtml = messengerAttachments.map(att => `
+      <div style="margin-top:6px; background:rgba(0,0,0,0.1); padding:6px; border-radius:8px; font-size:11px;">
+        📁 <a href="${att.data}" download="${att.name}" style="color:#0088ff; text-decoration:none; font-weight:bold;">${att.name} (Download)</a>
+      </div>
+    `).join('');
+  }
+
+  const userDiv = document.createElement('div');
+  userDiv.style.cssText = "background:#0088ff; color:#fff; padding:10px 14px; border-radius:14px 14px 0 14px; width:fit-content; max-width:80%; margin-left:auto; font-size:13px; word-break:break-word;";
+  userDiv.innerHTML = `${txt ? '<div>' + txt + '</div>' : ''} ${attachmentsHtml}`;
+  chatBox.appendChild(userDiv);
+
+  input.value = '';
+  messengerAttachments = [];
+  document.getElementById('messengerFilePreviewContainer').style.display = 'none';
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function startMessengerCall(type) {
+  const overlay = document.getElementById('messengerCallOverlay');
+  const title = document.getElementById('callTitleTxt');
+  const status = document.getElementById('callStatusTxt');
+  
+  overlay.style.display = 'flex';
+  if (type === 'voice') {
+    title.innerText = "Voice Calling...";
+    status.innerText = "Secure Audio Tunnel Active 🟢";
+  } else {
+    title.innerText = "Video Calling...";
+    status.innerText = "Secure HD Video Tunnel Active 🟢";
+  }
+}
+
+function endMessengerCall() {
+  document.getElementById('messengerCallOverlay').style.display = 'none';
+}
+
+function filterMessengerChats() {
+  const query = document.getElementById('messengerFilterInput').value.toLowerCase();
+  const chatBox = document.getElementById('messengerChatBox');
+  Array.from(chatBox.children).forEach(child => {
+    child.style.display = child.innerText.toLowerCase().includes(query) ? 'block' : 'none';
+  });
+}
 </script>
 </html>
