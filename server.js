@@ -12,9 +12,8 @@ const server = app.listen(port, () => {
     console.log(`MyFaceBox Master Hub running on port ${port}`);
 });
 
-// GunDB එක Server එකත් එක්ක ලින්ක් කිරීම (Global Sync සඳහා)
+// GunDB එක සර්වර් එකේම radata නමින් දත්ත ස්ථිරව තබා ගන්නා ලෙස ලින්ක් කිරීම
 const gun = Gun({ 
-    web: server,
-    localStorage: false 
+    web: server
 });
 
