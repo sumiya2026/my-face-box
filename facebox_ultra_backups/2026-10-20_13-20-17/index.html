@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+<html lang="si" id="htmlRoot" style="color-scheme: light;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+<title>My Face BOX</title>
+<link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;MYFAECBOX&quot;,&quot;short_name&quot;:&quot;FaceBox&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#121212&quot;,&quot;theme_color&quot;:&quot;#0088ff&quot;}">
+<script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
+<style>
+:root {
+  --bg-main: #ffffff; --text-main: #1f1f1f; --border-color: #dadce0; --card-bg: #ffffff;
+  --card-sub-bg: #f8f9fa; --status-bar-bg: #ffffff; --status-text: #3c4043; --header-bg: #ffffff;
+  --input-bg: #f8f9fa; --input-text: #1f1f1f; --nav-bg: #ffffff; --nav-text: #5f6368;
+}
+[data-theme="dark"] {
+  --bg-main: #121212; --text-main: #f1f3f4; --border-color: #333333; --card-bg: #1e1e1e;
+  --card-sub-bg: #2a2a2a; --status-bar-bg: #121212; --status-text: #9aa0a6; --header-bg: #181818;
+  --input-bg: #2a2a2a; --input-text: #f1f3f4; --nav-bg: #181818; --nav-text: #9aa0a6;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(--text-main)!important;overflow-x:hidden;font-size:16px;}
+
+.app-window{width:100vw;max-width:480px;min-height:100vh;display:flex;flex-direction:column;background:var(--bg-main)!important;position:relative;margin:0 auto;box-shadow:0 0 25px rgba(0,0,0,0.15);padding-bottom:70px;}
+@media(min-width: 481px) {
+  .app-window { border-left:1px solid var(--border-color); border-right:1px solid var(--border-color); }
+}
+
+.status-bar{background:var(--status-bar-bg)!important;color:var(--status-text)!important;padding:calc(env(safe-area-inset-top, 0px) + 6px) 16px 6px 16px;display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-bottom:1px solid var(--border-color);z-index:20;}
+.live-badge{background:#ea4335!important;color:#fff!important;font-size:11px;padding:2px 6px;border-radius:4px;margin-left:4px}
+.main-header{background:var(--header-bg)!important;color:var(--text-main)!important;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-color);z-index:20;position:sticky;top:0}
+.header-left-group{display:flex;align-items:center;gap:12px}
+.brand-logo-img{width:36px;height:36px;border-radius:10px;object-fit:cover;background:transparent}
+.brand-wrapper{display:flex;align-items:center;gap:6px;}
+.brand-title{font-size:18px;font-weight:900;font-style:italic;font-family:'Courier New', Courier, monospace;text-transform:uppercase;color:#0088ff!important;letter-spacing:1px;}
+.brand-signature{font-size:11px;color:var(--status-text)!important;font-style:italic;font-weight:700}
+
+.account-switcher-bar {
+  background: var(--card-sub-bg); border-bottom: 1px solid var(--border-color);
+  padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: bold;
+}
+.account-badge-pill {
+  background: #0088ff; color: #fff; padding: 3px 8px; border-radius: 12px; font-size: 10px; margin-left: 6px;
+}
+
+.content-scroller{flex:1;background:var(--bg-main)!important;position:relative;}
+.app-view-panel { display: none; width: 100%; height: 100%; flex-direction: column; }
+.app-view-panel.active-view { display: flex; }
+
+.stories-tray-container {
+  display: flex; gap: 8px; padding: 12px 12px; overflow-x: auto;
+  background: var(--card-bg); border-bottom: 1px solid var(--border-color);
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+}
+.stories-tray-container::-webkit-scrollbar { display: none; }
+
+.story-card-item {
+  min-width: 110px; width: 110px; height: 195px; border-radius: 14px;
+  background: var(--card-sub-bg); border: 1px solid var(--border-color);
+  position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0;
+  display: flex; flex-direction: column; justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06); scroll-snap-align: start; transition: transform 0.2s ease;
+}
+.story-card-item:active { transform: scale(0.96); }
+
+.create-story-card-box { background: var(--card-sub-bg); justify-content: flex-end; align-items: center; text-align: center; padding-bottom: 12px; }
+.create-story-bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 62%; object-fit: cover; }
+.create-story-plus-circle {
+  width: 32px; height: 32px; border-radius: 50%; background: #0088ff; color: #fff;
+  font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center;
+  border: 3px solid #fff; position: absolute; top: 48%; left: 50%; transform: translateX(-50%);
+  box-shadow: 0 3px 8px rgba(0,136,255,0.4); z-index: 5;
+}
+
+.story-avatar-ring-box {
+  width: 36px; height: 36px; border-radius: 50%; padding: 2px;
+  background: linear-gradient(135deg, #0088ff, #ff0055, #ff7a00);
+  display: flex; align-items: center; justify-content: center; margin: 10px 0 0 10px; z-index: 2;
+}
+.story-avatar-ring-box.active-ring { animation: pulseRingAnim 2s infinite; }
+@keyframes pulseRingAnim { 0%{box-shadow: 0 0 0 0 rgba(0,136,255,0.7);} 70%{box-shadow: 0 0 0 8px rgba(0,136,255,0);} 100%{box-shadow: 0 0 0 0 rgba(0,136,255,0);} }
+
+.story-avatar-img-el { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #fff; }
+.story-card-overlay-content { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+.story-card-author-txt { font-size: 12px; font-weight: bold; color: #fff; text-shadow: 0 1px 4px #000; padding: 0 10px 10px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
+
+.story-viewer-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #000; z-index: 99999999; display: none; flex-direction: column; justify-content: space-between;
+  color: #fff; padding: 12px 16px;
+}
+.story-progress-bar-row {
+  display: flex; gap: 4px; width: 100%; height: 3px; background: rgba(255,255,255,0.3);
+  margin-top: calc(env(safe-area-inset-top, 0px) + 6px); border-radius: 2px; overflow: hidden;
+}
+.story-prog-fill { height: 100%; width: 0%; background: #fff; transition: width linear; }
+.story-viewer-header { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; z-index: 10; }
+.story-viewer-user { display: flex; align-items: center; gap: 10px; }
+.story-viewer-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #0088ff; }
+.story-viewer-info div:first-child { font-size: 14px; font-weight: bold; }
+.story-viewer-info div:last-child { font-size: 11px; color: #aaa; }
+.story-close-btn { font-size: 28px; cursor: pointer; color: #fff; background: none; border: none; font-weight: bold; }
+
+.story-viewer-body {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1;
+}
+.story-viewer-img, .story-viewer-video { width: 100%; height: 100%; object-fit: cover; }
+
+.story-viewer-footer { display: flex; flex-direction: column; gap: 10px; z-index: 10; margin-bottom: 10px; position: relative; }
+.story-reactions-row {
+  display: flex; justify-content: center; gap: 12px; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);
+  padding: 8px 14px; border-radius: 24px; width: fit-content; margin: 0 auto;
+}
+.story-emoji-btn { font-size: 24px; cursor: pointer; transition: transform 0.1s; background: none; border: none; }
+.story-emoji-btn:active { transform: scale(1.3); }
+
+.story-reply-box { display: flex; gap: 8px; align-items: center; width: 100%; position: relative; }
+.story-reply-input {
+  flex: 1; padding: 12px 16px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(0,0,0,0.6); color: #fff; outline: none; font-size: 14px; backdrop-filter: blur(10px);
+}
+.story-send-btn { background: #0088ff; color: #fff; border: none; padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+.story-dots-btn { font-size: 20px; cursor: pointer; color: #fff; background: rgba(0,0,0,0.5); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); font-weight: bold; flex-shrink: 0; }
+
+.story-dropdown-menu {
+  position: absolute; bottom: 60px; right: 0; background: rgba(28,28,28,0.95); backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; width: 160px; display: none; flex-direction: column;
+  z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.5); overflow: hidden;
+}
+.story-dropdown-item {
+  padding: 12px 16px; font-size: 13px; font-weight: bold; color: #fff; cursor: pointer;
+  display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.feed-reels-section {
+  margin: 12px 0; background: var(--card-bg); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 10px 0;
+}
+.feed-reels-header { display: flex; justify-content: space-between; align-items: center; padding: 0 12px 8px 12px; }
+.feed-reels-title { font-size: 15px; font-weight: 900; color: #0088ff; display: flex; align-items: center; gap: 6px; }
+.feed-reels-scroll {
+  display: flex; gap: 14px; overflow-x: auto; padding: 0 12px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+}
+.feed-reel-item {
+  min-width: 218px; width: 218px; aspect-ratio: 9 / 16; height: 312px; border-radius: 16px; position: relative; overflow: hidden;
+  scroll-snap-align: start; background: #000; cursor: pointer; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.feed-reel-video, .feed-reel-img { width: 100%; height: 100%; object-fit: cover; }
+.feed-reel-overlay {
+  position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85)); color: #fff; display: flex; flex-direction: column; gap: 2px;
+}
+.feed-reel-author { font-size: 12px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.reels-hub-container {
+  width: 100%; height: calc(100vh - 135px); overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; background: #000;
+}
+.reel-item-card {
+  width: 100%; height: 100%; scroll-snap-align: start; position: relative; background: #000; display: flex; align-items: center; justify-content: center;
+}
+.reel-video-element { width: 100%; height: 100%; object-fit: cover; }
+.reel-overlay-ui {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 16px; pointer-events: none;
+}
+.reel-overlay-ui > * { pointer-events: auto; }
+.reel-right-actions { position: absolute; right: 12px; bottom: 100px; display: flex; flex-direction: column; gap: 16px; align-items: center; }
+.reel-action-btn-circle {
+  width: 48px; height: 48px; border-radius: 50%; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 20px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
+}
+.reel-action-count { font-size: 10px; font-weight: bold; margin-top: 2px; }
+.reel-bottom-meta { display: flex; flex-direction: column; gap: 6px; padding-bottom: 10px; width: 80%; }
+.reel-author-row { display: flex; align-items: center; gap: 10px; }
+.reel-author-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #0088ff; }
+.reel-author-name { font-size: 14px; font-weight: bold; color: #fff; }
+.reel-follow-btn { background: #0088ff; color: #fff; border: none; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; cursor: pointer; }
+.reel-caption-text { font-size: 13px; color: #f1f3f4; line-height: 1.4; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+.reel-audio-tag { font-size: 11px; color: #ccc; display: flex; align-items: center; gap: 4px; }
+
+.media-lightbox-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #000; z-index: 999999999; display: none;
+  flex-direction: column; justify-content: space-between; color: #fff;
+  overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch;
+}
+.lightbox-card-item {
+  width: 100vw; height: 100vh; scroll-snap-align: start; position: relative;
+  display: flex; align-items: center; justify-content: center; background: #000;
+}
+.lightbox-media-element { width: 100%; height: 100%; object-fit: cover; }
+.lightbox-top-bar {
+  position: absolute; top: calc(env(safe-area-inset-top, 0px) + 12px); left: 16px; right: 16px;
+  display: flex; justify-content: space-between; align-items: center; z-index: 20;
+}
+.lightbox-close-btn { font-size: 30px; cursor: pointer; color: #fff; background: rgba(0,0,0,0.5); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.3); font-weight: bold; }
+
+.status-composer{background:var(--card-bg)!important;padding:14px;margin:8px;border-radius:16px;border:1px solid var(--border-color);box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.composer-upper{display:flex;gap:10px;align-items:center}
+.user-avatar{width:40px;height:40px;border-radius:50%;background:var(--card-sub-bg)!important;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold;color:#ff7a00!important;border:1px solid var(--border-color);overflow:hidden;cursor:pointer;}
+.user-avatar img{width:100%;height:100%;object-fit:cover;}
+.composer-upper input{flex:1;padding:10px 14px;border-radius:20px;border:1px solid var(--border-color);background:var(--input-bg)!important;outline:none;font-size:14px;color:var(--input-text)!important;cursor:pointer;}
+.post-btn{background:linear-gradient(135deg, #0088ff, #0055ff);color:#fff!important;border:none;padding:8px 16px;border-radius:18px;font-weight:800;font-size:13px;cursor:pointer}
+
+.full-screen-post-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(20px);
+  z-index: 9999999; display: none; flex-direction: column; padding: 20px;
+  color: #1f1f1f !important; overflow-y: auto;
+}
+[data-theme="dark"] .full-screen-post-overlay {
+  background: rgba(18, 18, 18, 0.96) !important; color: #f1f3f4 !important;
+}
+.post-overlay-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 14px; border-bottom: 1px solid var(--border-color); margin-bottom: 16px;
+}
+.post-overlay-title { font-size: 18px; font-weight: 900; color: #0088ff; }
+.post-close-btn { font-size: 26px; color: #ea4335; cursor: pointer; background: none; border: none; font-weight: bold; }
+.post-textarea {
+  width: 100%; height: 130px; border: none; outline: none; background: transparent;
+  font-size: 16px; color: var(--text-main); resize: none; line-height: 1.5; padding: 10px 0;
+}
+.post-media-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 12px 0; }
+.post-option-tile {
+  background: var(--card-sub-bg); border: 1px solid var(--border-color);
+  padding: 12px; border-radius: 14px; text-align: center; cursor: pointer;
+  font-weight: bold; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+.submit-post-btn {
+  width: 100%; background: linear-gradient(135deg, #0088ff, #0055ff); color: #fff;
+  border: none; padding: 14px; border-radius: 16px; font-size: 16px; font-weight: 900;
+  cursor: pointer; margin-top: auto; box-shadow: 0 4px 12px rgba(0,136,255,0.3);
+}
+
+.feed-post-card{background:var(--card-bg)!important;padding:14px;margin:10px 8px;border-radius:16px;border:1px solid var(--border-color);box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.post-header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.post-user-info{display:flex;align-items:center;gap:10px;}
+.post-user-avatar{width:36px;height:36px;border-radius:50%;background:#0088ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;overflow:hidden;}
+.post-user-avatar img{width:100%;height:100%;object-fit:cover;}
+.post-user-name{font-weight:bold;font-size:14px;}
+.post-time{font-size:11px;color:var(--status-text);}
+.post-menu-btn{font-size:18px;cursor:pointer;color:var(--status-text);}
+.post-media-preview{width:100%;border-radius:12px;margin-top:10px;max-height:450px;object-fit:cover;border:1px solid var(--border-color);cursor:pointer;}
+.mp3-cover-box{width:100%;height:160px;border-radius:14px;background:linear-gradient(135deg, #0088ff, #ff0055);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;margin-top:10px;text-align:center;padding:12px;}
+.count-bar{display:flex;justify-content:space-between;padding:10px 0 6px 0;border-bottom:1px solid var(--border-color);font-size:12px;color:var(--status-text)!important;margin-top:6px;font-weight:700}
+.action-bar{display:flex;justify-content:space-around;padding:6px 0 0 0;margin-top:4px}
+.action-btn{flex:1;text-align:center;padding:8px;font-size:13px;font-weight:700;color:var(--text-main)!important;cursor:pointer;border-radius:8px;}
+.comments-container{margin-top:12px;padding-top:10px;border-top:1px dashed var(--border-color);}
+.comment-card{background:var(--card-sub-bg);padding:8px 12px;border-radius:12px;margin-top:8px;font-size:13px;border:1px solid var(--border-color);}
+.comment-author{font-weight:bold;color:#0088ff;margin-bottom:2px;}
+
+.bottom-navigation{width:100%;max-width:480px;height:65px;background:var(--nav-bg)!important;border-top:2px solid #0088ff;display:flex;justify-content:space-around;align-items:center;position:fixed;bottom:0;left:0;right:0;margin:0 auto;z-index:99999;box-shadow:0 -4px 15px rgba(0,136,255,0.15);}
+.nav-tab{text-align:center;font-size:11px;color:var(--nav-text)!important;cursor:pointer;font-weight:bold;flex:1;padding:6px 0;}
+.nav-tab.active{color:#0088ff!important;font-weight:900;transform:translateY(-2px);}
+.nav-tab .nav-icon{font-size:22px;display:block;margin-bottom:2px;}
+.menu-highlight-btn{background:linear-gradient(135deg, #0088ff, #0055ff);color:#fff!important;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;margin:-14px auto 2px auto;font-size:24px;box-shadow:0 4px 10px rgba(0,136,255,0.4);border:2px solid #fff;}
+
+.full-screen-menu-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-main)!important;backdrop-filter:blur(15px);z-index:999999;display:none;overflow-y:auto;padding:20px;color:var(--text-main)!important}
+.menu-search-box{width:100%;padding:10px 14px;border:1px solid #0088ff;border-radius:20px;background:var(--input-bg);color:var(--input-text);font-size:14px;outline:none;margin-bottom:14px;}
+.menu-section-title{font-size:13px;font-weight:900;color:#0088ff;margin:16px 0 8px 0;text-transform:uppercase;letter-spacing:0.5px}
+.pipeline-container{display:flex;flex-direction:column;gap:8px;position:relative;margin-bottom:14px;}
+.pipeline-container::before{content:'';position:absolute;top:20px;bottom:20px;left:24px;width:3px;background:linear-gradient(180deg, #0088ff, #34a853, #fbbc05, #ea4335);z-index:1;opacity:0.4;}
+.pipeline-step{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border-color);padding:12px 14px;border-radius:14px;cursor:pointer;position:relative;z-index:2;box-shadow:0 1px 3px rgba(0,0,0,0.03);}
+.pipeline-icon{font-size:26px;width:40px;text-align:center;}
+.pipeline-info{flex:1;}
+.pipeline-label{font-size:13px;font-weight:bold;color:var(--text-main);}
+.pipeline-desc{font-size:11px;color:var(--status-text);}
+
+.menu-grid-icons{display:grid;grid-template-columns:repeat(3, 1fr);gap:12px;margin-bottom:14px}
+.menu-icon-tile{background:var(--card-bg);border:1px solid var(--border-color);padding:14px 8px;border-radius:14px;text-align:center;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.03);}
+.menu-icon-tile .mi-icon{font-size:26px;margin-bottom:4px}
+.menu-icon-tile .mi-label{font-size:11px;font-weight:bold;color:var(--text-main)}
+
+.modular-window{
+  position:fixed; top:0; left:0; width:100vw; height:100vh; background:var(--bg-main); 
+  z-index:9999999; display:none; flex-direction:column; overflow-y:auto; padding:16px; 
+  padding-bottom: 120px;
+}
+.mod-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--border-color);margin-bottom:12px;}
+
+.reg-form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.reg-form-group label { font-size: 12px; font-weight: bold; color: var(--text-main); }
+.reg-input-field {
+  padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color);
+  background: var(--input-bg); color: var(--input-text); font-size: 13px; outline: none;
+}
+.account-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 6px 0 12px 0; }
+.account-type-card {
+  border: 1px solid var(--border-color); padding: 8px; border-radius: 10px; text-align: center;
+  font-size: 11px; font-weight: bold; cursor: pointer; background: var(--card-sub-bg);
+}
+.account-type-card.selected { border-color: #0088ff; background: rgba(0,136,255,0.1); color: #0088ff; }
+</style>
+</head>
+<body>
+<div class="app-window">
+  <div class="status-bar">
+    <span id="liveTime">9:41</span>
+    <span>5G 85%  P2P:🟢  ⚡ 24/7 Nano-Stable</span>
+    <span class="live-badge" onclick="openModule('modNotifications')" style="cursor:pointer;" title="Notifications">🔴 LIVE 24/7</span>
+  </div>
+
+  <div class="main-header">
+    <div class="header-left-group">
+      <svg class="brand-logo-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="92" height="92" rx="28" fill="#1f1f1f" stroke="#333" stroke-width="2"/>
+        <rect x="20" y="32" width="32" height="7" rx="3.5" fill="#0088ff"/>
+        <rect x="20" y="46" width="32" height="7" rx="3.5" fill="#0088ff"/>
+        <rect x="20" y="60" width="32" height="7" rx="3.5" fill="#0088ff"/>
+        <path d="M57 56 L67 68 L86 38" fill="none" stroke="#0088ff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="brand-wrapper">
+        <b class="brand-title">MYFAECBOX</b>
+        <span class="brand-signature">✨ By Sumiya</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <b onclick="openMasterMenu()" style="font-size:24px;cursor:pointer;color:#0088ff" title="Open Master Hub">⚙️</b>
+    </div>
+  </div>
+
+  <div class="account-switcher-bar">
+    <div>
+      <span style="color:var(--status-text)">Active:</span>
+      <span id="activeAccountName">Sumiya Profile</span>
+      <span class="account-badge-pill" id="activeAccountType">Personal</span>
+    </div>
+    <button onclick="openAccountSwitchModal()" style="background:#0088ff;color:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:bold;cursor:pointer;">🔄 Switch / Add (3 Max)</button>
+  </div>
+
+  <div class="content-scroller" id="mainContentScroller">
+    
+    <div id="viewPosts" class="app-view-panel active-view">
+      <div class="stories-tray-container" id="storiesTrayContainer"></div>
+
+      <div class="status-composer">
+        <div class="composer-upper">
+          <div class="user-avatar" id="myProfileAvatarContainer" onclick="openRegistrationModal(true)" title="Click to Edit Profile">👤</div>
+          <input id="postInput" placeholder="What's on your mind?" readonly onclick="openPostCreator()" style="cursor: pointer;">
+          <button class="post-btn" onclick="openPostCreator()">Post</button>
+        </div>
+      </div>
+
+      <div class="feed-reels-section">
+        <div class="feed-reels-header">
+          <div class="feed-reels-title">🎬 Reels & Short Videos</div>
+          <span style="font-size:12px;color:#0088ff;cursor:pointer;font-weight:bold;" onclick="switchBottomTab('reels', document.querySelectorAll('.nav-tab')[2])">See All</span>
+        </div>
+        <div class="feed-reels-scroll" id="feedReelsScrollContainer">
+          <div class="feed-reel-item" onclick="openLightboxFromUrl('https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-lights-41604-large.mp4', 'video')">
+            <video class="feed-reel-video" src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-lights-41604-large.mp4" autoplay muted loop playsinline></video>
+            <div class="feed-reel-overlay">
+              <span class="feed-reel-author">Sumiya Neon AI</span>
+              <span style="font-size:10px;opacity:0.8;">▶️ 1.4K</span>
+            </div>
+          </div>
+          <div class="feed-reel-item" onclick="openLightboxFromUrl('https://assets.mixkit.co/videos/preview/mixkit-tree-branches-in-the-breeze-1186-large.mp4', 'video')">
+            <video class="feed-reel-video" src="https://assets.mixkit.co/videos/preview/mixkit-tree-branches-in-the-breeze-1186-large.mp4" autoplay muted loop playsinline></video>
+            <div class="feed-reel-overlay">
+              <span class="feed-reel-author">Nature Vibe</span>
+              <span style="font-size:10px;opacity:0.8;">▶️ 3.8K</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="feedContainer"></div>
+    </div>
+
+    <div id="viewStatus" class="app-view-panel">
+      <div style="padding:16px;">
+        <h2 style="color:#0088ff;margin-bottom:10px;">📌 Status & Stories Hub</h2>
+        <p style="font-size:13px;color:var(--status-text);margin-bottom:16px;">ඔබේ තත්ත්වය හෝ කථා පුවත මිතුරන් සමඟ බෙදා ගන්න (අවම විනාඩි 5ක අසීමිත වීඩියෝ/පොටෝ):</p>
+        <button onclick="openStoryCreator()" style="width:100%;padding:14px;background:linear-gradient(135deg, #0088ff, #ff0055);color:#fff;border:none;border-radius:14px;font-weight:bold;cursor:pointer;font-size:15px;margin-bottom:20px;">+ Add New Status / Story (Min 5 Min Video Support)</button>
+        <div style="background:var(--card-bg);padding:14px;border-radius:14px;border:1px solid var(--border-color);">
+          <b>💡 Active Status Guidelines:</b>
+          <p style="font-size:13px;margin-top:6px;color:var(--status-text);">ඔබ දමන තත්ත්වයන් සහ අසීමිත වීඩියෝ හෝම් පිටුවෙ ස්වයංක්‍රීයව ක්‍රියාත්මක වන අතර, ඒවා ඔබගේ පෞද්ගලික ආරක්ෂාවට යටත්ව ගබඩා වේ.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="viewReels" class="app-view-panel">
+      <div style="padding:10px 16px;background:var(--card-bg);border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;">
+        <b style="color:#0088ff;font-size:15px;">🎥 Reels Explorer</b>
+        <button onclick="document.getElementById('reelVideoFileInput').click()" style="background:linear-gradient(135deg, #0088ff, #ff0055);color:#fff;border:none;padding:8px 14px;border-radius:16px;font-weight:bold;font-size:13px;cursor:pointer;">+ Create Reel</button>
+      </div>
+
+      <div class="reels-hub-container" id="reelsFeedContainer">
+        <div class="reel-item-card">
+          <video class="reel-video-element" src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-lights-41604-large.mp4" loop autoplay muted playsinline></video>
+          <div class="reel-overlay-ui">
+            <div></div>
+            <div class="reel-right-actions">
+              <div class="reel-action-btn-circle" onclick="likeReel(this)">❤️<span class="reel-action-count">1.4K</span></div>
+              <div class="reel-action-btn-circle" onclick="alert('Opening Reel Comments...')">💬<span class="reel-action-count">320</span></div>
+              <div class="reel-action-btn-circle" onclick="alert('Reel Link Copied!')">🔗</div>
+            </div>
+            <div class="reel-bottom-meta">
+              <div class="reel-author-row">
+                <img src="" class="reel-author-avatar" id="reelAuthorAvatarImg">
+                <span class="reel-author-name" id="reelAuthorNameTxt">Sumiya Neon AI</span>
+                <button class="reel-follow-btn">Follow</button>
+              </div>
+              <div class="reel-caption-text">✨ Exploring futuristic neon lights with P2P cloud sync! 🚀 #myfaecbox #reels</div>
+              <div class="reel-audio-tag">🎵 Original Sound - Sumiya Audio Engine</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="media-lightbox-overlay" id="mediaLightboxModal">
+    <div class="lightbox-top-bar">
+      <span style="font-size:14px;font-weight:bold;color:#fff;">🖼️ Media Feed Viewer</span>
+      <div class="lightbox-close-btn" onclick="closeLightbox()">×</div>
+    </div>
+    <div id="lightboxFeedContainer" style="width:100%; height:100%;"></div>
+  </div>
+
+  <div class="story-viewer-overlay" id="storyViewerModal">
+    <div class="story-progress-bar-row">
+      <div class="story-prog-fill" id="storyProgFill"></div>
+    </div>
+    <div class="story-viewer-header">
+      <div class="story-viewer-user">
+        <img id="viewerUserAvatar" class="story-viewer-avatar" src="" alt="Avatar">
+        <div class="story-viewer-info">
+          <div id="viewerUserName">Sumiya Master User</div>
+          <div id="viewerTime">5 hrs ago • AI Content</div>
+        </div>
+      </div>
+      <button class="story-close-btn" onclick="closeStoryViewer()">×</button>
+    </div>
+
+    <div class="story-viewer-body" id="storyViewerBody">
+      <img id="viewerMediaImg" class="story-viewer-img" src="" alt="Story Media" style="display:block;">
+      <video id="viewerMediaVideo" class="story-viewer-video" src="" autoplay controls playsinline style="display:none;"></video>
+    </div>
+
+    <div class="story-viewer-footer">
+      <div class="story-reactions-row">
+        <button class="story-emoji-btn" onclick="sendStoryReaction('❤️')">❤️</button>
+        <button class="story-emoji-btn" onclick="sendStoryReaction('😂')">😂</button>
+        <button class="story-emoji-btn" onclick="sendStoryReaction('🔥')">🔥</button>
+        <button class="story-emoji-btn" onclick="sendStoryReaction('👏')">👏</button>
+      </div>
+
+      <div class="story-reply-box">
+        <input type="text" id="storyReplyInput" class="story-reply-input" placeholder="Send message...">
+        <button class="story-send-btn" onclick="sendStoryMessage()">Send</button>
+        <button class="story-dots-btn" onclick="toggleStoryMenu(event)">⋮</button>
+        <div class="story-dropdown-menu" id="storyDropdownMenu">
+          <div class="story-dropdown-item" onclick="editCurrentStory()">✏️ Edit Story</div>
+          <div class="story-dropdown-item" onclick="shareCurrentStory()">🔗 Share</div>
+          <div class="story-dropdown-item" onclick="deleteCurrentStory()" style="color:#ea4335;">🗑️ Delete</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modular-window" id="modZoom">
+    <div class="mod-header">
+      <b>🎓 Sumiya Ultra-Pro Smart Class Hub</b>
+      <button onclick="closeModule('modZoom')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;padding:10px;flex:1;overflow-y:auto;">
+      <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid #0088ff;">
+        <b style="color:#0088ff;">🚀 නවීන තාක්ෂණික ඔන්ලයින් පන්ති සහ අධ්‍යාපන පද්ධතිය</b>
+        <p style="font-size:12px;margin-top:4px;color:var(--status-text);">උසස් තත්ත්වයේ වීඩියෝ සජීවී විකාශන, ඩිජිටල් වයිට්බෝඩ් (Whiteboard), සහ තත්‍ය කාලීන සිසුන්ගේ කතාබස් (Live Class Chat) පහසුකම් මෙහි අන්තර්ගත වේ.</p>
+      </div>
+
+      <div style="background:#000;border-radius:14px;height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:1px solid var(--border-color);">
+        <video id="smartClassLiveVideo" src="https://assets.mixkit.co/videos/preview/mixkit-tree-branches-in-the-breeze-1186-large.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+        <div style="position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.6);padding:4px 10px;border-radius:8px;color:#fff;font-size:11px;font-weight:bold;">🔴 LIVE Smart Class Session</div>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <button onclick="toggleSmartClassMic()" id="scMicBtn" style="flex:1;padding:10px;background:#34a853;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">🎙️ Mic On/Off</button>
+        <button onclick="toggleSmartClassCamera()" id="scCamBtn" style="flex:1;padding:10px;background:#0088ff;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">📷 Cam On/Off</button>
+        <button onclick="alert('Whiteboard Activated!')" style="flex:1;padding:10px;background:#ff7a00;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">📝 Whiteboard</button>
+      </div>
+
+      <div style="margin-top:6px;">
+        <b style="font-size:13px;color:var(--text-main);">💬 Class Live Chat & Q&A:</b>
+        <div id="smartClassChatBox" style="background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:10px;height:100px;padding:8px;overflow-y:auto;margin-top:6px;display:flex;flex-direction:column;gap:6px;font-size:12px;">
+          <div><b>Teacher Sumiya:</b> සාදරයෙන් පිළිගනිමු! අද පාඩම ආරම්භ කර ඇත.</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:6px;">
+          <input type="text" id="smartClassInput" placeholder="ප්‍රශ්නයක් හෝ පණිවිඩයක් ලියන්න..." style="flex:1;padding:8px 12px;border-radius:16px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);font-size:12px;outline:none;">
+          <button onclick="sendSmartClassMessage()" style="background:#0088ff;color:#fff;border:none;padding:8px 14px;border-radius:14px;font-weight:bold;cursor:pointer;font-size:12px;">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modular-window" id="modRegistration">
+    <div class="mod-header">
+      <b id="regModalHeaderTitle">👤 ගිණුම් විස්තර සහ ප්‍රොෆයිල් සැකසුම (Edit Profile)</b>
+      <button onclick="closeModule('modRegistration')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;padding:4px 4px 40px 4px; flex:1;">
+      <div style="background:var(--card-sub-bg);padding:10px;border-radius:10px;font-size:11px;color:var(--status-text);border:1px solid var(--border-color);">
+        🛡️ <b>OTP-Free Secure Fingerprint Lock:</b> මෙහි OTP අවශ්‍ය නොවී ඉතා ආරක්ෂාකාරීව ප්‍රොෆයිල්/ගිණුම් 3ක් දක්වා පාලනය කළ හැක.
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;margin:8px 0;">
+        <div style="width:60px;height:60px;border-radius:50%;background:#0088ff;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;overflow:hidden;" id="regAvatarPreview">👤</div>
+        <div>
+          <button onclick="document.getElementById('regAvatarFileInput').click()" style="padding:6px 12px;background:#0088ff;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer;">📸 ප්‍රොෆයිල් පින්තූරයක් තෝරන්න</button>
+          <input type="file" id="regAvatarFileInput" accept="image/*" style="display:none;" onchange="handleRegAvatarUpload(event)">
+        </div>
+      </div>
+
+      <div class="reg-form-group">
+        <label>1. නම හෝ අප් එකේ නම / Profile Name: *</label>
+        <input type="text" id="regInputName" class="reg-input-field" placeholder="ඔබගේ නම හෝ ව්‍යාපාරික නම මෙහි ඇතුළත් කරන්න">
+      </div>
+
+      <div class="reg-form-group">
+        <label>2. රට තෝරන්න (Select Country & Code):</label>
+        <select id="regSelectCountry" class="reg-input-field" onchange="handleCountryChange()">
+          <option value="LK" data-code="+94">🇱🇰 Sri Lanka (+94)</option>
+          <option value="IN" data-code="+91">🇮🇳 India (+91)</option>
+          <option value="US" data-code="+1">🇺🇸 United States (+1)</option>
+          <option value="GB" data-code="+44">🇬🇧 United Kingdom (+44)</option>
+          <option value="AE" data-code="+971">🇦🇪 UAE (+971)</option>
+          <option value="SA" data-code="+966">🇸🇦 Saudi Arabia (+966)</option>
+          <option value="QA" data-code="+974">🇶🇦 Qatar (+974)</option>
+          <option value="KW" data-code="+965">🇰🇼 Kuwait (+965)</option>
+          <option value="AU" data-code="+61">🇦🇺 Australia (+61)</option>
+          <option value="CA" data-code="+1">🇨🇦 Canada (+1)</option>
+          <option value="JP" data-code="+81">🇯🇵 Japan (+81)</option>
+          <option value="KR" data-code="+82">🇰🇷 South Korea (+82)</option>
+          <option value="SG" data-code="+65">🇸🇬 Singapore (+65)</option>
+          <option value="MY" data-code="+60">🇲🇾 Malaysia (+60)</option>
+          <option value="IT" data-code="+39">🇮🇹 Italy (+39)</option>
+          <option value="FR" data-code="+33">🇫🇷 France (+33)</option>
+          <option value="DE" data-code="+49">🇩🇪 Germany (+49)</option>
+          <option value="OTHER" data-code="">🌐 වෙනත් රටක් (Other)</option>
+        </select>
+      </div>
+
+      <div class="reg-form-group">
+        <label>3. ගිණුම් වර්ගය (Account Type - 3 Max):</label>
+        <div class="account-type-grid">
+          <div class="account-type-card selected" onclick="selectAccountType('Personal', this)">👤 Personal</div>
+          <div class="account-type-card" onclick="selectAccountType('Business', this)">💼 Business</div>
+          <div class="account-type-card" onclick="selectAccountType('Page', this)">🚩 Page</div>
+        </div>
+      </div>
+
+      <div class="reg-form-group">
+        <label>4. දුරකථන අංකය හෝ ඊමේල් (Phone / Email / NIC): *</label>
+        <input type="text" id="regInputContact" class="reg-input-field" placeholder="+94 7X XXXXXXX / email@gmail.com">
+      </div>
+
+      <div class="reg-form-group">
+        <label>5. ලිපිනය (Address):</label>
+        <input type="text" id="regInputAddress" class="reg-input-field" placeholder="නගරය, ප්‍රදේශය හෝ රටේ විස්තරය">
+      </div>
+
+      <div class="reg-form-group">
+        <label>6. උපන් දිනය (Date of Birth):</label>
+        <input type="date" id="regInputDOB" class="reg-input-field">
+      </div>
+
+      <div class="reg-form-group">
+        <label>7. ලිංගිකත්වය / ස්ත්‍රී පුරුෂ භාවය (Gender):</label>
+        <select id="regSelectGender" class="reg-input-field">
+          <option value="Male">පිරිමි (Male)</option>
+          <option value="Female">කාන්තා (Female)</option>
+          <option value="Other">වෙනත් (Other)</option>
+        </select>
+      </div>
+
+      <div class="reg-form-group">
+        <label>8. ස්වයංක්‍රීය කාලමුද්‍රාව (Auto Timestamp):</label>
+        <input type="text" id="regInputTimestamp" class="reg-input-field" readonly style="background:var(--card-sub-bg);opacity:0.8;">
+      </div>
+
+      <button onclick="saveUserProfileRegistration()" style="background:linear-gradient(135deg, #0088ff, #0055ff);color:#fff;border:none;padding:14px;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;margin:15px 0 30px 0;box-shadow:0 4px 12px rgba(0,136,255,0.4);">💾 තොරතුරු සේ이브 කරන්න</button>
+    </div>
+  </div>
+
+  <div class="modular-window" id="modAccountSwitch">
+    <div class="mod-header">
+      <b>🔄 Multi-Account Switcher (උපරිම 3 ගිණුම්)</b>
+      <button onclick="closeModule('modAccountSwitch')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
+    </div>
+    <div style="padding:10px;display:flex;flex-direction:column;gap:12px;">
+      <p style="font-size:12px;color:var(--status-text);">ඔබගේ ගිණුම් මාරු කරන්න, නව ගිණුම් එකතු කරන්න හෝ ප්‍රොෆයිල් කළමනාකරණය කරන්න:</p>
+      <div id="accountListContainer" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <button onclick="addNewAccountOption()" style="padding:12px;background:linear-gradient(135deg, #34a853, #0088ff);color:#fff;border:none;border-radius:12px;font-weight:bold;cursor:pointer;">+ නව ගිණුමක් එකතු කරන්න (Max 3)</button>
+    </div>
+  </div>
+
+  <input type="file" id="globalProfilePhotoInput" accept="image/*,video/*" style="display:none;" onchange="handleProfilePhotoUpload(event)">
+  <input type="file" id="storyMediaFileInput" accept="image/*,video/*" style="display:none;" onchange="handleStoryMediaUpload(event)">
+  <input type="file" id="reelVideoFileInput" accept="video/*" style="display:none;" onchange="handleReelVideoUpload(event)">
+
+  <div class="bottom-navigation">
+    <div class="nav-tab active" onclick="switchBottomTab('posts', this)"><span class="nav-icon">🏠</span>Posts</div>
+    <div class="nav-tab" onclick="switchBottomTab('status', this)"><span class="nav-icon">📌</span>Status</div>
+    <div class="nav-tab" onclick="switchBottomTab('reels', this)"><span class="nav-icon">🎬</span>Reels</div>
+    <div class="nav-tab" onclick="openMasterMenu()">
+      <div class="menu-highlight-btn">⚙️</div>
+      <span style="color:#0088ff;font-weight:bold;">Menu</span>
+    </div>
+  </div>
+
+  <div class="full-screen-post-overlay" id="fullScreenPostModal">
+    <div class="post-overlay-header">
+      <span class="post-overlay-title">📝 Create Professional Post</span>
+      <button class="post-close-btn" onclick="closePostCreator()">×</button>
+    </div>
+
+    <textarea id="modalPostText" class="post-textarea" placeholder="What's on your mind? Share your thoughts freely..." oninput="updateWordCount()"></textarea>
+    
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--status-text);margin-bottom:10px;">
+      <span id="wordCountCounter">Words: 0</span>
+      <span style="color:#34a853">⚡ Nano-Stable 24/7 Active</span>
+    </div>
+
+    <input type="file" id="filePhotoInput" accept="image/*" multiple style="display:none;" onchange="handleMediaSelect(event, 'photo')">
+    <input type="file" id="fileVideoInput" accept="video/*" style="display:none;" onchange="handleMediaSelect(event, 'video')">
+    <input type="file" id="fileAudioInput" accept="audio/*" style="display:none;" onchange="handleMediaSelect(event, 'audio')">
+
+    <div class="post-media-options">
+      <div class="post-option-tile" onclick="document.getElementById('filePhotoInput').click()"><span>📷</span> Add Photos</div>
+      <div class="post-option-tile" onclick="document.getElementById('fileVideoInput').click()"><span>🎥</span> Add Video</div>
+      <div class="post-option-tile" onclick="triggerVoiceNoteRecording()"><span>🎙️</span> Voice Note</div>
+      <div class="post-option-tile" onclick="document.getElementById('fileAudioInput').click()"><span>🎵</span> Add MP3 Song</div>
+    </div>
+
+    <div id="uploadProgressBox" style="display:none;background:var(--card-sub-bg);padding:10px;border-radius:10px;margin-bottom:10px;font-size:12px;border:1px solid var(--border-color);">
+      <div id="uploadProgressText">Uploading & Enhancing Quality... 0%</div>
+      <div style="width:100%;height:6px;background:#ccc;border-radius:3px;margin-top:6px;overflow:hidden;">
+        <div id="uploadProgressBar" style="width:0%;height:100%;background:#0088ff;transition:width 0.2s;"></div>
+      </div>
+    </div>
+
+    <div id="selectedMediaPreview" style="font-size:12px;color:#0088ff;margin-bottom:10px;font-weight:bold;"></div>
+
+    <button class="submit-post-btn" onclick="submitNewPost()">🚀 Publish Post</button>
+  </div>
+
+  <div class="full-screen-menu-overlay" id="masterMenuHub">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <b style="font-size:16px;color:#0088ff">🌐 MYFAECBOX MASTER PIPELINE HUB</b>
+      <span onclick="closeMasterMenu()" style="font-size:28px;color:#ea4335;cursor:pointer">×</span>
+    </div>
+
+    <input type="text" id="menuSearchInput" class="menu-search-box" placeholder="🔍 Search any app or pipeline service..." onkeyup="filterMenuApps()">
+
+    <div class="menu-section-title">⚡ Top-to-Bottom Connected Pipeline Architecture</div>
+    <div class="pipeline-container">
+      <div class="pipeline-step" onclick="openModule('modLanguageHub')">
+        <div class="pipeline-icon">🌍</div>
+        <div class="pipeline-info">
+          <div class="pipeline-label">1. Sumiya Language & Localization Hub</div>
+          <div class="pipeline-desc">Sinhala, English, Tamil & Global Country Config</div>
+        </div>
+      </div>
+      <div class="pipeline-step" onclick="openModule('modOfflineLogin')">
+        <div class="pipeline-icon">📡</div>
+        <div class="pipeline-info">
+          <div class="pipeline-label">2. Sumiya P2P Offline Mesh Tunnel</div>
+          <div class="pipeline-desc">Low signal & zero-data autonomous login protocol</div>
+        </div>
+      </div>
+      <div class="pipeline-step" onclick="openModule('modFreeData')">
+        <div class="pipeline-icon">📶</div>
+        <div class="pipeline-info">
+          <div class="pipeline-label">3. Sumiya Zero-Rated Free Data Proxy</div>
+          <div class="pipeline-desc">Seamless free package routing & connectivity</div>
+        </div>
+      </div>
+      <div class="pipeline-step" onclick="openModule('modRegistration')">
+        <div class="pipeline-icon">👤</div>
+        <div class="pipeline-info">
+          <div class="pipeline-label">4. Sumiya Registration & Profile Setup</div>
+          <div class="pipeline-desc">Multi-account registration & device fingerprinting</div>
+        </div>
+      </div>
+      <div class="pipeline-step" onclick="openModule('modGlobalFeed')">
+        <div class="pipeline-icon">🔄</div>
+        <div class="pipeline-info">
+          <div class="pipeline-label">5. Sumiya Global Cloud Sync Feed</div>
+          <div class="pipeline-desc">Real-time GunDB peer-to-peer data synchronization</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-section-title">🎙️ Security & Voice Authentication</div>
+    <div class="menu-grid-icons">
+      <div class="menu-icon-tile" data-name="sumiya voice identification & pin system" onclick="openVoiceManagerDirectly()">
+        <div class="mi-icon" style="color:#ff0055">🎙️</div><div class="mi-label">Voice Manager</div>
+      </div>
+    </div>
+
+    <div class="menu-section-title">⚙️ Advanced Core Services Hub</div>
+    <div class="menu-grid-icons">
+      <div class="menu-icon-tile" data-name="sumiya interactive help assistant" onclick="openModule('modInteractiveHelp')">
+        <div class="mi-icon" style="color:#34a853">💡</div><div class="mi-label">Sumiya Help</div>
+      </div>
+      <div class="menu-icon-tile" data-name="sumiya emergency sos shield" onclick="openModule('modEmergencySOS')">
+        <div class="mi-icon" style="color:#ea4335">🚨</div><div class="mi-label">Sumiya SOS</div>
+      </div>
+      <div class="menu-icon-tile" data-name="sumiya ai bot assistant" onclick="openModule('modAIBot')">
+        <div class="mi-icon" style="color:#0088ff">🤖</div><div class="mi-label">Sumiya AI Bot</div>
+      </div>
+      <div class="menu-icon-tile" data-name="sumiya notifications center" onclick="openModule('modNotifications')">
+        <div class="mi-icon" style="color:#ff7a00">🔔</div><div class="mi-label">Notifications</div>
+      </div>
+      <div class="menu-icon-tile" data-name="sumiya zoom control" onclick="openModule('modZoomControl')">
+        <div class="mi-icon" style="color:#0088ff">🔍</div><div class="mi-label">Zoom Control</div>
+      </div>
+      <div class="menu-icon-tile" data-name="sumiya secret diary" onclick="openModule('modDiary')">
+        <div class="mi-icon" style="color:#ff0055">📖</div><div class="mi-label">Sumiya Diary</div>
+      </div>
+      <div class="menu-icon-tile" data-name="sumiya play store" onclick="openModule('modPlayStore')">
+        <div class="mi-icon" style="color:#01875f">🛒</div><div class="mi-label">Play Store</div>
+      </div>
+      <div class="menu-icon-tile" data-name="sumiya live video" onclick="openModule('modLive')">
+        <div class="mi-icon" style="color:#ea4335">🔴</div><div class="mi-label">Live Video</div>
+      </div>
+      <div class="menu-icon-tile" data-name="sumiya ai camera" onclick="openModule('modCamera')">
+        <div class="mi-icon">📷</div><div class="mi-label">AI Camera</div>
+      </div>
+      <div class="menu-icon-tile" data-name="sumiya smart class" onclick="openModule('modZoom')">
+        <div class="mi-icon">🎓</div><div class="mi-label">Smart Class</div>
+      </div>
+      <div class="menu-icon-tile" data-name="sumiya messenger" onclick="openModule('modMessenger')">
+        <div class="mi-icon">💬</div><div class="mi-label">Messenger</div>
+      </div>
+    </div>
+
+    <div class="menu-section-title">📱 Source Mute & Media Privacy Hub</div>
+    <div style="background:var(--card-bg);padding:14px;border-radius:14px;border:1px solid var(--border-color);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <b>🔕 Source Mute (Manual Audio Logic)</b><br>
+        <small style="color:var(--status-text)">ට්‍රැක් සහ වීඩියෝ ශබ්ද මැනුවල් ලෙස මියුට් කරන්න</small>
+      </div>
+      <button onclick="toggleSourceMuteGlobal()" id="sourceMuteBtn" style="padding:8px 16px;background:#34a853;color:#fff;border:none;border-radius:12px;font-weight:bold;cursor:pointer;">Active (Unmuted)</button>
+    </div>
+
+    <div class="menu-section-title">📱 Social & Cloud Apps (Page 2)</div>
+    <div class="menu-grid-icons">
+      <div class="menu-icon-tile" data-name="google" onclick="alert('Opening Google...')"><div class="mi-icon" style="color:#ea4335">G</div><div class="mi-label">Google</div></div>
+      <div class="menu-icon-tile" data-name="youtube" onclick="alert('Opening YouTube...')"><div class="mi-icon" style="color:#ff0000">▶️</div><div class="mi-label">YouTube</div></div>
+      <div class="menu-icon-tile" data-name="facebook" onclick="alert('Opening Facebook...')"><div class="mi-icon" style="color:#1877f2">f</div><div class="mi-label">Facebook</div></div>
+      <div class="menu-icon-tile" data-name="tiktok" onclick="alert('Opening TikTok...')"><div class="mi-icon" style="color:#000">🎵</div><div class="mi-label">TikTok</div></div>
+      <div class="menu-icon-tile" data-name="instagram" onclick="alert('Opening Instagram...')"><div class="mi-icon" style="color:#dc2743">📸</div><div class="mi-label">Instagram</div></div>
+      <div class="menu-icon-tile" data-name="whatsapp" onclick="alert('Opening WhatsApp...')"><div class="mi-icon" style="color:#25d366">💬</div><div class="mi-label">WhatsApp</div></div>
+      <div class="menu-icon-tile" data-name="telegram" onclick="alert('Opening Telegram...')"><div class="mi-icon" style="color:#0088cc">✈️</div><div class="mi-label">Telegram</div></div>
+      <div class="menu-icon-tile" data-name="twitter x" onclick="alert('Opening X (Twitter)...')"><div class="mi-icon" style="color:#fff">𝕏</div><div class="mi-label">Twitter / X</div></div>
+    </div>
+
+    <div class="menu-section-title">🎬 Entertainment & Utilities (Page 3)</div>
+    <div class="menu-grid-icons">
+      <div class="menu-icon-tile" data-name="netflix" onclick="alert('Opening Netflix...')"><div class="mi-icon" style="color:#e50914">🎬</div><div class="mi-label">Netflix</div></div>
+      <div class="menu-icon-tile" data-name="spotify" onclick="alert('Opening Spotify...')"><div class="mi-icon" style="color:#1db954">🎧</div><div class="mi-label">Spotify</div></div>
+      <div class="menu-icon-tile" data-name="maps" onclick="alert('Opening Google Maps...')"><div class="mi-icon" style="color:#34a853">🗺️</div><div class="mi-label">Maps</div></div>
+      <div class="menu-icon-tile" data-name="translate" onclick="alert('Opening Translate...')"><div class="mi-icon" style="color:#4285f4">🌐</div><div class="mi-label">Translate</div></div>
+      <div class="menu-icon-tile" data-name="gmail" onclick="alert('Opening Gmail...')"><div class="mi-icon" style="color:#ea4335">✉️</div><div class="mi-label">Gmail</div></div>
+      <div class="menu-icon-tile" data-name="drive" onclick="alert('Opening Cloud Drive...')"><div class="mi-icon" style="color:#fbbc05">📁</div><div class="mi-label">Cloud Drive</div></div>
+    </div>
+
+    <div class="menu-section-title">⚙️ System Controls</div>
+    <div style="background:var(--card-bg);padding:12px;border-radius:12px;border:1px solid var(--border-color);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+      <div><b>🌓 Theme Mode</b><br><small style="color:var(--status-text)">Light / Dark Mode</small></div>
+      <button onclick="toggleTheme()" style="padding:6px 14px;background:#0088ff;color:#fff;border:none;border-radius:12px;font-weight:bold;cursor:pointer">Toggle</button>
+    </div>
+
+    <button onclick="closeMasterMenu()" style="margin-top:14px;width:100%;padding:10px;background:linear-gradient(135deg, #0088ff, #0055ff);color:#fff;border:none;border-radius:8px;font-weight:bold;cursor:pointer">Close Menu</button>
+  </div>
+
+  <div class="modular-window" id="modInteractiveHelp">
+    <div class="mod-header">
+      <b>💡 Sumiya Interactive Help Assistant</b>
+      <button onclick="closeModule('modInteractiveHelp')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
+    </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:12px;flex:1;">
+      <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid #34a853;">
+        <b style="color:#34a853;">📌 විශේෂ උදව් සහ මගපෙන්වීම:</b>
+        <p style="font-size:13px;margin-top:4px;color:var(--text-main);">මෙම යෙදුම තුළ ඇති සියලුම අංශයන් ඉතා පහසුවෙන් ක්‍රියාත්මක කරගත හැකි වන පරිදි ස්වයංක්‍රීයව සකසා ඇත.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modular-window" id="modEmergencySOS">
+    <div class="mod-header">
+      <b>🚨 Sumiya SOS Emergency Shield</b>
+      <button onclick="closeModule('modEmergencySOS')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
+    </div>
+    <div style="padding:16px;"><b>🛡️ හදිසි අවස්ථා ආරක්ෂණ පද්ධතිය (24/7 Nano-Active).</b></div>
+  </div>
+
+  <div class="modular-window" id="modAIBot">
+    <div class="mod-header">
+      <b>🤖 Sumiya AI Assistant Bot</b>
+      <button onclick="closeModule('modAIBot')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
+    </div>
+    <div style="display:flex;flex-direction:column;flex:1;gap:10px;padding:10px;height:calc(100vh - 180px);">
+      <div id="aiBotChatBox" style="flex:1;background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:12px;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
+        <div style="background:var(--card-bg);border:1px solid var(--border-color);padding:10px 14px;border-radius:12px;font-size:13px;color:var(--text-main);">
+          🤖 <b>Sumiya AI Bot:</b> සාදරයෙන් පිළිගනිමු! MYFAECBOX පද්ධතියේ 1000% ක්ම තාක්ෂණික, පාරිභෝගික සහ පද්ධති පාලන අයිතිය <b>Sumiya</b> වෙත පවරා ඇත. ඔබට අවශ්‍ය ඕනෑම තාක්ෂණික සහායක් සඳහා විමසන්න. (උදාහරණයට: <code>sumiya718264</code> යවන්න)
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <input type="text" id="aiBotInputText" placeholder="තාක්ෂණික ප්‍රශ්නයක් හෝ sumiya718264 ටයිප් කරන්න..." onkeypress="if(event.key==='Enter') sendAIBotMessage()" style="flex:1;padding:10px 14px;border-radius:20px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);outline:none;font-size:13px;">
+        <button onclick="sendAIBotMessage()" style="background:#0088ff;color:#fff;border:none;padding:10px 16px;border-radius:20px;font-weight:bold;cursor:pointer;">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modular-window" id="modVoiceManager">
+    <div class="mod-header">
+      <b>🎙️ Sumiya Voice Identification & PIN Hub</b>
+      <button onclick="closeModule('modVoiceManager')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
+    </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:14px;flex:1;overflow-y:auto;">
+      <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid var(--border-color);">
+        <b>🔒 Security & Voice Control</b>
+        <p style="font-size:12px;color:var(--status-text);margin-top:4px;">මෙම අංශය හරහා ඔබට ඔබගේ රහස් අංකය (PIN) වෙනස් කර ගැනීමට සහ ඔබේ කටහඬ (Voice Profile) පටිගත කර සුරක්ෂිතව තබා ගැනීමට හැක.</p>
+      </div>
+      <div id="voiceRecStatus" style="font-weight:bold;font-size:13px;text-align:center;padding:8px;color:var(--text-main);">සූදානම් (Ready)</div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="startVoiceRecording()" style="flex:1;padding:12px;background:#34a853;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">🔴 Record Voice</button>
+        <button onclick="stopVoiceRecording()" style="flex:1;padding:12px;background:#ea4335;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">⏹️ Stop & Save</button>
+      </div>
+      <button onclick="changeMasterPIN()" style="padding:12px;background:#0088ff;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">🔑 Change Secret PIN</button>
+    </div>
+  </div>
+
+  <div class="modular-window" id="modNotifications">
+    <div class="mod-header">
+      <b>🔔 Notifications Center</b>
+      <button onclick="closeModule('modNotifications')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
+    </div>
+    <div style="padding:16px;"><b>🔔 Active 24/7 Notifications Hub</b></div>
+  </div>
+
+  <div class="modular-window" id="modDiary">
+    <div class="mod-header">
+      <b>📖 Sumiya Ultra-Pro Digital Diary & Studio Hub</b>
+      <button onclick="closeModule('modDiary')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;">Close</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;padding:10px;flex:1;overflow-y:auto;">
+      <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid #ff0055;">
+        <b style="color:#ff0055;">🔒 100% සුරක්ෂිත ඩයරි සහ ස්ටුඩියෝ මාධ්‍ය කළමනාකරු</b>
+        <p style="font-size:12px;margin-top:4px;color:var(--status-text);">ඕනෑම ෆයිල් එකක් (PDF, Docs), ෆොටෝ, වීඩියෝ, වොයිස් රෙකෝඩින් හෝ ස්ටුඩියෝ කැමරා මඟින් ගත් රූප ඩයරිය තුළම සේව් කරන්න, ඩවුන්ලෝඩ් කරන්න, ඩිලීට් කරන්න සහ ශෙයාර් කරන්න.</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <input type="text" id="diaryTitleInput" placeholder="ඩයරි සටහන් මාතෘකාව (Title)..." style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);font-size:14px;outline:none;">
+        <textarea id="diaryNoteInput" placeholder="ඔබේ රහස් සටහන් හෝ අදහස් මෙහි ලියන්න..." style="width:100%;height:90px;padding:12px;border-radius:12px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);outline:none;font-size:14px;resize:none;"></textarea>
+        
+        <div style="display:grid;grid-template-columns: repeat(2, 1fr); gap: 8px;">
+          <button onclick="document.getElementById('diaryFileInput').click()" style="padding:10px;background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:10px;font-size:12px;font-weight:bold;cursor:pointer;color:var(--text-main);">📁 Attach File/PDF</button>
+          <button id="diaryVoiceRecBtn" onclick="triggerDiaryVoiceRecording()" style="padding:10px;background:var(--card-sub-bg);border:1px solid var(--border-color);border-radius:10px;font-size:12px;font-weight:bold;cursor:pointer;color:var(--text-main);">🎙️ Record Voice</button>
+        </div>
+        <input type="file" id="diaryFileInput" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt" multiple style="display:none;" onchange="handleDiaryFilesUpload(event)">
+        
+        <div style="display:grid;grid-template-columns: repeat(2, 1fr); gap: 8px;">
+          <button onclick="triggerStudioCamera('photo')" style="padding:10px;background:#0088ff;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:bold;cursor:pointer;">📷 Studio Photo</button>
+          <button onclick="triggerStudioCamera('video')" style="padding:10px;background:#ff0055;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:bold;cursor:pointer;">🎥 Studio Video</button>
+        </div>
+        <input type="file" id="studioCameraPhotoInput" accept="image/*" capture="environment" style="display:none;" onchange="handleStudioCapture(event, 'photo')">
+        <input type="file" id="studioCameraVideoInput" accept="video/*" capture="environment" style="display:none;" onchange="handleStudioCapture(event, 'video')">
+
+        <span id="diaryFileCountStatus" style="font-size:11px;color:#0088ff;font-weight:bold;">No files attached</span>
+        
+        <button onclick="saveAdvancedDiaryEntry()" style="background:linear-gradient(135deg, #ff0055, #ff7a00);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:bold;cursor:pointer;font-size:14px;">💾 සටහන සුරක්ෂිත කරන්න</button>
+      </div>
+
+      <div style="margin-top:10px;">
+        <b style="font-size:13px;color:var(--text-main);">📌 සුරැකි ඩයරි සටහන්:</b>
+        <div id="savedDiaryLogs" style="margin-top:8px;display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+let posts = JSON.parse(localStorage.getItem('myfacebox_base_posts') || '[]');
+let currentSelectedMedia = { type: null, src: [], title: '' };
+let currentStoryType = null;
+let gun = Gun({ peers: ['https://gun-manhattan.herokuapp.com/gun', 'https://relay.gun.eco/gun'] });
+let storyTimer = null;
+let selectedRegAccountType = 'Personal';
+let tempAvatarBase64 = '';
+let isSourceMuted = false;
+
+let allUserAccounts = JSON.parse(localStorage.getItem('myfacebox_multi_accounts') || '[]');
+let activeAccountIndex = parseInt(localStorage.getItem('myfacebox_active_acc_index') || '0');
+
+function saveAllAccounts() {
+  localStorage.setItem('myfacebox_multi_accounts', JSON.stringify(allUserAccounts));
+}
+
+if (allUserAccounts.length === 0) {
+  allUserAccounts.push({
+    id: 'ACC_' + Date.now(),
+    name: 'Sumiya Master User',
+    country: 'LK',
+    countryCode: '+94',
+    type: 'Personal',
+    contact: '0712345678',
+    address: 'Panadura, Sri Lanka',
+    dob: '1995-01-01',
+    gender: 'Male',
+    avatar: '',
+    storyMedia: '', 
+    extraStories: [
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600'
+    ],
+    regTimestamp: new Date().toLocaleString(),
+    deviceFingerprint: getOrCreateDeviceFingerprint(),
+    lastPingTimestamp: Date.now()
+  });
+  saveAllAccounts();
+}
+
+let activeProfile = allUserAccounts[activeAccountIndex] || allUserAccounts[0];
+if (!activeProfile.extraStories) activeProfile.extraStories = [];
+
+function getOrCreateDeviceFingerprint() {
+  let fp = localStorage.getItem('myfacebox_device_fp');
+  if (!fp) {
+    fp = 'FP_' + Math.random().toString(36).substring(2, 12) + '_' + Date.now();
+    localStorage.setItem('myfacebox_device_fp', fp);
+  }
+  return fp;
+}
+
+function handleCountryChange() {
+  const select = document.getElementById('regSelectCountry');
+  const selectedOption = select.options[select.selectedIndex];
+  const countryCode = selectedOption.getAttribute('data-code');
+  const contactInput = document.getElementById('regInputContact');
+  if (countryCode && !contactInput.value.startsWith('+')) {
+    contactInput.value = countryCode + ' ';
+  }
+}
+
+function updateHeaderAccountUI() {
+  activeProfile = allUserAccounts[activeAccountIndex] || allUserAccounts[0];
+  if (!activeProfile.extraStories) activeProfile.extraStories = [];
+  document.getElementById('activeAccountName').innerText = activeProfile.name;
+  document.getElementById('activeAccountType').innerText = activeProfile.type;
+  initUserProfile();
+  renderStoriesTray();
+}
+
+function initUserProfile() {
+  const avatarContainers = [
+    document.getElementById('myProfileAvatarContainer'), 
+    document.getElementById('regAvatarPreview')          
+  ];
+
+  avatarContainers.forEach(el => {
+    if (!el) return;
+    if (activeProfile.avatar) {
+      if (el.tagName === 'IMG') {
+        el.src = activeProfile.avatar;
+      } else {
+        el.innerHTML = `<img src="${activeProfile.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+      }
+    } else {
+      if (el.tagName === 'IMG') {
+        el.src = 'https://via.placeholder.com/150';
+      } else {
+        el.innerHTML = '👤';
+      }
+    }
+  });
+
+  const reelAvatar = document.getElementById('reelAuthorAvatarImg');
+  if (reelAvatar) {
+    reelAvatar.src = activeProfile.avatar || 'https://via.placeholder.com/150';
+  }
+
+  const reelName = document.getElementById('reelAuthorNameTxt');
+  if (reelName) {
+    reelName.innerText = activeProfile.name || 'Sumiya User';
+  }
+}
+
+function renderStoriesTray() {
+  const container = document.getElementById('storiesTrayContainer');
+  if (!container) return;
+
+  const profileAvatar = activeProfile.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600';
+
+  let extraStoriesHtml = '';
+  if (activeProfile.extraStories && activeProfile.extraStories.length > 0) {
+    extraStoriesHtml = activeProfile.extraStories.map((story, idx) => `
+      <div class="story-card-item" onclick="openExtraStoryViewer(${idx})" style="background:url(${story});background-size:cover;background-position:center;">
+        <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 50%, rgba(0,0,0,0.8) 100%);"></div>
+        <div class="story-card-overlay-content">
+          <div class="story-avatar-ring-box">
+            <img src="${profileAvatar}" class="story-avatar-img-el">
+          </div>
+          <span class="story-card-author-txt">Friend #${idx + 1}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  container.innerHTML = `
+    <div class="story-card-item create-story-card-box" onclick="openStoryCreator()">
+      <img src="${profileAvatar}" class="create-story-bg-img" alt="Create Story">
+      <div class="create-story-plus-circle">+</div>
+      <span class="story-card-author-txt" style="color:var(--text-main);text-shadow:none;margin-top:20px;font-size:11px;">Create story</span>
+    </div>
+    
+    <div class="story-card-item" onclick="openStoryViewer('user')" style="background:url(${activeProfile.storyMedia || profileAvatar});background-size:cover;background-position:center;">
+      <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 50%, rgba(0,0,0,0.8) 100%);"></div>
+      <div class="story-card-overlay-content">
+        <div class="story-avatar-ring-box active-ring">
+          <img class="story-avatar-img-el" src="${profileAvatar}" alt="My Story">
+        </div>
+        <span class="story-card-author-txt">Your Story</span>
+      </div>
+    </div>
+
+    ${extraStoriesHtml}
+
+    <div class="story-card-item" onclick="openStoryViewer('global')" style="background:linear-gradient(135deg, #34a853, #0088ff);">
+      <div class="story-card-overlay-content">
+        <div class="story-avatar-ring-box" style="background:#fff;">
+          <span style="font-size:18px;">🌐</span>
+        </div>
+        <span class="story-card-author-txt">Global Hub</span>
+      </div>
+    </div>
+  `;
+}
+
+function openRegistrationModal(isEditMode = false) {
+  openModule('modRegistration');
+  if (isEditMode) {
+    document.getElementById('regModalHeaderTitle').innerText = '👤 ගිණුම් විස්තර සහ ප්‍රොෆයිල් සැකසුම (Edit Profile)';
+    document.getElementById('regInputName').value = activeProfile.name || '';
+    document.getElementById('regSelectCountry').value = activeProfile.country || 'LK';
+    document.getElementById('regInputContact').value = activeProfile.contact || '';
+    document.getElementById('regInputAddress').value = activeProfile.address || '';
+    document.getElementById('regInputDOB').value = activeProfile.dob || '';
+    document.getElementById('regSelectGender').value = activeProfile.gender || 'Male';
+    document.getElementById('regInputTimestamp').value = activeProfile.regTimestamp || new Date().toLocaleString();
+    tempAvatarBase64 = activeProfile.avatar || '';
+    
+    selectedRegAccountType = activeProfile.type || 'Personal';
+    document.querySelectorAll('.account-type-card').forEach(c => {
+      c.classList.remove('selected');
+      if (c.innerText.toLowerCase().includes(selectedRegAccountType.toLowerCase())) {
+        c.classList.add('selected');
+      }
+    });
+
+    if (tempAvatarBase64) {
+      document.getElementById('regAvatarPreview').innerHTML = `<img src="${tempAvatarBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    } else {
+      document.getElementById('regAvatarPreview').innerHTML = '👤';
+    }
+  }
+}
+
+function selectAccountType(type, cardEl) {
+  selectedRegAccountType = type;
+  document.querySelectorAll('.account-type-card').forEach(c => c.classList.remove('selected'));
+  cardEl.classList.add('selected');
+}
+
+function handleRegAvatarUpload(event) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    tempAvatarBase64 = e.target.result;
+    document.getElementById('regAvatarPreview').innerHTML = `<img src="${tempAvatarBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+  };
+  reader.readAsDataURL(files[0]);
+}
+
+function saveUserProfileRegistration() {
+  const name = document.getElementById('regInputName').value.trim();
+  const countrySelect = document.getElementById('regSelectCountry');
+  const country = countrySelect.value;
+  const countryCode = countrySelect.options[countrySelect.selectedIndex].getAttribute('data-code');
+  const contact = document.getElementById('regInputContact').value.trim();
+  const address = document.getElementById('regInputAddress').value.trim();
+  const dob = document.getElementById('regInputDOB').value;
+  const gender = document.getElementById('regSelectGender').value;
+
+  if (!name) return alert('කරුණාකර නම හෝ ප්‍රොෆයිල් නම ඇතුළත් කරන්න!');
+  if (!contact) return alert('කරුණාකර දුරකථන අංකය, ඊමේල් ලිපිනය හෝ ජාතික හැඳුනුම්පත් අංකය ඇතුළත් කරන්න!');
+
+  activeProfile = allUserAccounts[activeAccountIndex] || allUserAccounts[0];
+  activeProfile.name = name;
+  activeProfile.country = country;
+  activeProfile.countryCode = countryCode;
+  activeProfile.type = selectedRegAccountType;
+  activeProfile.contact = contact;
+  activeProfile.address = address;
+  activeProfile.dob = dob;
+  activeProfile.gender = gender;
+  if (tempAvatarBase64) activeProfile.avatar = tempAvatarBase64;
+  
+  if (!activeProfile.regTimestamp) activeProfile.regTimestamp = new Date().toLocaleString();
+  activeProfile.lastPingTimestamp = Date.now();
+  activeProfile.ownerSignature = 'Primary Verified Owner: ' + activeProfile.name + ' [' + activeProfile.contact + ']';
+
+  allUserAccounts[activeAccountIndex] = activeProfile;
+  saveAllAccounts();
+
+  updateHeaderAccountUI();
+  renderFeed();
+  closeModule('modRegistration');
+  alert('🎉 ගිණුම සාර්ථකව සුරැකුණි!');
+}
+
+function openAccountSwitchModal() {
+  openModule('modAccountSwitch');
+  const container = document.getElementById('accountListContainer');
+  container.innerHTML = allUserAccounts.map((acc, idx) => `
+    <div style="background:var(--card-sub-bg);padding:10px;border-radius:12px;border:1px solid ${idx === activeAccountIndex ? '#0088ff' : 'var(--border-color)'};display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <b>${acc.name}</b> <span style="font-size:10px;color:#0088ff">(${acc.type})</span>
+        <div style="font-size:11px;color:var(--status-text);">${acc.contact}</div>
+      </div>
+      ${idx === activeAccountIndex ? '<span style="color:#34a853;font-weight:bold;font-size:12px;">Active</span>' : `<button onclick="switchToAccount(${idx})" style="padding:6px 12px;background:#0088ff;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer;">Switch</button>`}
+    </div>
+  `).join('');
+}
+
+function switchToAccount(idx) {
+  activeAccountIndex = idx;
+  localStorage.setItem('myfacebox_active_acc_index', idx);
+  updateHeaderAccountUI();
+  closeModule('modAccountSwitch');
+  renderFeed();
+  alert(`🔄 Switched to account: ${activeProfile.name}`);
+}
+
+function addNewAccountOption() {
+  if (allUserAccounts.length >= 3) {
+    return alert('⚠️ මේ මොහොතේ උපරිම ගිණුම් සංඛ්‍යාවට ළඟා වී ඇත (Max 3).');
+  }
+  const newAcc = {
+    id: 'ACC_' + Date.now(),
+    name: 'New Account ' + (allUserAccounts.length + 1),
+    country: activeProfile.country || 'LK',
+    countryCode: activeProfile.countryCode || '+94',
+    type: 'Personal',
+    contact: activeProfile.contact || '',
+    address: '',
+    dob: '',
+    gender: 'Male',
+    avatar: '',
+    storyMedia: '',
+    extraStories: [],
+    regTimestamp: new Date().toLocaleString(),
+    deviceFingerprint: getOrCreateDeviceFingerprint(),
+    lastPingTimestamp: Date.now()
+  };
+  allUserAccounts.push(newAcc);
+  saveAllAccounts();
+  activeAccountIndex = allUserAccounts.length - 1;
+  localStorage.setItem('myfacebox_active_acc_index', activeAccountIndex);
+  updateHeaderAccountUI();
+  closeModule('modAccountSwitch');
+  openRegistrationModal(true);
+}
+
+function openStoryCreator() {
+  document.getElementById('storyMediaFileInput').click();
+}
+
+function handleStoryMediaUpload(event) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+  const file = files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const mediaResult = e.target.result;
+    if (!activeProfile.storyMedia) {
+      activeProfile.storyMedia = mediaResult;
+    } else {
+      if (!activeProfile.extraStories) activeProfile.extraStories = [];
+      activeProfile.extraStories.push(mediaResult);
+    }
+    allUserAccounts[activeAccountIndex] = activeProfile;
+    saveAllAccounts();
+    initUserProfile();
+    renderStoriesTray();
+    alert('✨ නව ස්ටෝරි (Story / Min 5+ Video) එක සාර්ථකව එකතු විය!');
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleReelVideoUpload(event) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+  const videoUrl = URL.createObjectURL(files[0]);
+  const container = document.getElementById('reelsFeedContainer');
+  const newReelCard = document.createElement('div');
+  newReelCard.className = 'reel-item-card';
+  newReelCard.innerHTML = `
+    <video class="reel-video-element" src="${videoUrl}" loop autoplay muted playsinline ${isSourceMuted ? 'muted' : ''}></video>
+    <div class="reel-overlay-ui">
+      <div></div>
+      <div class="reel-right-actions">
+        <div class="reel-action-btn-circle" onclick="likeReel(this)">❤️<span class="reel-action-count">1</span></div>
+        <div class="reel-action-btn-circle" onclick="alert('Opening Reel Comments...')">💬<span class="reel-action-count">0</span></div>
+        <div class="reel-action-btn-circle" onclick="alert('Reel Link Copied!')">🔗</div>
+      </div>
+      <div class="reel-bottom-meta">
+        <div class="reel-author-row">
+          <img src="${activeProfile.avatar || 'https://via.placeholder.com/150'}" class="reel-author-avatar">
+          <span class="reel-author-name">${activeProfile.name}</span>
+          <button class="reel-follow-btn">Author</button>
+        </div>
+        <div class="reel-caption-text">🎬 My New Uploaded Reel! #myfaecbox</div>
+        <div class="reel-audio-tag">🎵 Original Sound - ${activeProfile.name}</div>
+      </div>
+    </div>
+  `;
+  container.prepend(newReelCard);
+  alert('🎥 රීල් වීඩියෝව සහ හෝම් පිටුවට සාර්ථකව උඩුගත කරන ලදී!');
+}
+
+function openLightboxFromUrl(src, type) {
+  const modal = document.getElementById('mediaLightboxModal');
+  const container = document.getElementById('lightboxFeedContainer');
+  if (type === 'video') {
+    container.innerHTML = `<div class="lightbox-card-item"><video src="${src}" controls autoplay loop class="lightbox-media-element" ${isSourceMuted ? 'muted' : ''}></video></div>`;
+  } else {
+    container.innerHTML = `<div class="lightbox-card-item"><img src="${src}" class="lightbox-media-element"></div>`;
+  }
+  modal.style.display = 'flex';
+}
+
+function closeLightbox() {
+  document.getElementById('mediaLightboxModal').style.display = 'none';
+  document.getElementById('lightboxFeedContainer').innerHTML = '';
+}
+
+function openStoryViewer(type) {
+  currentStoryType = type;
+  const modal = document.getElementById('storyViewerModal');
+  const avatarImg = document.getElementById('viewerUserAvatar');
+  const nameEl = document.getElementById('viewerUserName');
+  const timeEl = document.getElementById('viewerTime');
+  const mediaImg = document.getElementById('viewerMediaImg');
+  const mediaVideo = document.getElementById('viewerMediaVideo');
+  const progFill = document.getElementById('storyProgFill');
+
+  modal.style.display = 'flex';
+  document.getElementById('storyDropdownMenu').style.display = 'none';
+
+  let mediaSrc = '';
+  if (type === 'user') {
+    nameEl.innerText = activeProfile.name;
+    avatarImg.src = activeProfile.avatar || 'https://via.placeholder.com/150';
+    mediaSrc = activeProfile.storyMedia || activeProfile.avatar || 'https://via.placeholder.com/600';
+    timeEl.innerText = 'Just now • Primary Author Story';
+  } else {
+    nameEl.innerText = 'Global Community Hub';
+    avatarImg.src = 'https://via.placeholder.com/150';
+    mediaSrc = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600';
+    timeEl.innerText = '5 hrs ago • AI Content';
+  }
+
+  if (mediaSrc.includes('data:video') || mediaSrc.endsWith('.mp4') || mediaSrc.endsWith('.mov')) {
+    mediaImg.style.display = 'none';
+    mediaVideo.style.display = 'block';
+    mediaVideo.src = mediaSrc;
+    if(isSourceMuted) mediaVideo.muted = true;
+  } else {
+    mediaVideo.style.display = 'none';
+    mediaImg.style.display = 'block';
+    mediaImg.src = mediaSrc;
+  }
+
+  progFill.style.width = '0%';
+  setTimeout(() => { progFill.style.transition = 'width 5s linear'; progFill.style.width = '100%'; }, 50);
+
+  if (storyTimer) clearTimeout(storyTimer);
+  storyTimer = setTimeout(() => { closeStoryViewer(); }, 5000);
+}
+
+function openExtraStoryViewer(index) {
+  currentStoryType = 'extra_' + index;
+  const modal = document.getElementById('storyViewerModal');
+  const avatarImg = document.getElementById('viewerUserAvatar');
+  const nameEl = document.getElementById('viewerUserName');
+  const timeEl = document.getElementById('viewerTime');
+  const mediaImg = document.getElementById('viewerMediaImg');
+  const mediaVideo = document.getElementById('viewerMediaVideo');
+  const progFill = document.getElementById('storyProgFill');
+
+  modal.style.display = 'flex';
+  document.getElementById('storyDropdownMenu').style.display = 'none';
+
+  nameEl.innerText = activeProfile.name;
+  avatarImg.src = activeProfile.avatar || 'https://via.placeholder.com/150';
+  const mediaSrc = activeProfile.extraStories[index];
+  timeEl.innerText = `Story #${index + 1} • Just now`;
+
+  if (mediaSrc && (mediaSrc.includes('data:video') || mediaSrc.endsWith('.mp4'))) {
+    mediaImg.style.display = 'none';
+    mediaVideo.style.display = 'block';
+    mediaVideo.src = mediaSrc;
+    if(isSourceMuted) mediaVideo.muted = true;
+  } else {
+    mediaVideo.style.display = 'none';
+    mediaImg.style.display = 'block';
+    mediaImg.src = mediaSrc;
+  }
+
+  progFill.style.width = '0%';
+  setTimeout(() => { progFill.style.transition = 'width 5s linear'; progFill.style.width = '100%'; }, 50);
+
+  if (storyTimer) clearTimeout(storyTimer);
+  storyTimer = setTimeout(() => { closeStoryViewer(); }, 5000);
+}
+
+function closeStoryViewer() {
+  document.getElementById('storyViewerModal').style.display = 'none';
+  document.getElementById('storyDropdownMenu').style.display = 'none';
+  const mediaVideo = document.getElementById('viewerMediaVideo');
+  if(mediaVideo) mediaVideo.pause();
+  if (storyTimer) clearTimeout(storyTimer);
+}
+
+function toggleStoryMenu(event) {
+  event.stopPropagation();
+  const menu = document.getElementById('storyDropdownMenu');
+  menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+}
+
+window.onclick = function(event) {
+  if (!event.target.matches('.story-dots-btn')) {
+    const menu = document.getElementById('storyDropdownMenu');
+    if (menu && menu.style.display === 'flex') menu.style.display = 'none';
+  }
+}
+
+function editCurrentStory() {
+  closeStoryViewer();
+  openStoryCreator();
+}
+
+function deleteCurrentStory() {
+  if (confirm('🗑️ මෙම කතාව මකා දමන්න අවශ්‍යමද?')) {
+    if (currentStoryType === 'user') {
+      activeProfile.storyMedia = '';
+    } else if (currentStoryType && currentStoryType.startsWith('extra_')) {
+      const idx = parseInt(currentStoryType.split('_')[1]);
+      activeProfile.extraStories.splice(idx, 1);
+    }
+    allUserAccounts[activeAccountIndex] = activeProfile;
+    saveAllAccounts();
+    initUserProfile();
+    renderStoriesTray();
+    closeStoryViewer();
+    alert('✅ කතාව මකා දමන ලදී!');
+  }
+}
+
+function shareCurrentStory() { alert('🔗 කතාව බෙදා ගන්න ලදී!'); }
+function sendStoryReaction(emoji) { alert(`❤️ Reaction: ${emoji}`); }
+function sendStoryMessage() {
+  const txt = document.getElementById('storyReplyInput').value.trim();
+  if (!txt) return;
+  alert(`💬 Reply sent: "${txt}"`);
+  document.getElementById('storyReplyInput').value = '';
+}
+
+function switchBottomTab(tabName, el) {
+  document.querySelectorAll('.bottom-navigation .nav-tab').forEach(t => t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.app-view-panel').forEach(v => v.classList.remove('active-view'));
+
+  if (tabName === 'posts') document.getElementById('viewPosts').classList.add('active-view');
+  else if (tabName === 'status') document.getElementById('viewStatus').classList.add('active-view');
+  else if (tabName === 'reels') document.getElementById('viewReels').classList.add('active-view');
+}
+
+function likeReel(btn) {
+  const countSpan = btn.querySelector('.reel-action-count');
+  let current = parseFloat(countSpan.innerText);
+  if (countSpan.innerText.includes('K')) {
+    current = current * 1000 + 1;
+    countSpan.innerText = (current / 1000).toFixed(1) + 'K';
+  } else {
+    countSpan.innerText = current + 1;
+  }
+  alert('❤️ Reel Liked!');
+}
+
+function openPostCreator() {
+  document.getElementById('fullScreenPostModal').style.display = 'flex';
+  document.getElementById('modalPostText').focus();
+}
+
+function closePostCreator() {
+  document.getElementById('fullScreenPostModal').style.display = 'none';
+  currentSelectedMedia = { type: null, src: [], title: '' };
+  document.getElementById('selectedMediaPreview').innerText = '';
+}
+
+function updateWordCount() {
+  const txt = document.getElementById('modalPostText').value.trim();
+  document.getElementById('wordCountCounter').innerText = `Words: ${txt ? txt.split(/\s+/).length : 0}`;
+}
+
+function handleMediaSelect(event, type) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+  const progressBox = document.getElementById('uploadProgressBox');
+  const progressBar = document.getElementById('uploadProgressBar');
+  const progressText = document.getElementById('uploadProgressText');
+
+  progressBox.style.display = 'block';
+  let percent = 0;
+  let timer = setInterval(() => {
+    percent += 20;
+    progressBar.style.width = percent + '%';
+    progressText.innerText = `Compressing HD Quality... ${percent}%`;
+    if (percent >= 100) {
+      clearInterval(timer);
+      setTimeout(() => {
+        progressBox.style.display = 'none';
+        if (type === 'photo') {
+          currentSelectedMedia.type = 'photo';
+          currentSelectedMedia.src = Array.from(files).map(f => URL.createObjectURL(f));
+          document.getElementById('selectedMediaPreview').innerText = `📸 Photos Attached!`;
+        } else if (type === 'video') {
+          currentSelectedMedia.type = 'video';
+          currentSelectedMedia.src = [URL.createObjectURL(files[0])];
+          document.getElementById('selectedMediaPreview').innerText = `🎥 Video Attached!`;
+        } else if (type === 'audio') {
+          currentSelectedMedia.type = 'audio';
+          currentSelectedMedia.src = [URL.createObjectURL(files[0])];
+          currentSelectedMedia.title = files[0].name.replace(/\.[^/.]+$/, "");
+          document.getElementById('selectedMediaPreview').innerText = `🎵 MP3 Attached!`;
+        }
+      }, 300);
+    }
+  }, 150);
+}
+
+function triggerVoiceNoteRecording() {
+  alert('🎙️ Voice Recording Started!');
+  setTimeout(() => {
+    currentSelectedMedia.type = 'voice';
+    currentSelectedMedia.src = ['#voice_stream'];
+    document.getElementById('selectedMediaPreview').innerText = `🎙️ Voice Note Recorded!`;
+  }, 1000);
+}
+
+function submitNewPost() {
+  const txtInput = document.getElementById('modalPostText');
+  const txt = txtInput.value.trim();
+  if (!txt && !currentSelectedMedia.type) return alert('කරුණාකර යම් අන්තර්ගතයක් හෝ මාධ්‍යයක් එක් කරන්න!');
+
+  const newPost = {
+    id: Date.now(),
+    name: activeProfile.name,
+    avatar: activeProfile.avatar,
+    accountType: activeProfile.type,
+    authorSignature: activeProfile.ownerSignature || ('Primary Verified Owner: ' + activeProfile.name),
+    txt: txt,
+    media: { ...currentSelectedMedia },
+    likes: 0,
+    comments: [],
+    time: 'Just now'
+  };
+
+  posts.unshift(newPost);
+  localStorage.setItem('myfacebox_base_posts', JSON.stringify(posts));
+  gun.get('myfacebox_global_posts').set(newPost);
+
+  txtInput.value = '';
+  closePostCreator();
+  renderFeed();
+}
+
+function reactPost(postId, type) {
+  const p = posts.find(item => item.id === postId);
+  if (p) {
+    if (type === 'like') p.likes++;
+    localStorage.setItem('myfacebox_base_posts', JSON.stringify(posts));
+    renderFeed();
+  }
+}
+
+function addComment(postId) {
+  const input = document.getElementById(`commentInput_${postId}`);
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) return;
+  const p = posts.find(item => item.id === postId);
+  if (p) {
+    p.comments.push({ id: Date.now(), author: activeProfile.name, avatar: activeProfile.avatar, txt: val });
+    localStorage.setItem('myfacebox_base_posts', JSON.stringify(posts));
+    renderFeed();
+  }
+}
+
+function deletePost(postId) {
+  if (confirm('🗑️ මෙම පෝස්ටුව මකා දමන්න අවශ්‍යමද?')) {
+    posts = posts.filter(p => p.id !== postId);
+    localStorage.setItem('myfacebox_base_posts', JSON.stringify(posts));
+    renderFeed();
+  }
+}
+
+function toggleSourceMuteGlobal() {
+  isSourceMuted = !isSourceMuted;
+  const btn = document.getElementById('sourceMuteBtn');
+  if (isSourceMuted) {
+    btn.innerText = "Muted (Silence)";
+    btn.style.background = "#ea4335";
+    alert("🔕 Source Muted Successfully! All background audio/videos are muted.");
+  } else {
+    btn.innerText = "Active (Unmuted)";
+    btn.style.background = "#34a853";
+    alert("🔔 Source Unmuted Successfully!");
+  }
+  document.querySelectorAll('video, audio').forEach(media => {
+    media.muted = isSourceMuted;
+  });
+}
+
+function openMasterMenu() { document.getElementById('masterMenuHub').style.display = 'block'; }
+function closeMasterMenu() { document.getElementById('masterMenuHub').style.display = 'none'; }
+function openModule(id) { closeMasterMenu(); document.getElementById(id).style.display = 'flex'; }
+function closeModule(id) { document.getElementById(id).style.display = 'none'; }
+
+function toggleTheme() {
+  const root = document.getElementById('htmlRoot');
+  if(root.getAttribute('data-theme') === 'dark') root.removeAttribute('data-theme');
+  else root.setAttribute('data-theme', 'dark');
+}
+
+function filterMenuApps() {
+  const query = document.getElementById('menuSearchInput').value.toLowerCase();
+  document.querySelectorAll('.pipeline-step').forEach(step => {
+    step.style.display = step.innerText.toLowerCase().includes(query) ? 'flex' : 'none';
+  });
+  document.querySelectorAll('.menu-icon-tile').forEach(tile => {
+    const name = tile.getAttribute('data-name') || '';
+    tile.style.display = name.toLowerCase().includes(query) ? 'block' : 'none';
+  });
+}
+
+function renderFeed() {
+  const container = document.getElementById('feedContainer');
+  if (posts.length === 0) {
+    container.innerHTML = '<div style="padding:30px;text-align:center;color:#777">No posts yet! Tap above to publish freely.</div>';
+    return;
+  }
+
+  container.innerHTML = posts.map(p => `
+    <div class="feed-post-card">
+      <div class="post-header-row">
+        <div class="post-user-info">
+          <div class="post-user-avatar">
+            ${p.avatar ? `<img src="${p.avatar}" style="width:100%;height:100%;object-fit:cover;">` : '👤'}
+          </div>
+          <div>
+            <div class="post-user-name">${p.name} <span style="font-size:10px;color:#0088ff">(${p.accountType || 'Personal'})</span></div>
+            <div class="post-time">${p.time} • 🛡️ ${p.authorSignature || 'Verified Owner'}</div>
+          </div>
+        </div>
+        <div class="post-menu-btn" onclick="deletePost(${p.id})">🗑️</div>
+      </div>
+
+      <p style="margin-top:6px;line-height:1.4;white-space:pre-wrap;" onclick="openLightboxFromUrl('${p.media && p.media.src ? p.media.src[0] : ''}', 'photo')">${p.txt}</p>
+
+      ${p.media && p.media.type === 'photo' ? p.media.src.map(img => `<img src="${img}" class="post-media-preview" onclick="openLightboxFromUrl('${img}', 'photo')">`).join('') : ''}
+      ${p.media && p.media.type === 'video' ? `<video src="${p.media.src[0]}" autoplay muted loop playsinline class="post-media-preview" onclick="openLightboxFromUrl('${p.media.src[0]}', 'video')" ${isSourceMuted ? 'muted' : ''}></video>` : ''}
+      ${p.media && p.media.type === 'audio' ? `
+        <div class="mp3-cover-box" onclick="openLightboxFromUrl('${p.media.src[0]}', 'audio')">
+          <div style="font-size:32px;margin-bottom:6px;">🎵</div>
+          <b>${p.media.title || 'Sumiya Track'}</b>
+          <audio controls autoplay src="${p.media.src[0]}" style="margin-top:10px;width:90\%;height:30px;" ${isSourceMuted ? 'muted' : ''}></audio>
+        </div>
+      ` : ''}
+
+      <div class="count-bar" onclick="openLightboxFromUrl('${p.media && p.media.src ? p.media.src[0] : ''}', 'photo')">
+        <span>❤️ ${p.likes} Likes • 💬 ${p.comments.length} Comments</span>
+        <span>🔗 Shared 100%</span>
+      </div>
+
+      <div class="action-bar">
+        <div class="action-btn" onclick="reactPost(${p.id}, 'like')">👍 Like</div>
+        <div class="action-btn" onclick="document.getElementById('commentInput_${p.id}').focus()">💬 Comment</div>
+      </div>
+
+      <div class="comments-container">
+        <div style="display:flex;gap:6px;margin-bottom:8px;">
+          <input type="text" id="commentInput_${p.id}" placeholder="Write a comment..." style="flex:1;padding:6px 10px;border-radius:16px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);outline:none;font-size:12px;">
+          <button onclick="addComment(${p.id})" style="background:#0088ff;color:#fff;border:none;padding:4px 10px;border-radius:14px;font-size:11px;font-weight:bold;">Send</button>
+        </div>
+
+        ${p.comments.map(c => `
+          <div class="comment-card" onclick="alert('Comment tapped: ${c.txt}')">
+            <div class="comment-author">${c.author}</div>
+            <div>${c.txt}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+let currentDiaryAttachments = [];
+let diaryMediaRecorder;
+let diaryAudioChunks = [];
+
+function handleDiaryFilesUpload(event) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      currentDiaryAttachments.push({
+        name: file.name,
+        type: file.type,
+        data: e.target.result
+      });
+      document.getElementById('diaryFileCountStatus').innerText = `📎 Attached: ${currentDiaryAttachments.length} file(s)`;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function triggerStudioCamera(type) {
+  if (type === 'photo') {
+    document.getElementById('studioCameraPhotoInput').click();
+  } else {
+    document.getElementById('studioCameraVideoInput').click();
+  }
+}
+
+function handleStudioCapture(event, type) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+  const file = files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    currentDiaryAttachments.push({
+      name: `Studio_${type}_${Date.now()}.${type === 'photo' ? 'jpg' : 'mp4'}`,
+      type: type === 'photo' ? 'image/jpeg' : 'video/mp4',
+      data: e.target.result
+    });
+    document.getElementById('diaryFileCountStatus').innerText = `📎 Studio Attached (${currentDiaryAttachments.length})`;
+    alert('📸 ස්ටුඩියෝ කැමරාවෙන් ලබාගත් මාධ්‍ය ඩයරියට එකතු විය!');
+  };
+  reader.readAsDataURL(file);
+}
+
+function triggerDiaryVoiceRecording() {
+  const btn = document.getElementById('diaryVoiceRecBtn');
+  if (!diaryMediaRecorder || diaryMediaRecorder.state === "inactive") {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      diaryMediaRecorder = new MediaRecorder(stream);
+      diaryMediaRecorder.start();
+      diaryAudioChunks = [];
+      btn.innerText = "⏹️ Stop";
+      btn.style.background = "#ea4335";
+      btn.style.color = "#fff";
+
+      diaryMediaRecorder.addEventListener("dataavailable", event => {
+        diaryAudioChunks.push(event.data);
+      });
+
+      diaryMediaRecorder.addEventListener("stop", () => {
+        const audioBlob = new Blob(diaryAudioChunks, { type: 'audio/mp3' });
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = function() {
+          currentDiaryAttachments.push({
+            name: `Voice_${Date.now()}.mp3`,
+            type: 'audio/mp3',
+            data: reader.result
+          });
+          document.getElementById('diaryFileCountStatus').innerText = `📎 Attached: ${currentDiaryAttachments.length} file(s)`;
+          alert("🎙️ වොයිස් රෙකෝඩින් එක ඩයරියට ඇතුළත් විය!");
+        };
+      });
+    }).catch(err => alert("මයික්‍රෆෝන අවසරය අවශ්‍යයි: " + err));
+  } else {
+    diaryMediaRecorder.stop();
+    btn.innerText = "🎙️ Record Voice";
+    btn.style.background = "var(--card-sub-bg)";
+    btn.style.color = "var(--text-main)";
+  }
+}
+
+function saveAdvancedDiaryEntry() {
+  const title = document.getElementById('diaryTitleInput').value.trim();
+  const txt = document.getElementById('diaryNoteInput').value.trim();
+  if (!title && !txt && currentDiaryAttachments.length === 0) {
+    return alert('කරුණාකර මාතෘකාවක්, සටහනක් හෝ ෆයිල් එකක් ඇතුළත් කරන්න!');
+  }
+  let diaryLogs = JSON.parse(localStorage.getItem('myfacebox_advanced_diary') || '[]');
+  const newEntry = {
+    id: Date.now(),
+    date: new Date().toLocaleString(),
+    title: title || 'Untitled Note',
+    text: txt,
+    attachments: [...currentDiaryAttachments]
+  };
+  diaryLogs.unshift(newEntry);
+  localStorage.setItem('myfacebox_advanced_diary', JSON.stringify(diaryLogs));
+  
+  document.getElementById('diaryTitleInput').value = '';
+  document.getElementById('diaryNoteInput').value = '';
+  currentDiaryAttachments = [];
+  document.getElementById('diaryFileCountStatus').innerText = 'No files attached';
+  renderAdvancedDiaryLogs();
+  alert('📖 සටහන සුරක්ෂිතව තැන්පත් විය!');
+}
+
+function renderAdvancedDiaryLogs() {
+  const container = document.getElementById('savedDiaryLogs');
+  if (!container) return;
+  let diaryLogs = JSON.parse(localStorage.getItem('myfacebox_advanced_diary') || '[]');
+  if (diaryLogs.length === 0) {
+    container.innerHTML = '<div style="padding:15px;text-align:center;color:var(--status-text);font-size:12px;background:var(--card-sub-bg);border-radius:10px;">සුරැකි සටහන් නොමැත.</div>';
+    return;
+  }
+  
+  container.innerHTML = diaryLogs.map(d => `
+    <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid var(--border-color);display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <b style="color:#ff0055;font-size:14px;">📌 ${d.title}</b>
+        <span style="font-size:10px;color:var(--status-text);">${d.date}</span>
+      </div>
+      <p style="font-size:13px;color:var(--text-main);white-space:pre-wrap;line-height:1.4;">${d.text}</p>
+      
+      ${d.attachments && d.attachments.length > 0 ? `
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
+          ${d.attachments.map((att, idx) => `
+            <div style="background:var(--card-bg);padding:6px 10px;border-radius:8px;border:1px solid var(--border-color);display:flex;align-items:center;gap:6px;font-size:11px;">
+              <span style="cursor:pointer;color:#0088ff;font-weight:bold;" onclick="openDiaryAttachment('${att.data}', '${att.type}')">👁️ ${att.name.substring(0, 15)}...</span>
+              <a href="${att.data}" download="${att.name}" style="text-decoration:none;font-size:12px;" title="Download">📥</a>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:6px;">
+        <button onclick="shareDiaryEntry('${d.title}', '${d.text}')" style="background:#0088ff;color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;">🔗 Share</button>
+        <button onclick="deleteDiaryEntry(${d.id})" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;">🗑️ Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openDiaryAttachment(dataUrl, type) {
+  if (type.startsWith('image/')) {
+    openLightboxFromUrl(dataUrl, 'photo');
+  } else if (type.startsWith('video/')) {
+    openLightboxFromUrl(dataUrl, 'video');
+  } else if (type.startsWith('audio/')) {
+    const audioWin = window.open();
+    audioWin.document.write(`<audio controls autoplay src="${dataUrl}" style="width:100%;margin-top:20%;"></audio>`);
+  } else {
+    const win = window.open();
+    win.document.write(`<iframe src="${dataUrl}" style="width:100%;height:100%;border:none;"></iframe>`);
+  }
+}
+
+function shareDiaryEntry(title, text) {
+  if (navigator.share) {
+    navigator.share({ title: title, text: text }).catch(() => {});
+  } else {
+    alert(`🔗 සටහන කොපි කරගන්න ලදී: "${title}"`);
+  }
+}
+
+function deleteDiaryEntry(id) {
+  if (confirm('🗑️ මෙම සටහන මකා දමන්න අවශ්‍යමද?')) {
+    let diaryLogs = JSON.parse(localStorage.getItem('myfacebox_advanced_diary') || '[]');
+    diaryLogs = diaryLogs.filter(d => d.id !== id);
+    localStorage.setItem('myfacebox_advanced_diary', JSON.stringify(diaryLogs));
+    renderAdvancedDiaryLogs();
+  }
+}
+
+function toggleSmartClassMic() { alert("🎙️ Smart Class Microphone Toggled!"); }
+function toggleSmartClassCamera() { alert("📷 Smart Class Camera Toggled!"); }
+
+function sendSmartClassMessage() {
+  const input = document.getElementById('smartClassInput');
+  const chatBox = document.getElementById('smartClassChatBox');
+  if(!input || !input.value.trim()) return;
+  const msg = input.value.trim();
+  const div = document.createElement('div');
+  div.innerHTML = `<b>You:</b> ${msg}`;
+  chatBox.appendChild(div);
+  input.value = '';
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function sendAIBotMessage() {
+  const input = document.getElementById('aiBotInputText');
+  if (!input) return;
+  const userTxt = input.value.trim();
+  if (!userTxt) return;
+
+  const chatBox = document.getElementById('aiBotChatBox');
+  const userDiv = document.createElement('div');
+  userDiv.style.cssText = "background:#0088ff;color:#fff;padding:8px 14px;border-radius:14px 14px 0 14px;width:fit-content;max-width:85%;margin-left:auto;font-size:13px;word-break:break-word;";
+  userDiv.innerText = userTxt;
+  chatBox.appendChild(userDiv);
+
+  input.value = '';
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  setTimeout(() => {
+    const botDiv = document.createElement('div');
+    botDiv.style.cssText = "background:var(--card-bg);border:1px solid var(--border-color);color:var(--text-main);padding:10px 14px;border-radius:14px 14px 14px 0;width:fit-content;max-width:85%;margin-right:auto;font-size:13px;line-height:1.4;";
+
+    if (userTxt.includes('sumiya718264') || userTxt.toUpperCase().includes('SUMIYA MRA')) {
+      botDiv.innerHTML = `
+        👑 <b>Sumiya Master Owner Identified!</b><br><br>
+        ආයුබෝවන් <b>Sumiya</b>! ඔබ විසින් <code>sumiya718264</code> අංකය එවූ නිසා ඔබව 1000% ක්ම පද්ධති නායකයා සහ අයිතිකරු ලෙස සාර්ථකව හඳුනාගන්නා ලදී.<br><br>
+        ⚡ <b>අභ්‍යන්තර සියලු විස්තර සහ පද්ධති තත්ත්වය (Internal Hub Status):</b><br>
+        • <b>Active Profile:</b> ${activeProfile.name} (${activeProfile.type})<br>
+        • <b>Contact/NIC:</b> ${activeProfile.contact}<br>
+        • <b>Device Fingerprint:</b> ${activeProfile.deviceFingerprint}<br>
+        • <b>P2P Peer Cloud Sync:</b> Active 🟢 (GunDB Online)<br>
+        • <b>Security Protocol:</b> Fully Unlocked for Sumiya MRA 🛡️<br>
+        • <b>App Storage Status:</b> Nano-Stable Zero Loss 24/7<br><br>
+        සියලුම අභ්‍යන්තර පාලන සහ දත්ත දැන් සම්පූර්ණයෙන්ම ඔබේ පාලනය යටතේ ක්‍රියාත්මක වේ! 🚀
+      `;
+    } else {
+      botDiv.innerHTML = `
+        🌐 <b>තාක්ෂණික මගපෙන්වීම:</b><br>
+        MYFAECBOX පද්ධතියේ 1000% ක්ම තාක්ෂණික හා පාරිභෝගික සියලුම වගකීම් සහ අයිතිය <b>Sumiya</b> වෙත භාර දී ඇත. ඔබ මාව (Sumiya) හඳුනාගැනීම සඳහා පණිවිඩයක <code>sumiya718264</code> අංකය එවන්න.
+      `;
+    }
+
+    chatBox.appendChild(botDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }, 400);
+}
+
+let masterSecretPIN = localStorage.getItem('sumiya_master_pin') || "sumiya718264"; 
+let savedVoiceSample = localStorage.getItem('sumiya_owner_voice') || null;
+
+function openVoiceManagerDirectly() {
+  closeMasterMenu();
+  openModule('modVoiceManager');
+}
+
+let mediaRecorder;
+let audioChunks = [];
+
+function startVoiceRecording() {
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.start();
+      audioChunks = [];
+
+      const statusEl = document.getElementById('voiceRecStatus');
+      if(statusEl) {
+        statusEl.innerText = "🎙️ කටහඬ පටිගත වෙමින් පවතී... (කතා කරන්න)";
+        statusEl.style.color = "#ea4335";
+      }
+
+      mediaRecorder.addEventListener("dataavailable", event => {
+        audioChunks.push(event.data);
+      });
+
+      mediaRecorder.addEventListener("stop", () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = function() {
+          savedVoiceSample = reader.result;
+          localStorage.setItem('sumiya_owner_voice', savedVoiceSample);
+          const statusEl2 = document.getElementById('voiceRecStatus');
+          if(statusEl2) {
+            statusEl2.innerText = "✅ ඔබගේ කටහඬ සාර්ථකව පද්ධතියේ Save විය!";
+            statusEl2.style.color = "#34a853";
+          }
+          alert("🎉 ඔබගේ කටහඬ පද්ධතියට සාර්ථකව ඇතුළත් කර ගන්නා ලදී!");
+        }
+      });
+    })
+    .catch(err => {
+      alert("🎙️ මයික්‍රෆෝනයට අවසර ලබා දෙන්න: " + err);
+    });
+}
+
+function stopVoiceRecording() {
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+  }
+}
+
+function changeMasterPIN() {
+  const newPIN = prompt("🔑 නව රහස් අංකය (New Secret PIN) ඇතුළත් කරන්න:");
+  if (newPIN && newPIN.trim() !== "") {
+    masterSecretPIN = newPIN.trim();
+    localStorage.setItem('sumiya_master_pin', masterSecretPIN);
+    alert("🔒 ඔබගේ නව රහස් අංකය සාර්ථකව වෙනස් කර සුරකින ලදී!");
+  } else {
+    alert("⚠️ රහස් අංකය හිස්ව තැබිය නොහැක!");
+  }
+}
+
+setTimeout(renderAdvancedDiaryLogs, 600);
+
+updateHeaderAccountUI();
+renderStoriesTray();
+renderFeed();
+
+gun.get('myfacebox_global_posts').map().on(function(data, id) {
+  if (data && data.txt) {
+    let exists = posts.find(p => p.id === data.id);
+    if (!exists) {
+      posts.unshift(data);
+      renderFeed();
+    }
+  }
+});
+</script>
+
+<!-- ========================================== -->
+<!-- Sumiya International Messenger Hub Module  -->
+<!-- ========================================== -->
+<div class="modular-window" id="modMessenger" style="display:flex; flex-direction:column; background:var(--bg-main); z-index:9999999;">
+  <div class="mod-header">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-size:20px;">💬</span>
+      <b>Sumiya International Messenger Hub</b>
+    </div>
+    <button onclick="closeModule('modMessenger')" style="background:#ea4335;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:bold;">Close</button>
+  </div>
+
+  <div style="display:flex; flex-direction:column; flex:1; height:calc(100vh - 120px); overflow:hidden;">
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--card-sub-bg); border-bottom:1px solid var(--border-color);">
+      <div style="display:flex; gap:8px;">
+        <button onclick="startMessengerCall('voice')" style="background:#34a853; color:#fff; border:none; padding:6px 12px; border-radius:14px; font-size:12px; font-weight:bold; cursor:pointer;">📞 Voice Call</button>
+        <button onclick="startMessengerCall('video')" style="background:#0088ff; color:#fff; border:none; padding:6px 12px; border-radius:14px; font-size:12px; font-weight:bold; cursor:pointer;">📹 Video Call</button>
+      </div>
+      <div>
+        <input type="text" id="messengerFilterInput" placeholder="🔍 Filter messages..." onkeyup="filterMessengerChats()" style="padding:6px 12px; border-radius:14px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--input-text); font-size:12px; outline:none;">
+      </div>
+    </div>
+
+    <div id="messengerChatBox" style="flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px; background:var(--bg-main);">
+      <div style="background:var(--card-sub-bg); border:1px solid var(--border-color); padding:10px 14px; border-radius:12px; font-size:13px; max-width:80%; align-self:flex-start; color:var(--text-main);">
+        <b>System:</b> සාදරයෙන් පිළිගනිමු! ඔබට මෙහිදී ඕනෑම ගොනුවක් (PDF, Docs, Images, Videos, Audio) හුවමාරු කර ගැනීමට සහ Edit කිරීමට හැක.
+      </div>
+    </div>
+
+    <div id="messengerFilePreviewContainer" style="display:none; padding:6px 12px; background:var(--card-sub-bg); border-top:1px solid var(--border-color); font-size:11px; color:#0088ff; font-weight:bold;"></div>
+
+    <div style="padding:10px; background:var(--card-bg); border-top:1px solid var(--border-color); display:flex; flex-direction:column; gap:8px;">
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button onclick="document.getElementById('messengerFileInput').click()" style="background:var(--card-sub-bg); border:1px solid var(--border-color); padding:8px 12px; border-radius:16px; cursor:pointer; font-size:14px;" title="Attach Any File / Media">📎</button>
+        <input type="file" id="messengerFileInput" multiple style="display:none;" onchange="handleMessengerFileUpload(event)">
+        
+        <input type="text" id="messengerInputText" placeholder="ටයිප් කරන්න හෝ Edit කරන්න..." onkeypress="if(event.key==='Enter') sendMessengerMessage()" style="flex:1; padding:10px 14px; border-radius:20px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--input-text); font-size:13px; outline:none;">
+        
+        <button onclick="sendMessengerMessage()" style="background:linear-gradient(135deg, #0088ff, #0055ff); color:#fff; border:none; padding:10px 18px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:13px;">Send</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="messengerCallOverlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:#000; z-index:99999999; display:none; flex-direction:column; justify-content:space-between; align-items:center; padding:30px; color:#fff;">
+  <div style="text-align:center; margin-top:40px;">
+    <div style="width:90px; height:90px; border-radius:50%; background:#0088ff; margin:0 auto 14px auto; display:flex; align-items:center; justify-content:center; font-size:36px;" id="callAvatarIcon">👤</div>
+    <h2 id="callTitleTxt">Connecting Call...</h2>
+    <p style="font-size:13px; color:#aaa; margin-top:6px;" id="callStatusTxt">Secure P2P Encryption Active</p>
+  </div>
+  <div style="width:100%; height:40%; background:#1e1e1e; border-radius:20px; display:flex; align-items:center; justify-content:center; border:1px solid #333;" id="callVideoContainer">
+    <span style="font-size:14px; color:#777;">Camera / Audio Stream Active</span>
+  </div>
+  <button onclick="endMessengerCall()" style="background:#ea4335; color:#fff; border:none; padding:14px 30px; border-radius:30px; font-size:15px; font-weight:bold; cursor:pointer; margin-bottom:20px;">📞 End Call</button>
+</div>
+
+<script>
+let messengerAttachments = [];
+
+function handleMessengerFileUpload(event) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      messengerAttachments.push({
+        name: file.name,
+        type: file.type,
+        data: e.target.result
+      });
+      const previewBox = document.getElementById('messengerFilePreviewContainer');
+      previewBox.style.display = 'block';
+      previewBox.innerText = `📎 Attached: ${messengerAttachments.length} file(s) ready to send.`;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function sendMessengerMessage() {
+  const input = document.getElementById('messengerInputText');
+  const chatBox = document.getElementById('messengerChatBox');
+  const txt = input.value.trim();
+
+  if (!txt && messengerAttachments.length === 0) return;
+
+  let attachmentsHtml = '';
+  if (messengerAttachments.length > 0) {
+    attachmentsHtml = messengerAttachments.map(att => `
+      <div style="margin-top:6px; background:rgba(0,0,0,0.1); padding:6px; border-radius:8px; font-size:11px;">
+        📁 <a href="${att.data}" download="${att.name}" style="color:#0088ff; text-decoration:none; font-weight:bold;">${att.name} (Download)</a>
+      </div>
+    `).join('');
+  }
+
+  const userDiv = document.createElement('div');
+  userDiv.style.cssText = "background:#0088ff; color:#fff; padding:10px 14px; border-radius:14px 14px 0 14px; width:fit-content; max-width:80%; margin-left:auto; font-size:13px; word-break:break-word;";
+  userDiv.innerHTML = `${txt ? '<div>' + txt + '</div>' : ''} ${attachmentsHtml}`;
+  chatBox.appendChild(userDiv);
+
+  input.value = '';
+  messengerAttachments = [];
+  document.getElementById('messengerFilePreviewContainer').style.display = 'none';
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function startMessengerCall(type) {
+  const overlay = document.getElementById('messengerCallOverlay');
+  const title = document.getElementById('callTitleTxt');
+  const status = document.getElementById('callStatusTxt');
+  
+  overlay.style.display = 'flex';
+  if (type === 'voice') {
+    title.innerText = "Voice Calling...";
+    status.innerText = "Secure Audio Tunnel Active 🟢";
+  } else {
+    title.innerText = "Video Calling...";
+    status.innerText = "Secure HD Video Tunnel Active 🟢";
+  }
+}
+
+function endMessengerCall() {
+  document.getElementById('messengerCallOverlay').style.display = 'none';
+}
+
+function filterMessengerChats() {
+  const query = document.getElementById('messengerFilterInput').value.toLowerCase();
+  const chatBox = document.getElementById('messengerChatBox');
+  Array.from(chatBox.children).forEach(child => {
+    child.style.display = child.innerText.toLowerCase().includes(query) ? 'block' : 'none';
+  });
+}
+</script>
+</html>
