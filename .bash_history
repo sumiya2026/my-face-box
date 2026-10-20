@@ -1,8 +1,3 @@
-    except Exception as e:
-        print(f"DB Initialization Error: {e}")
-
-init_db()
-
 def load_data():
     data = {}
     try:
@@ -497,4 +492,9 @@ cp /sdcard/index.html .
 cp index.html public/
 git add .
 git commit -m "Add updated index.html to public folder"
+git push origin main
+cp /sdcard/index.html .
+cp index.html public/
+git add .
+git commit -m "Fix photo memory and update index"
 git push origin main
