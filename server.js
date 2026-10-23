@@ -207,3 +207,56 @@ const createTables = async () => {
   }
 };
 createTables();
+// 🌍 GLOBAL POST & STORY LOGIC (Supabase Cloud එකෙන් ලෝඩ් කිරීම සහ සේව් කිරීම)
+
+// 1. පෝස්ට් එකක් දාද්දී කෙලින්ම Supabase Cloud එකට සේව් කරන ලොජික් එක
+app.post('/api/posts', async (req, res) => {
+  const { username, content, image_url } = req.body;
+  try {
+    const newPost = await pool.query(
+      'INSERT INTO global_posts (username, content, image_url) VALUES ($1, $2, $3) RETURNING *',
+      [username, content, image_url]
+    );
+    res.json({ success: true, post: newPost.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: "Cloud Save Error" });
+  }
+});
+
+// 2. හැමෝම දාන පෝස්ට් සියල්ලම නොමැකී ජාත්‍යන්තරව ලෝඩ් කරගන්නා ලොජික් එක
+app.get('/api/posts', async (req, res) => {
+  try {
+    const allPosts = await pool.query('SELECT * FROM global_posts ORDER BY created_at DESC');
+    res.json(allPosts.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Cloud Load Error" });
+  }
+});
+
+// 3. ස්ටෝරි (Stories) කෙලින්ම Cloud එකට සේව් කරන ලොජික් එක
+app.post('/api/stories', async (req, res) => {
+  const { username, media_url, media_type } = req.body;
+  try {
+    const newStory = await pool.query(
+      'INSERT INTO global_stories (username, media_url, media_type) VALUES ($1, $2, $3) RETURNING *',
+      [username, media_url, media_type]
+    );
+    res.json({ success: true, story: newStory.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: "Cloud Story Save Error" });
+  }
+});
+
+// 4. ස්ටෝරි සියල්ලම සජීවීව ලෝඩ් කරගන්නා ලොජික් එක
+app.get('/api/stories', async (req, res) => {
+  try {
+    const allStories = await pool.query('SELECT * FROM global_stories ORDER BY created_at DESC');
+    res.json(allStories.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Cloud Story Load Error" });
+  }
+});
