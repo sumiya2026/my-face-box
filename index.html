@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-<title>MYFAECBOX - Ultra Pro International Cloud Hub</title>
+<title>My Face BOX</title>
 <link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;MYFAECBOX&quot;,&quot;short_name&quot;:&quot;FaceBox&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#121212&quot;,&quot;theme_color&quot;:&quot;#0088ff&quot;}">
 <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
@@ -2645,3 +2645,44 @@ function updateSumiyaUserProfile(userId, newName, newPhotoBase64) {
 </script>
 </body>
 </html>
+// 📸 FRONT-END IMAGE UPLOAD SYNCHRONIZER (පින්තූර කෙලින්ම ස්ථිර මතකයට සහ Cloud එකට යවන ලොජික් එක)
+async function uploadPostWithMedia(username, content, fileInputId) {
+  const fileInput = document.getElementById(fileInputId);
+  let imageUrl = "";
+
+  if (fileInput && fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+
+    // 1. පින්තූරය මුලින්ම Render ස්ථිර මතක තැටියට (Persistent Disk) අප්ලෝඩ් කිරීම
+    try {
+      const uploadResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const uploadResult = await uploadResponse.json();
+      if (uploadResult.success) {
+        imageUrl = uploadResult.url; // ස්ථිරවම සේව් වුණු පින්තූරයේ ලිපිනය
+      }
+    } catch (err) {
+      console.error("📸 Media Upload Error: ", err);
+    }
+  }
+
+  // 2. පින්තූර ලිපිනයත් සමඟ මුළු පෝස්ට් එකම Supabase Cloud එකට ලින්ක් කිරීම
+  try {
+    const response = await fetch('/api/posts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, content, image_url: imageUrl })
+    });
+    const result = await response.json();
+    if (result.success) {
+      console.log("✅ Post Synced Eternally with Global Cloud Vault!");
+      location.reload(); // පිටුව ස්වයංක්‍රීයව අලුත් කිරීම
+    }
+  } catch (err) {
+    console.error("❌ Post Sync Error: ", err);
+  }
+}
