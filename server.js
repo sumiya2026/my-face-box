@@ -269,3 +269,25 @@ if (!fs.existsSync(uploadDir)){
     fs.mkdirSync(uploadDir, { recursive: true });
     console.log("✅ ස්ථිර මතක ෆෝල්ඩරය සාර්ථකව සක්‍රීය කළා වස්තු!");
 }
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+const fs = require('fs');
+
+// 📁 Render ස්ථිර මතක තැටිය තුළට ප්‍රධාන ඩේටාබේස් ෆයිල් එක ආරක්ෂිතව ලින්ක් කිරීම
+const persistentDbPath = '/opt/render/project/src/uploads/myface_database.db';
+const localSourcePath = '/storage/emulated/0/myface_database.db';
+
+// ෆයිල් එක ස්ථිර මතක තැටියේ නැත්නම් මුලින්ම එතැනට කොපි කර ගැනීම
+if (!fs.existsSync(persistentDbPath) && fs.existsSync(localSourcePath)) {
+    fs.copyFileSync(localSourcePath, persistentDbPath);
+    console.log("⚙️ ප්‍රධාන ඩේටාබේස් එක ස්ථිර මතක තැටියට සාර්ථකව පිටපත් කළා වස්තු!");
+}
+
+// 🌍 සර්වර් එකේ සියලුම API Routes මේ ප්‍රධාන ෆයිල් එකට සම්බන්ධ කිරීම
+const db = new sqlite3.Database(persistentDbPath, (err) => {
+    if (err) {
+        console.error('❌ Database Connection Error: ', err.message);
+    } else {
+        console.log('🚀 MYFAECBOX සාර්ථකව ප්‍රධාන myface_database.db එකට ලින්ක් වුණා වස්තු!');
+    }
+});
