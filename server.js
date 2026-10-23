@@ -177,3 +177,33 @@ pool.connect((err, client, release) => {
   console.log('🚀 MYFAECBOX සාර්ථකව ජාත්‍යන්තර Supabase Cloud Vault එකට ලින්ක් වුණා වස්තු!');
   release();
 });
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: "postgresql://postgres:FY%3Fk%21XyUf9f%25NNQ@db.tqnhcqwgfoandnbyeqvs.supabase.co:6543/postgres?sslmode=require",
+});
+
+// 🌍 ජාත්‍යන්තර ග්‍රාහකයින්ගේ දත්ත සඳහා Tables සෑදීමේ ස්මාර්ට් ලොජික් එක
+const createTables = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS global_posts (
+        id SERIAL PRIMARY KEY,
+        username TEXT,
+        content TEXT,
+        image_url TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+      CREATE TABLE IF NOT EXISTS global_stories (
+        id SERIAL PRIMARY KEY,
+        username TEXT,
+        media_url TEXT,
+        media_type TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log("✅ MYFAECBOX Cloud Tables Created Successfully!");
+  } catch (err) {
+    console.error("❌ Table Creation Error: ", err);
+  }
+};
+createTables();
