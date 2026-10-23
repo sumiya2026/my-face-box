@@ -260,3 +260,12 @@ app.get('/api/stories', async (req, res) => {
     res.status(500).json({ error: "Cloud Story Load Error" });
   }
 });
+const fs = require('fs');
+const path = require('path');
+
+// 📁 පින්තූර මැකෙන්නේ නැති ස්ථිර මතක ෆෝල්ඩරය ස්වයංක්‍රීයව සෑදීමේ එන්ජිම
+const uploadDir = '/opt/render/project/src/uploads';
+if (!fs.existsSync(uploadDir)){
+    fs.mkdirSync(uploadDir, { recursive: true });
+    console.log("✅ ස්ථිර මතක ෆෝල්ඩරය සාර්ථකව සක්‍රීය කළා වස්තු!");
+}
