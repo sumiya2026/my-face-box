@@ -163,3 +163,17 @@ app.listen(PORT, async () => {
 
 
 
+const { Pool } = require('pg');
+
+// 🌍 ජාත්‍යන්තර මට්ටමේ සුපිරි Cloud Storage පද්ධතිය සම්බන්ධ කිරීම
+const pool = new Pool({
+  connectionString: "postgresql://postgres:FY%3Fk%21XyUf9f%25NNQ@db.tqnhcqwgfoandnbyeqvs.supabase.co:6543/postgres?sslmode=require",
+});
+
+pool.connect((err, client, release) => {
+  if (err) {
+    return console.error('❌ Supabase Cloud එකට ලින්ක් වීම අසාර්ථකයි:', err.stack);
+  }
+  console.log('🚀 MYFAECBOX සාර්ථකව ජාත්‍යන්තර Supabase Cloud Vault එකට ලින්ක් වුණා වස්තු!');
+  release();
+});
