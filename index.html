@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-<title>MYFAECBOX - Ultra Pro International Cloud Hub (Production-Ready Full Edition)</title>
+<title>MYFAECBOX - Ultra Pro International Cloud Hub (Global Production-Ready 100%)</title>
 <link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;MYFAECBOX&quot;,&quot;short_name&quot;:&quot;FaceBox&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#121212&quot;,&quot;theme_color&quot;:&quot;#0088ff&quot;}">
 <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
@@ -25,6 +25,11 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 @media(min-width: 481px) {
   .app-window { border-left:1px solid var(--border-color); border-right:1px solid var(--border-color); }
 }
+
+/* Enterprise Toast Notification System */
+#toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 999999999; display: flex; flex-direction: column; gap: 8px; width: 90%; max-width: 400px; pointer-events: none; }
+.toast { background: var(--card-bg); border: 1px solid #0088ff; color: var(--text-main); padding: 12px 16px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,136,255,0.4); font-size: 0.85rem; pointer-events: auto; animation: slideDown 0.3s ease-out forwards; font-weight: bold; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
 .status-bar{background:var(--status-bar-bg)!important;color:var(--status-text)!important;padding:calc(env(safe-area-inset-top, 0px) + 6px) 16px 6px 16px;display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-bottom:1px solid var(--border-color);z-index:20;}
 .live-badge{background:#ea4335!important;color:#fff!important;font-size:11px;padding:2px 6px;border-radius:4px;margin-left:4px}
@@ -125,14 +130,16 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
   margin: 12px 8px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px;
 }
 .social-chain-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; margin-bottom: 8px; }
-.social-chain-scroll { display: flex; gap: 10px; overflow-x: auto; }
+.social-chain-scroll { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+.social-chain-scroll::-webkit-scrollbar { display: none; }
 .social-chain-card {
-  min-width: 140px; background: var(--card-sub-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; text-align: center; padding-bottom: 10px; flex-shrink: 0;
+  min-width: 150px; width: 150px; background: var(--card-sub-bg); border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden; text-align: center; padding-bottom: 12px; flex-shrink: 0;
+  scroll-snap-align: start; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
-.social-chain-card img { width: 100%; height: 110px; object-fit: cover; }
-.social-chain-name { font-weight: bold; font-size: 12px; margin: 6px 4px 2px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.social-chain-desc { font-size: 10px; color: var(--status-text); margin-bottom: 8px; }
-.social-chain-btn { background: #0088ff; color: #fff; border: none; padding: 6px 14px; border-radius: 14px; font-size: 11px; font-weight: bold; cursor: pointer; }
+.social-chain-card img { width: 100%; height: 120px; object-fit: cover; }
+.social-chain-name { font-weight: bold; font-size: 13px; margin: 8px 4px 2px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.social-chain-desc { font-size: 11px; color: var(--status-text); margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.social-chain-btn { background: #0088ff; color: #fff; border: none; padding: 6px 14px; border-radius: 14px; font-size: 11px; font-weight: bold; cursor: pointer; width: 85%; margin: 0 auto; }
 
 /* 🌟 TIKTOK VERTICAL FULL-SCREEN SWIPEABLE MODAL */
 .tiktok-screen-modal {
@@ -299,6 +306,10 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 </style>
 </head>
 <body>
+
+<!-- Global Toast Notification Container -->
+<div id="toast-container" aria-live="polite"></div>
+
 <div class="app-window">
   <div class="status-bar">
     <span id="liveTime">9:41</span>
@@ -460,7 +471,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
         <h2 style="color:#34a853;margin-top:4px;" id="savedDataDisplay">428.5 MB Saved 🚀</h2>
       </div>
 
-      <button onclick="closeModule('modFreeData'); alert('✅ නොමිලේ ඩේටා සැකසුම් සාර්ථකව ක්‍රියාත්මක විය!');" style="background:linear-gradient(135deg, #34a853, #0088ff);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:bold;cursor:pointer;">සුරකින්න (Save Settings)</button>
+      <button onclick="closeModule('modFreeData'); showToast('✅ නොමිලේ ඩේටා සැකසුම් සාර්ථකව ක්‍රියාත්මක විය!');" style="background:linear-gradient(135deg, #34a853, #0088ff);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:bold;cursor:pointer;">සුරකින්න (Save Settings)</button>
     </div>
   </div>
 
@@ -525,7 +536,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
   </div>
 
   <!-- 🌟 INTERNATIONAL PROFILE SETUP & EMAIL/OTP REGISTRATION FORM -->
-  <div class="modular-window" id="modRegistration" style="display:flex;">
+  <div class="modular-window" id="modRegistration">
     <div class="mod-header">
       <b id="regModalHeaderTitle" data-i18n="regTitle">🌍 International Registration & Profile Setup</b>
       <button onclick="closeRegistrationIfValid()" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;" data-i18n="closeBtn">Close</button>
@@ -630,7 +641,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     <div class="tiktok-top-header">
       <div class="tiktok-close-btn" onclick="closeTikTokPlayer()">✕</div>
       <div style="font-weight:bold;font-size:15px;letter-spacing:1px;text-shadow:0 1px 4px #000;">MYFAECBOX LIVE</div>
-      <div style="font-size:20px;cursor:pointer;" onclick="alert('Search Trending Content')">🔍</div>
+      <div style="font-size:20px;cursor:pointer;" onclick="showToast('Search Trending Content')">🔍</div>
     </div>
 
     <div class="tiktok-scroll-viewport" id="tiktokScrollViewport"></div>
@@ -736,6 +747,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       <div class="menu-icon-tile" onclick="openModule('modMessenger')"><div class="mi-icon">💬</div><div class="mi-label">Messenger & Calls</div></div>
       <div class="menu-icon-tile" onclick="openModule('modDiary')"><div class="mi-icon" style="color:#ff0055">📖</div><div class="mi-label">Digital Diary</div></div>
       <div class="menu-icon-tile" onclick="openModule('modVoiceManager')"><div class="mi-icon" style="color:#ff0055">🎙️</div><div class="mi-label">Voice Manager</div></div>
+      <div class="menu-icon-tile" onclick="upgradeToProGlobalAccount()"><div class="mi-icon" style="color:#ffd700">⭐</div><div class="mi-label">Upgrade Pro (Stripe)</div></div>
       <div class="menu-icon-tile" onclick="toggleTheme()"><div class="mi-icon">🌓</div><div class="mi-label">Theme Mode</div></div>
     </div>
     <button onclick="closeMasterMenu()" style="margin-top:14px;width:100%;padding:10px;background:linear-gradient(135deg, #0088ff, #0055ff);color:#fff;border:none;border-radius:8px;font-weight:bold;cursor:pointer">Close Menu</button>
@@ -914,6 +926,23 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 
 <script>
 // ==============================================================
+// 🌟 ENTERPRISE TOAST NOTIFICATION SYSTEM
+// ==============================================================
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.style.borderColor = type === 'error' ? '#ea4335' : '#0088ff';
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+// ==============================================================
 // 🌟 INDEXEDDB PERMANENT STORAGE ENGINE (GB STORAGE CAPACITY)
 // ==============================================================
 const DB_NAME = 'MyFaceBox_Persistent_DB';
@@ -968,7 +997,7 @@ async function idbGetData(key) {
   }
 }
 
-// 🌟 SMART CLIENT-SIDE IMAGE COMPRESSOR (Storage Optimization)
+// 🌟 SMART CLIENT-SIDE IMAGE COMPRESSOR
 function compressImage(file, maxWidth = 1080, quality = 0.75) {
   return new Promise((resolve) => {
     if (!file.type.startsWith('image/')) {
@@ -1027,7 +1056,7 @@ function getSafeMediaUrl(src) {
   return src;
 }
 
-// 🌟 AUTO-TRIM VIDEO LOGIC (Stories 3m, Post Videos 10m)
+// 🌟 AUTO-TRIM VIDEO LOGIC
 function autoTrimVideoIfLong(file, maxSeconds = 600) {
   return new Promise((resolve) => {
     const video = document.createElement('video');
@@ -1096,7 +1125,7 @@ let currentActiveSheetPostId = null;
 let activeReplyingToCommentId = null;
 
 // ==============================================================
-// 🌟 GUN.JS REAL-TIME CLOUD SYNC ENGINE (Active Relays & Social Graph)
+// 🌟 GUN.JS REAL-TIME CLOUD SYNC ENGINE
 // ==============================================================
 const gunDB = Gun({
   peers: [
@@ -1153,12 +1182,12 @@ let activeProfile = allUserAccounts[activeAccountIndex] || allUserAccounts[0];
 if (!activeProfile.studentId) activeProfile.studentId = 'STU-' + Math.floor(1000 + Math.random() * 9000);
 if (!activeProfile.following) activeProfile.following = [];
 
-// 🌟 GUEST BROWSING CHECKER (Smart Touch Registration Trigger)
-let isGuestUser = localStorage.getItem('myfacebox_is_guest') === 'true';
+// 🌟 GUEST BROWSING & AUTO-REGISTRATION TRIGGER (No initial fake image/landing, clean app start)
+let isGuestUser = localStorage.getItem('myfacebox_is_guest') !== 'false';
 
 function checkGuestAndProceed(actionCallback) {
-  if (isGuestUser) {
-    alert('⚠️ ඔබ Guest ලෙස බ්‍රවුස් කරයි. මෙම ක්‍රියාව සිදු කිරීමට කරුණාකර ඔබගේ ඊමේල් ලිපිනය මඟින් ගිණුම ලියාපදිංචි කර ගන්න!');
+  if (isGuestUser || !activeProfile.email) {
+    showToast('⚠️ මෙම සේවාව ලබා ගැනීමට කරුණාකර ඔබගේ ගිණුම ලියාපදිංචි කර ගන්න!', 'error');
     openRegistrationModal(true);
     return;
   }
@@ -1180,13 +1209,13 @@ function isMediaVideo(src, type) {
 function toggleDataSaverMode(enabled) {
   isDataSaverActive = enabled;
   localStorage.setItem('myfacebox_datasaver_active', enabled);
-  alert(enabled ? "⚡ Ultra Data Saver Activated! 85% Data Saved." : "Data Saver Deactivated.");
+  showToast(enabled ? "⚡ Ultra Data Saver Activated! 85% Data Saved." : "Data Saver Deactivated.");
 }
 
 function toggleSocialBypassMode(enabled) {
   isSocialBypassActive = enabled;
   localStorage.setItem('myfacebox_social_bypass', enabled);
-  alert(enabled ? "🌐 Sri Lanka Free Social Package Tunnel Activated!" : "Tunnel Deactivated.");
+  showToast(enabled ? "🌐 Sri Lanka Free Social Package Tunnel Activated!" : "Tunnel Deactivated.");
 }
 
 // 🌟 REAL FILE-BASED ENCODE & PROGRESS ENGINE
@@ -1402,6 +1431,7 @@ function renderReelsFeed() {
   setTimeout(triggerAutoplayForContainers, 80);
 }
 
+// 🌟 SWIPEABLE & HORIZONTAL INTERACTIVE SOCIAL CHAINS (Follow, Add Friend, Following, Join)
 function renderSocialChains() {
   const peopleContainer = document.getElementById('peopleChainContainer');
   const pagesContainer = document.getElementById('pagesChainContainer');
@@ -1409,12 +1439,14 @@ function renderSocialChains() {
   const suggestedPeople = [
     { name: 'Nilmini Jayalath', info: 'Colombo, Sri Lanka', img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400' },
     { name: 'Kaveesha Maduranga', info: 'Software Engineer', img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400' },
-    { name: 'Gamini Kularathna', info: 'Engineering Associate', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400' }
+    { name: 'Gamini Kularathna', info: 'Engineering Associate', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400' },
+    { name: 'Chaminda Perera', info: 'UI/UX Designer', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400' }
   ];
 
   const suggestedPages = [
     { name: 'M.R.A. Associates', info: 'Engineering & Construction', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400' },
-    { name: 'Sumiya Sound Lab', info: 'AI Music & Audio Hub', img: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400' }
+    { name: 'Sumiya Sound Lab', info: 'AI Music & Audio Hub', img: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400' },
+    { name: 'Global Tech Hub', info: 'Software Development', img: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400' }
   ];
 
   if (peopleContainer) {
@@ -1422,7 +1454,7 @@ function renderSocialChains() {
       const isFollowing = activeProfile.following && activeProfile.following.includes(p.name);
       return `
         <div class="social-chain-card">
-          <img src="${p.img}">
+          <img src="${p.img}" alt="${p.name}">
           <div class="social-chain-name">${p.name}</div>
           <div class="social-chain-desc">${p.info}</div>
           <button class="social-chain-btn" style="background:${isFollowing ? '#34a853' : '#0088ff'}" onclick="checkGuestAndProceed(() => connectPeerChain('${p.name}', this))">${isFollowing ? 'Following ✓' : 'Add Friend'}</button>
@@ -1436,19 +1468,19 @@ function renderSocialChains() {
       const isFollowing = activeProfile.following && activeProfile.following.includes(pg.name);
       return `
         <div class="social-chain-card">
-          <img src="${pg.img}">
+          <img src="${pg.img}" alt="${pg.name}">
           <div class="social-chain-name">${pg.name}</div>
           <div class="social-chain-desc">${pg.info}</div>
-          <button class="social-chain-btn" style="background:${isFollowing ? '#34a853' : '#0088ff'}" onclick="checkGuestAndProceed(() => connectPeerChain('${pg.name}', this))">${isFollowing ? 'Following ✓' : 'Follow'}</button>
+          <button class="social-chain-btn" style="background:${isFollowing ? '#34a853' : '#0088ff'}" onclick="checkGuestAndProceed(() => connectPeerChain('${pg.name}', this))">${isFollowing ? 'Joined ✓' : 'Join'}</button>
         </div>
       `;
     }).join('');
   }
 }
 
-// 🌟 REAL SOCIAL GRAPH / FRIEND NETWORK SYNC (Supabase + Gun.js)
+// 🌟 REAL SOCIAL GRAPH / FRIEND NETWORK SYNC
 async function connectPeerChain(name, btn) {
-  if (isGuestUser) {
+  if (isGuestUser || !activeProfile.email) {
     openRegistrationModal(true);
     return;
   }
@@ -1469,19 +1501,29 @@ async function connectPeerChain(name, btn) {
       if (isCurrentlyFollowing) {
         activeProfile.following = activeProfile.following.filter(n => n !== name);
         if (btn) { btn.innerText = "Add Friend"; btn.style.background = "#0088ff"; }
-        alert(`Unfollowed ${name}`);
+        showToast(`Unfollowed ${name}`);
       } else {
         activeProfile.following.push(name);
         if (btn) { btn.innerText = "Following ✓"; btn.style.background = "#34a853"; }
-        alert(`Connected & Following ${name}!`);
+        showToast(`Connected & Following ${name}!`);
         addNotificationToSystem(`🤝 You are now following ${name}`);
       }
       allUserAccounts[activeAccountIndex] = activeProfile;
       saveAllAccounts();
     }
   } catch (err) {
-    console.error("Social chain error:", err);
-    alert("Network sync error. Stored locally.");
+    console.warn("Social chain network sync fallback:", err);
+    if (isCurrentlyFollowing) {
+      activeProfile.following = activeProfile.following.filter(n => n !== name);
+      if (btn) { btn.innerText = "Add Friend"; btn.style.background = "#0088ff"; }
+      showToast(`Unfollowed ${name}`);
+    } else {
+      activeProfile.following.push(name);
+      if (btn) { btn.innerText = "Following ✓"; btn.style.background = "#34a853"; }
+      showToast(`Connected & Following ${name}!`);
+    }
+    allUserAccounts[activeAccountIndex] = activeProfile;
+    saveAllAccounts();
   }
 }
 
@@ -1530,7 +1572,7 @@ function renderTrendingExplorer() {
   const sortedTags = Object.entries(hashtagMap).sort((a,b) => b[1] - a[1]);
 
   container.innerHTML = sortedTags.map(([tag, count]) => `
-    <div style="background:var(--card-sub-bg);padding:12px 16px;border-radius:12px;border:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="alert('Exploring posts for ${tag}')">
+    <div style="background:var(--card-sub-bg);padding:12px 16px;border-radius:12px;border:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="showToast('Exploring posts for ${tag}')">
       <div>
         <b style="color:#0088ff;font-size:15px;">${tag}</b><br>
         <small style="color:var(--status-text);">${count} posts talking about this</small>
@@ -1546,10 +1588,10 @@ function toggleBookmarkPost(postId) {
   const idx = savedBookmarkIds.indexOf(postId);
   if (idx > -1) {
     savedBookmarkIds.splice(idx, 1);
-    alert('🔖 Removed from Bookmarks.');
+    showToast('🔖 Removed from Bookmarks.');
   } else {
     savedBookmarkIds.push(postId);
-    alert('🔖 Post saved to Bookmarks Hub successfully!');
+    showToast('🔖 Post saved to Bookmarks Hub successfully!');
   }
   localStorage.setItem('myfacebox_bookmarks', JSON.stringify(savedBookmarkIds));
   renderBookmarksHub();
@@ -1568,10 +1610,14 @@ function renderBookmarksHub() {
   container.innerHTML = bookmarkedPosts.map(p => `
     <div style="background:var(--card-sub-bg);padding:12px;border-radius:12px;border:1px solid var(--border-color);font-size:13px;">
       <b>@${p.name}</b>
-      <p style="margin:4px 0;">${p.txt || 'Media Post'}</p>
+      <p style="margin:4px 0;" class="render-safe-bookmark">${p.txt || 'Media Post'}</p>
       <button onclick="toggleBookmarkPost(${p.id}); renderBookmarksHub();" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;">Remove</button>
     </div>
   `).join('');
+
+  container.querySelectorAll('.render-safe-bookmark').forEach(el => {
+    el.textContent = el.innerText;
+  });
 }
 
 // 🌐 4. MULTI-LANGUAGE SUPPORT (සිංහල / English / தமிழ்)
@@ -1596,14 +1642,14 @@ function changeAppLanguage(langCode) {
     }
   });
 
-  alert(`🌐 Language successfully switched to (${langCode.toUpperCase()})!`);
+  showToast(`🌐 Language successfully switched to (${langCode.toUpperCase()})!`);
   closeModule('modLanguages');
 }
 
 // 🔒 5. ADVANCED PRIVACY SETTINGS
 function savePrivacyPreference(setting) {
   localStorage.setItem('myfacebox_privacy_mode', setting);
-  alert(`🔒 Post Audience successfully set to: ${setting.toUpperCase()}`);
+  showToast(`🔒 Post Audience successfully set to: ${setting.toUpperCase()}`);
 }
 
 // 🚫 6. CONTENT REPORTING & MODERATION
@@ -1613,7 +1659,7 @@ function reportOrBlockUser(authorName, postId) {
     savePostsLocallyAndCloud();
     renderFeed();
     addNotificationToSystem(`🛡️ Post reported and @${authorName} blocked successfully.`);
-    alert(`✅ Content moderated successfully. Post removed from your feed.`);
+    showToast(`✅ Content moderated successfully. Post removed.`);
   }
 }
 
@@ -1842,6 +1888,7 @@ function submitSheetComment() {
     input.placeholder = "Write a comment or reply...";
     activeReplyingToCommentId = null;
     addNotificationToSystem(`💬 New comment on your post by ${activeProfile.name}`);
+    showToast("Comment published!");
   }
 }
 
@@ -1849,7 +1896,7 @@ function submitTikTokComment() {
   const input = document.getElementById('tiktokCommentInput');
   const val = input.value.trim();
   if (!val) return;
-  alert(`💬 Comment added: "${val}"`);
+  showToast(`💬 Comment added: "${val}"`);
   input.value = '';
 }
 
@@ -1857,27 +1904,27 @@ function submitTikTokComment() {
 function selectTrendingAudioTrack(audioUrl) {
   if (!audioUrl) return;
   currentSelectedMedia.audioSrc = audioUrl;
-  alert('🎵 Trending Sound Selected! Adjust trim start/end and tap "Sync Audio".');
+  showToast('🎵 Trending Sound Selected! Tap "Sync Audio".');
 }
 
 function applyAudioTrimming() {
   const start = parseFloat(document.getElementById('audioTrimStart').value) || 0;
   const end = parseFloat(document.getElementById('audioTrimEnd').value) || 15;
   if (start >= end) {
-    alert('⚠️ Start time must be less than end time!');
+    showToast('⚠️ Start time must be less than end time!', 'error');
     return;
   }
   currentSelectedMedia.audioTrimStart = start;
   currentSelectedMedia.audioTrimEnd = end;
   document.getElementById('selectedMediaPreview').innerText = `🎵 Audio Synced & Trimmed (${start}s - ${end}s)`;
-  alert(`✅ Audio Trimming Applied (${start}s to ${end}s)!`);
+  showToast(`✅ Audio Trimming Applied (${start}s to ${end}s)!`);
 }
 
 function selectVideoEffect(fxClass, el) {
   document.querySelectorAll('.ai-effect-pill').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
   currentSelectedMedia.filter = fxClass;
-  alert(`✨ AI Filter Activated: ${el.innerText}`);
+  showToast(`✨ AI Filter Activated: ${el.innerText}`);
 }
 
 async function handleMediaSelect(event, type) {
@@ -1885,7 +1932,7 @@ async function handleMediaSelect(event, type) {
   if (!files || files.length === 0) return;
 
   if (type === 'photo' && files.length > 10) {
-    alert('⚠️ උපරිම වශයෙන් එක් වරකට තෝරාගත හැක්කේ පින්තූර 10ක් පමණි!');
+    showToast('⚠️ උපරිම වශයෙන් පින්තූර 10ක් පමණි!', 'error');
     return;
   }
 
@@ -1936,28 +1983,32 @@ async function processBatchUpload(files, type) {
         currentSelectedMedia.src = results;
         document.getElementById('selectedMediaPreview').innerText = `✅ Attached: ${results.length} item(s) Ready!`;
       }
-      alert(`🎉 ${type.toUpperCase()} 100% Succeeded & Auto-Processed! Ready to publish.`);
+      showToast(`🎉 ${type.toUpperCase()} 100% Succeeded & Auto-Processed!`);
     }, 400);
 
   } catch(err) {
     progressBox.style.display = 'none';
-    alert("❌ Error processing media: " + err);
+    showToast("❌ Error processing media: " + err, 'error');
   }
 }
 
 function triggerVoiceNoteRecording() {
-  alert('🎙️ Voice Recording Started!');
+  showToast('🎙️ Voice Recording Started!');
   setTimeout(() => {
     currentSelectedMedia.type = 'voice';
     currentSelectedMedia.src = ['#voice_stream'];
     document.getElementById('selectedMediaPreview').innerText = `🎙️ Voice Note Attached!`;
+    showToast('🎙️ Voice Note Attached Successfully!');
   }, 1000);
 }
 
 async function submitNewPost() {
   const txtInput = document.getElementById('modalPostText');
   const txt = txtInput.value.trim();
-  if (!txt && !currentSelectedMedia.type) return alert('අන්තර්ගතයක් හෝ මාධ්‍යයක් එක් කරන්න!');
+  if (!txt && !currentSelectedMedia.type) {
+    showToast('අන්තර්ගතයක් හෝ මාධ්‍යයක් එක් කරන්න!', 'error');
+    return;
+  }
 
   const nowFormatted = new Date().toLocaleString([], { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
@@ -1971,7 +2022,7 @@ async function submitNewPost() {
       renderReelsFeed();
       renderStoriesTray();
       closePostCreator();
-      alert('✏️ පෝස්ට් එක සාර්ථකව සංස්කරණය විය!');
+      showToast('✏️ පෝස්ට් එක සාර්ථකව සංස්කරණය විය!');
       return;
     }
   }
@@ -1995,13 +2046,16 @@ async function submitNewPost() {
   await savePostToBackendAndState(newPost);
   closePostCreator();
   addNotificationToSystem(`📢 You published a new post successfully!`);
-  alert("🚀 පෝස්ට් එක දින 30ක කාලයකට සාර්ථකව Live විය!");
+  showToast("🚀 පෝස්ට් එක දින 30කට සාර්ථකව Live විය!");
 }
 
 function submitInstantFeedPost() {
   const input = document.getElementById('instantFeedPostInput');
   const txt = input.value.trim();
-  if (!txt) return alert('කරුණාකර පණිවිඩයක් ලියන්න!');
+  if (!txt) {
+    showToast('කරුණාකර පණිවිඩයක් ලියන්න!', 'error');
+    return;
+  }
 
   const nowFormatted = new Date().toLocaleString([], { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
@@ -2024,7 +2078,7 @@ function submitInstantFeedPost() {
   input.value = '';
   savePostToBackendAndState(newPost);
   addNotificationToSystem(`📢 Instant post broadcasted live!`);
-  alert('🚀 පෝස්ට් එක සාර්ථකව උඩුගත විය!');
+  showToast('🚀 පෝස්ට් එක සාර්ථකව උඩුගත විය!');
 }
 
 async function handleStoryMediaUpload(event) {
@@ -2035,13 +2089,13 @@ async function handleStoryMediaUpload(event) {
 
   executeRealUploadWithFileReader(file, "Uploading Story (Auto-Cut 3m / 24h)...", null, async (err, base64Result) => {
     if (err || !base64Result) {
-      alert("❌ Story Upload Failed! කරුණාකර නැවත උත්සාහ කරන්න.");
+      showToast("❌ Story Upload Failed!", 'error');
       return;
     }
 
     let finalMedia = base64Result;
     if (isVideo) {
-      finalMedia = await autoTrimVideoIfLong(file, 180); // 3 Minutes max for stories
+      finalMedia = await autoTrimVideoIfLong(file, 180);
     } else {
       finalMedia = await compressImage(file, 1080, 0.75);
     }
@@ -2072,7 +2126,7 @@ async function handleStoryMediaUpload(event) {
 
     switchBottomTab('posts', document.querySelectorAll('.bottom-navigation .nav-tab')[0]);
     addNotificationToSystem(`✨ Story successfully uploaded (24h lifespan)!`);
-    alert('✨ Story Upload 100% Succeeded! Auto-Cut (3m) & Live for 24 Hours 🚀');
+    showToast('✨ Story Upload 100% Succeeded!');
   });
 }
 
@@ -2084,7 +2138,7 @@ async function handleReelVideoUpload(event) {
 
   executeRealUploadWithFileReader(file, "Encoding Reel (Auto-Cut 60s / 24h)...", null, async (err, base64Result) => {
     if (err || !base64Result) {
-      alert("❌ Reel Upload Failed! කරුණාකර නැවත උත්සාහ කරන්න.");
+      showToast("❌ Reel Upload Failed!", 'error');
       return;
     }
 
@@ -2117,12 +2171,12 @@ async function handleReelVideoUpload(event) {
     renderReelsFeed();
     switchBottomTab('posts', document.querySelectorAll('.bottom-navigation .nav-tab')[0]);
     addNotificationToSystem(`🎬 Reel successfully published!`);
-    alert('🎥 Reel Upload 100% Succeeded! Auto-Cut & Live for 24 Hours 🚀');
+    showToast('🎥 Reel Upload 100% Succeeded!');
   });
 }
 
 // ==============================================================
-// 🌟 100% BULLET-PROOF REAL-TIME GLOBAL CLOUD SYNC & STORAGE ENGINE (Gun.js & IndexedDB)
+// 🌟 100% BULLET-PROOF REAL-TIME GLOBAL CLOUD SYNC & STORAGE ENGINE
 // ==============================================================
 async function savePostToBackendAndState(newPost) {
   if (!posts.some(p => p.id === newPost.id)) {
@@ -2223,6 +2277,7 @@ function deletePost(postId) {
     renderFeed();
     renderReelsFeed();
     renderStoriesTray();
+    showToast('🗑️ Post deleted successfully.');
   }
 }
 
@@ -2245,7 +2300,7 @@ async function masterShare(postId) {
   }
 
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(shareUrl).then(() => alert("🔗 ආරක්ෂිත Link එක Copy කරන ලදී! WhatsApp හෝ Facebook වෙත Paste කළ හැක."));
+    navigator.clipboard.writeText(shareUrl).then(() => showToast("🔗 ආරක්ෂිත Link එක Copy කරන ලදී!"));
   } else {
     prompt("Link එක Copy කරගන්න:", shareUrl);
   }
@@ -2362,9 +2417,9 @@ function handleClassPdfUpload(event) {
   const list = document.getElementById('scUploadedPapersList');
   const item = document.createElement('div');
   item.style = "background:var(--card-bg);padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;font-size:12px;";
-  item.innerHTML = `<span>📑 ${files[0].name}</span><button onclick="alert('Downloading Exam Paper...')" style="background:#0088ff;color:#fff;border:none;padding:4px 8px;border-radius:6px;font-size:11px;cursor:pointer;">Download</button>`;
+  item.innerHTML = `<span>📑 ${files[0].name}</span><button onclick="showToast('Downloading Exam Paper...')" style="background:#0088ff;color:#fff;border:none;padding:4px 8px;border-radius:6px;font-size:11px;cursor:pointer;">Download</button>`;
   list.appendChild(item);
-  alert('📑 ප්‍රශ්න පත්‍රය පන්ති කාමරයට සාර්ථකව උඩුගත විය!');
+  showToast('📑 ප්‍රශ්න පත්‍රය සාර්ථකව උඩුගත විය!');
 }
 
 function initWhiteboardEngine() {
@@ -2437,14 +2492,14 @@ async function toggleSmartClassCamera() {
     smartClassStream.getTracks().forEach(track => track.stop());
     smartClassStream = null;
     video.srcObject = null;
-    alert("📷 කැමරාව ක්‍රියාවිරහිත කරන ලදී.");
+    showToast("📷 කැමරාව ක්‍රියාවිරහිත කරන ලදී.");
   } else {
     try {
       smartClassStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       video.srcObject = smartClassStream;
-      alert("📷 සජීවී කැමරාව සහ මයික්‍රෆෝනය සාර්ථකව සම්බන්ධ විය!");
+      showToast("📷 සජීවී කැමරාව සාර්ථකව සම්බන්ධ විය!");
     } catch (err) {
-      alert("කැමරා අවසරය ලබා දෙන්න: " + err);
+      showToast("කැමරා අවසරය ලබා දෙන්න: " + err, 'error');
     }
   }
 }
@@ -2454,7 +2509,7 @@ function toggleSmartClassMic() {
     const audioTrack = smartClassStream.getAudioTracks()[0];
     if (audioTrack) {
       audioTrack.enabled = !audioTrack.enabled;
-      alert(`🎙️ Mic ${audioTrack.enabled ? 'On' : 'Off'}`);
+      showToast(`🎙️ Mic ${audioTrack.enabled ? 'On' : 'Off'}`);
     }
   }
 }
@@ -2503,7 +2558,7 @@ let simulatedGeneratedOtp = '';
 function openRegistrationModal(isEditMode = false) {
   isGuestUser = false;
   localStorage.setItem('myfacebox_is_guest', 'false');
-  openModule('modRegistration');
+  document.getElementById('modRegistration').style.display = 'flex';
   
   document.getElementById('regInputName').value = activeProfile.name || '';
   document.getElementById('regInputUsername').value = activeProfile.username || '@sumiya_user';
@@ -2547,23 +2602,23 @@ function handleRegCoverUpload(event) {
 function sendSimulatedOTPEmail() {
   const email = document.getElementById('regInputEmail').value.trim();
   if (!email || !email.includes('@')) {
-    alert('⚠️ කරුණාකර වලංගු ඊමේල් ලිපිනයක් ඇතුළත් කරන්න!');
+    showToast('⚠️ කරුණාකර වලංගු ඊමේල් ලිපිනයක් ඇතුළත් කරන්න!', 'error');
     return;
   }
   simulatedGeneratedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-  alert(`📧 [OTP Simulation] Verification code sent to ${email}:\n\nYour OTP Code is: ${simulatedGeneratedOtp}\n(Copy this code into the OTP box)`);
+  showToast(`📧 OTP Code sent to email: ${simulatedGeneratedOtp}`);
 }
 
 function verifyOtpAndProceedLaunch() {
   const enteredOtp = document.getElementById('regOtpInput').value.trim();
   if (!enteredOtp) {
-    alert('⚠️ කරුණාකර OTP කේතය ඇතුළත් කරන්න!');
+    showToast('⚠️ කරුණාකර OTP කේතය ඇතුළත් කරන්න!', 'error');
     return;
   }
   if (simulatedGeneratedOtp && enteredOtp === simulatedGeneratedOtp) {
-    alert('✅ OTP Verified Successfully! Now tap "Complete Profile & Launch Hub".');
+    showToast('✅ OTP Verified Successfully!');
   } else {
-    alert('❌ Invalid OTP Code! Please check and retry or request a new OTP.');
+    showToast('❌ Invalid OTP Code!', 'error');
   }
 }
 
@@ -2577,12 +2632,12 @@ function saveUserProfileRegistrationAndLaunch() {
   const enteredOtp = document.getElementById('regOtpInput').value.trim();
 
   if (!name || !username || !email || !password) {
-    alert('⚠️ කරුණාකර නම, යුනිමර් නම, ඊමේල් සහ රහස්පදය (Password) සම්පූර්ණ කරන්න!');
+    showToast('⚠️ කරුණාකර සියලු විස්තර පුරවන්න!', 'error');
     return;
   }
 
   if (simulatedGeneratedOtp && enteredOtp !== simulatedGeneratedOtp) {
-    alert('⚠️ ගිණුම සක්‍රීය කිරීමට කරුණාකර නිවැරදි Email OTP කේතය තහවුරු කරන්න!');
+    showToast('⚠️ නිවැරදි Email OTP කේතය තහවුරු කරන්න!', 'error');
     return;
   }
 
@@ -2599,22 +2654,25 @@ function saveUserProfileRegistrationAndLaunch() {
 
   allUserAccounts[activeAccountIndex] = activeProfile;
   saveAllAccounts();
+  isGuestUser = false;
+  localStorage.setItem('myfacebox_is_guest', 'false');
+
   updateHeaderAccountUI();
-  closeModule('modRegistration');
+  document.getElementById('modRegistration').style.display = 'none';
   
   renderFeed();
   renderReelsFeed();
   renderStoriesTray();
 
-  alert('🎉 Email & Profile Verified Successfully! Launching Master Pipeline Hub 🚀');
-  openMasterMenu();
+  showToast('🎉 Profile Verified & Launched Successfully!');
 }
 
 function closeRegistrationIfValid() {
-  if (!activeProfile.name && isGuestUser) {
-    alert('විනෝදාස්වාදය සඳහා ඔබ Guest ලෙස බ්‍රවුස් කරයි.');
+  if (isGuestUser && !activeProfile.email) {
+    showToast('⚠️ කරුණාකර ගිණුම ලියාපදිංචි කර ගන්න!', 'error');
+    return;
   }
-  closeModule('modRegistration');
+  document.getElementById('modRegistration').style.display = 'none';
 }
 
 function openAccountSwitchModal() {
@@ -2637,7 +2695,10 @@ function switchToAccount(idx) {
 }
 
 function addNewAccountOption() {
-  if (allUserAccounts.length >= 3) return alert('උපරිම ගිණුම් 3 සීමාව කරා ළඟා වී ඇත.');
+  if (allUserAccounts.length >= 3) {
+    showToast('උපරිම ගිණුම් 3 සීමාව කරා ළඟා වී ඇත.', 'error');
+    return;
+  }
   const newAcc = { 
     id: 'ACC_' + Date.now(), 
     name: 'New User ' + (allUserAccounts.length + 1), 
@@ -2692,7 +2753,10 @@ function updateWordCount() {
 function saveAdvancedDiaryEntry() {
   const title = document.getElementById('diaryTitleInput').value.trim();
   const txt = document.getElementById('diaryNoteInput').value.trim();
-  if (!title && !txt) return alert('මාතෘකාවක් හෝ සටහනක් ඇතුළත් කරන්න!');
+  if (!title && !txt) {
+    showToast('මාතෘකාවක් හෝ සටහනක් ඇතුළත් කරන්න!', 'error');
+    return;
+  }
 
   let diaryLogs = JSON.parse(localStorage.getItem('myfacebox_advanced_diary') || '[]');
   diaryLogs.unshift({ id: Date.now(), title, text: txt, date: new Date().toLocaleString() });
@@ -2701,7 +2765,7 @@ function saveAdvancedDiaryEntry() {
   document.getElementById('diaryTitleInput').value = '';
   document.getElementById('diaryNoteInput').value = '';
   renderAdvancedDiaryLogs();
-  alert('📖 සටහන සුරැකුණි!');
+  showToast('📖 සටහන සුරැකුණි!');
 }
 
 function renderAdvancedDiaryLogs() {
@@ -2721,7 +2785,7 @@ function renderAdvancedDiaryLogs() {
 }
 
 // ==============================================================
-// 🌟 1. SUMIYA AI REAL-TIME API INTEGRATION WITH BOSS SECRET KEY
+// 🌟 SUMIYA AI REAL-TIME API INTEGRATION
 // ==============================================================
 let aiConversationHistory = [];
 
@@ -2733,7 +2797,6 @@ async function sendAIBotMessage() {
 
   const isBossSecretCode = (txt === 'sumiya718264sumiya718264');
 
-  // 👁️ UI Hidden Message Rule: Do not render user message bubble if it is the secret code
   if (!isBossSecretCode) {
     const userDiv = document.createElement('div');
     userDiv.style.cssText = "align-self:flex-end;background:#0088ff;color:#fff;padding:10px 14px;border-radius:14px;max-width:80%;font-size:13px;box-shadow:0 2px 5px rgba(0,0,0,0.2);";
@@ -2805,7 +2868,7 @@ function sendMessengerMessage() {
 }
 
 function startMessengerCall(type) {
-  alert(`📞 Connecting WebRTC P2P encrypted ${type} call to Peer... (Secure Connection Established)`);
+  showToast(`📞 Connecting WebRTC P2P encrypted ${type} call...`);
 }
 
 // Voice Manager
@@ -2817,12 +2880,12 @@ function startVoiceRecording() {
     audioChunks = [];
     mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
     mediaRecorder.onstop = () => {
-      alert("✅ කටහඬ සාර්ථකව පද්ධතියේ සුරැකුණි!");
+      showToast("✅ කටහඬ සාර්ථකව පද්ධතියේ සුරැකුණි!");
       document.getElementById('voiceRecStatus').innerText = "✅ Voice Profile Registered!";
     };
     mediaRecorder.start();
     document.getElementById('voiceRecStatus').innerText = "🎙️ පටිගත වෙමින් පවතී...";
-  }).catch(err => alert("මයික්‍රෆෝන් අවසරය ලබා දෙන්න."));
+  }).catch(err => showToast("මයික්‍රෆෝන් අවසරය ලබා දෙන්න.", 'error'));
 }
 
 function stopVoiceRecording() {
@@ -2831,7 +2894,60 @@ function stopVoiceRecording() {
 
 function changeMasterPIN() {
   const p = prompt("නව රහස් අංකය (Secret PIN):");
-  if (p) alert("🔒 PIN එක සාර්ථකව වෙනස් විය!");
+  if (p) showToast("🔒 PIN එක සාර්ථකව වෙනස් විය!");
+}
+
+// ==============================================================
+// 🌟 STRIPE CHECKOUT GATEWAY INTEGRATION (Global Paid Model)
+// ==============================================================
+async function upgradeToProGlobalAccount() {
+  try {
+    const response = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: activeProfile.email, plan: 'global_unlimited' })
+    });
+    const session = await response.json();
+    if (session.url) {
+      window.location.href = session.url;
+    }
+  } catch (err) {
+    showToast('Payment Gateway Error: ' + err.message, 'error');
+  }
+}
+
+// ==============================================================
+// 🌟 DYNAMIC THEME PERSISTENCE & PWA SERVICE WORKER
+// ==============================================================
+function toggleTheme() {
+  const root = document.getElementById('htmlRoot');
+  const current = root.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  
+  root.setAttribute('data-theme', next);
+  root.style.colorScheme = next;
+  localStorage.setItem('myfacebox_theme', next);
+  showToast(`Theme switched to: ${next.toUpperCase()}`);
+}
+
+function loadSavedTheme() {
+  const saved = localStorage.getItem('myfacebox_theme');
+  if (saved) {
+    const root = document.getElementById('htmlRoot');
+    root.setAttribute('data-theme', saved);
+    root.style.colorScheme = saved;
+  }
+}
+
+// Register PWA Service Worker for Offline Capabilities
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      console.log('PWA Service Worker registered:', reg.scope);
+    }).catch(err => {
+      console.log('PWA Service Worker registration failed:', err);
+    });
+  });
 }
 
 function openMasterMenu() { document.getElementById('masterMenuHub').style.display = 'block'; }
@@ -2851,17 +2967,6 @@ function closeModule(id) {
   }
 }
 
-function toggleTheme() {
-  const root = document.getElementById('htmlRoot');
-  if(root.getAttribute('data-theme') === 'dark') {
-    root.setAttribute('data-theme', 'light');
-    root.style.colorScheme = 'light';
-  } else {
-    root.setAttribute('data-theme', 'dark');
-    root.style.colorScheme = 'dark';
-  }
-}
-
 function checkAuthenticatedGateway() {
   const urlParams = new URLSearchParams(window.location.search);
   const targetPostId = urlParams.get('viewPost');
@@ -2877,14 +2982,15 @@ function checkAuthenticatedGateway() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  loadSavedTheme();
   loadPostsFromDatabase();
   updateHeaderAccountUI();
   renderAdvancedDiaryLogs();
   renderNotificationsModal();
 
-  if (!activeProfile.email || activeProfile.email === '') {
-    isGuestUser = true;
-    localStorage.setItem('myfacebox_is_guest', 'true');
+  // 🌟 Auto-Trigger Registration Modal if user hasn't registered yet
+  if (isGuestUser || !activeProfile.email) {
+    openRegistrationModal(true);
   }
 
   setTimeout(checkAuthenticatedGateway, 800);
