@@ -1,0 +1,12 @@
+{
+  "icons": [
+    {
+      "id": "messenger",
+      "name": "Messenger",
+      "icon": "💬",
+      "path": "icons/messenger/messenger.js",
+      "enabled": true
+    }
+  ],
+  "version": "1.0.0"
+}
