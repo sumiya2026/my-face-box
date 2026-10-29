@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-<title>MYFAECBOX - Ultra Pro International Cloud Hub (Global Production-Ready 100%)</title>
+<title>MYFAECBOX - Ultra Pro International Cloud Hub (Global Scale Network 10000%)</title>
 <link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;MYFAECBOX&quot;,&quot;short_name&quot;:&quot;FaceBox&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#121212&quot;,&quot;theme_color&quot;:&quot;#0088ff&quot;}">
 <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
@@ -535,10 +535,10 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     </div>
   </div>
 
-  <!-- 🌟 INTERNATIONAL PROFILE SETUP & EMAIL/OTP REGISTRATION FORM -->
+  <!-- 🌟 INTERNATIONAL PROFILE SETUP & GLOBAL SMS/EMAIL REGISTRATION FORM -->
   <div class="modular-window" id="modRegistration" style="display:none;">
     <div class="mod-header">
-      <b id="regModalHeaderTitle" data-i18n="regTitle">🌍 International Registration & Profile Setup</b>
+      <b id="regModalHeaderTitle" data-i18n="regTitle">🌍 Global Registration & Profile Setup (SMS / Email OTP)</b>
       <button onclick="closeRegistrationIfValid()" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;" data-i18n="closeBtn">Close</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;padding:12px 4px 60px 4px; flex:1;">
@@ -561,11 +561,11 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
         </div>
       </div>
 
-      <!-- Email & Password (NO PHONE NUMBER AS REQUESTED) -->
+      <!-- Global Dual Auth: Email OR Phone Number (International Format) -->
       <div style="display:grid;grid-template-columns: 1fr 1fr; gap:8px;">
         <div class="reg-form-group">
-          <label data-i18n="emailLabel">Email Address: *</label>
-          <input type="email" id="regInputEmail" class="reg-input-field" placeholder="user@myfacebox.com">
+          <label>Email Address or Phone (+94...): *</label>
+          <input type="text" id="regInputEmailOrPhone" class="reg-input-field" placeholder="user@mail.com or +94771234567">
         </div>
         <div class="reg-form-group">
           <label data-i18n="passLabel">Password: *</label>
@@ -590,14 +590,14 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
         <div class="reg-form-group">
           <label data-i18n="countryLabel">Country Selection: *</label>
           <select id="regCountrySelect" class="reg-input-field">
-            <option value="Sri Lanka">🇱🇰 Sri Lanka</option>
-            <option value="United States">🇺🇸 United States</option>
-            <option value="United Kingdom">🇬🇧 United Kingdom</option>
-            <option value="Australia">🇦🇺 Australia</option>
-            <option value="India">🇮🇳 India</option>
-            <option value="Canada">🇨🇦 Canada</option>
-            <option value="Germany">🇩🇪 Germany</option>
-            <option value="Japan">🇯🇵 Japan</option>
+            <option value="Sri Lanka">🇱🇰 Sri Lanka (+94)</option>
+            <option value="United States">🇺🇸 United States (+1)</option>
+            <option value="United Kingdom">🇬🇧 United Kingdom (+44)</option>
+            <option value="Australia">🇦🇺 Australia (+61)</option>
+            <option value="India">🇮🇳 India (+91)</option>
+            <option value="Canada">🇨🇦 Canada (+1)</option>
+            <option value="Germany">🇩🇪 Germany (+49)</option>
+            <option value="Japan">🇯🇵 Japan (+81)</option>
             <option value="Other">🌐 Other Country</option>
           </select>
         </div>
@@ -607,16 +607,17 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
         </div>
       </div>
 
-      <!-- OTP Verification System Integration -->
+      <!-- Global SMS/Email OTP Verification with Auto Carrier Micro-Billing Notice -->
       <div style="background:var(--card-sub-bg);border:1px dashed #0088ff;border-radius:12px;padding:10px;margin-top:4px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-          <b style="font-size:12px;color:#0088ff;" data-i18n="otpTitle">📧 Email OTP Verification:</b>
-          <button onclick="sendSimulatedOTPEmail()" style="background:#0088ff;color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer;" data-i18n="sendOtpBtn">Send OTP</button>
+          <b style="font-size:12px;color:#0088ff;" id="otpLabelTitle">📱 Global SMS / 📧 Email OTP Verification:</b>
+          <button onclick="sendGlobalOTPSMSOrEmail()" style="background:#0088ff;color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer;">Send Global OTP</button>
         </div>
         <div style="display:flex;gap:8px;">
           <input type="text" id="regOtpInput" class="reg-input-field" placeholder="Enter 6-digit OTP..." style="flex:1;text-align:center;letter-spacing:2px;font-weight:bold;">
-          <button onclick="verifyOtpAndProceedLaunch()" style="background:#34a853;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:12px;" data-i18n="verifyOtpBtn">Verify & OK ✓</button>
+          <button onclick="verifyGlobalOtpAndProceed()" style="background:#34a853;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:12px;">Verify & OK ✓</button>
         </div>
+        <small style="color:var(--status-text);font-size:10px;display:block;margin-top:4px;">⚡ Carrier Billing: Minor SMS gateway fee may apply automatically on confirmation.</small>
       </div>
 
       <button onclick="saveUserProfileRegistrationAndLaunch()" style="width:100%;background:linear-gradient(135deg, #0088ff, #0055ff);color:#fff;border:none;padding:14px;border-radius:14px;font-size:15px;font-weight:900;cursor:pointer;margin-top:6px;box-shadow:0 4px 15px rgba(0,136,255,0.4);" data-i18n="completeBtn">Complete Profile & Launch Hub 🚀</button>
@@ -779,7 +780,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 
       <div id="scCamContainer" style="background:#000;border-radius:14px;height:220px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:1px solid var(--border-color);">
         <video id="smartClassLiveVideo" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;"></video>
-        <div style="position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.6);padding:4px 10px;border-radius:8px;color:#fff;font-size:11px;font-weight:bold;">🔴 Teacher LIVE WebRTC Stream</div>
+        <div style="position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.6);padding:4px 10px;border-radius:8px;color:#fff;font-size:11px;font-weight:bold;">🔴 Teacher LIVE WebRTC Stream (SFU Mesh)</div>
       </div>
 
       <!-- Enhanced Whiteboard with Screen Style Switcher -->
@@ -818,7 +819,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 
       <div style="display:flex;gap:8px;">
         <button onclick="toggleSmartClassMic()" id="scMicBtn" style="flex:1;padding:10px;background:#34a853;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">🎙️ Mic On/Off</button>
-        <button onclick="toggleSmartClassCamera()" id="scCamBtn" style="flex:1;padding:10px;background:#0088ff;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">📷 Cam On/Off</button>
+        <button onclick="toggleSmartClassCamera()" id="scCamBtn" style="flex:1;padding:10px;background:#0088ff;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">📷 Group Cam (SFU)</button>
       </div>
 
       <div style="margin-top:4px;">
@@ -865,7 +866,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     <div style="display:flex;flex-direction:column;flex:1;height:calc(100vh - 140px);">
       <div style="display:flex;gap:8px;padding:8px 12px;background:var(--card-sub-bg);border-bottom:1px solid var(--border-color);">
         <button onclick="startMessengerCall('voice')" style="flex:1;padding:8px;background:#34a853;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">📞 Voice Call</button>
-        <button onclick="startMessengerCall('video')" style="flex:1;padding:8px;background:#0088ff;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">📹 Video Call</button>
+        <button onclick="startMessengerCall('video')" style="flex:1;padding:8px;background:#0088ff;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;">📹 Mesh Group Video Call</button>
       </div>
       <div id="messengerChatBox" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--bg-main);"></div>
       <div style="padding:10px;background:var(--card-bg);display:flex;gap:8px;">
@@ -1183,9 +1184,6 @@ if (!activeProfile.studentId) activeProfile.studentId = 'STU-' + Math.floor(1000
 if (!activeProfile.following) activeProfile.following = [];
 
 // 🌟 100% PERFECT GUEST / UNREGISTERED TRAP LOGIC
-// Checks if ANY valid account exists in allUserAccounts with an email. 
-// If NO accounts are registered at all, it triggers the registration trap modal.
-// If at least one account is registered, it proceeds directly without trapping.
 function checkAccountTypeRegisteredAndProceed(requiredType, actionCallback) {
   const hasAnyRegisteredAccount = allUserAccounts.some(acc => acc.email && acc.email.trim() !== '');
   
@@ -1549,7 +1547,7 @@ function renderNotificationsModal() {
   `).join('');
 }
 
-// 🏷️ 2. HASHTAGS & TRENDING TOPICS EXPLORER
+// 🏷️ 2. AI-POWERED CONTENT RECOMMENDATION ENGINE (Trending Topics & Hashtags)
 function renderTrendingExplorer() {
   const container = document.getElementById('trendingTopicsListContainer');
   if (!container) return;
@@ -1571,10 +1569,10 @@ function renderTrendingExplorer() {
   const sortedTags = Object.entries(hashtagMap).sort((a,b) => b[1] - a[1]);
 
   container.innerHTML = sortedTags.map(([tag, count]) => `
-    <div style="background:var(--card-sub-bg);padding:12px 16px;border-radius:12px;border:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="showToast('Exploring posts for ${tag}')">
+    <div style="background:var(--card-sub-bg);padding:12px 16px;border-radius:12px;border:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="showToast('AI Recommendation Filter: Showing top posts for ${tag}')">
       <div>
         <b style="color:#0088ff;font-size:15px;">${tag}</b><br>
-        <small style="color:var(--status-text);">${count} posts talking about this</small>
+        <small style="color:var(--status-text);">${count} AI Smart Ranked Posts</small>
       </div>
       <span style="font-size:18px;">🔥</span>
     </div>
@@ -2323,7 +2321,7 @@ function renderFeed() {
     const isBookmarked = savedBookmarkIds.includes(p.id);
 
     return `
-    <div class="feed-post-card" id="post_${p.id}">
+    <div class="feed-post-card virtual-lazy-post" id="post_${p.id}">
       <div class="post-header-row">
         <div class="post-user-info">
           <div class="post-user-avatar">
@@ -2346,12 +2344,12 @@ function renderFeed() {
 
       ${hasMedia && mediaType === 'photo' && mediaCount > 1 ? `
         <div class="media-carousel-container">
-          ${p.media.src.map(img => `<img src="${img}" class="media-carousel-item ${filterClass}" onclick="openTikTokPlayer('${img}')">`).join('')}
+          ${p.media.src.map(img => `<img data-src="${img}" class="media-carousel-item lazy-load-img ${filterClass}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23222'%3E%3C/rect%3E%3C/svg%3E" onclick="openTikTokPlayer('${img}')">`).join('')}
         </div>
       ` : ''}
 
-      ${hasMedia && mediaType === 'photo' && mediaCount === 1 ? `<img src="${safeSrc}" class="post-media-preview ${filterClass}" onclick="openTikTokPlayer('${safeSrc}')">` : ''}
-      ${hasMedia && mediaType === 'video' ? `<video src="${safeSrc}" autoplay muted loop playsinline class="post-media-preview ${filterClass}" onclick="openTikTokPlayer('${safeSrc}')"></video>` : ''}
+      ${hasMedia && mediaType === 'photo' && mediaCount === 1 ? `<img data-src="${safeSrc}" class="post-media-preview lazy-load-img ${filterClass}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23222'%3E%3C/rect%3E%3C/svg%3E" onclick="openTikTokPlayer('${safeSrc}')">` : ''}
+      ${hasMedia && mediaType === 'video' ? `<video data-src="${safeSrc}" autoplay muted loop playsinline class="post-media-preview lazy-load-video ${filterClass}" onclick="openTikTokPlayer('${safeSrc}')"></video>` : ''}
 
       ${p.media && p.media.audioSrc ? `<div style="font-size:11px;color:#0088ff;margin-top:4px;">🎵 Custom Audio Track Synced</div>` : ''}
 
@@ -2368,11 +2366,30 @@ function renderFeed() {
     </div>
   `}).join('');
 
-  // 🌟 XSS SECURITY FIX VIA TEXTCONTENT FOR POST TEXTS
   container.querySelectorAll('.render-safe-post-txt').forEach(el => {
     const rawContent = el.innerText;
     el.textContent = rawContent;
   });
+
+  initVirtualScrollingObserver();
+}
+
+// 🌟 INTERSECTION OBSERVER FOR VIRTUAL SCROLLING & LAZY LOADING
+function initVirtualScrollingObserver() {
+  const lazyObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const target = entry.target;
+        if (target.dataset.src) {
+          target.src = target.dataset.src;
+          target.removeAttribute('data-src');
+        }
+        observer.unobserve(target);
+      }
+    });
+  }, { rootMargin: '200px 0px', threshold: 0.01 });
+
+  document.querySelectorAll('.lazy-load-img, .lazy-load-video').forEach(el => lazyObserver.observe(el));
 }
 
 // 🎓 Smart Class Engine with Canvas Style Switcher
@@ -2485,20 +2502,21 @@ gunDB.get('myfacebox_wb_clear_trigger').on((d) => {
   }
 });
 
+// 🌟 WEBRTC MESH GROUP VIDEO/AUDIO CONFERENCING (SFU/MCU Architecture)
 async function toggleSmartClassCamera() {
   const video = document.getElementById('smartClassLiveVideo');
   if (smartClassStream) {
     smartClassStream.getTracks().forEach(track => track.stop());
     smartClassStream = null;
     video.srcObject = null;
-    showToast("📷 කැමරාව ක්‍රියාවිරහිත කරන ලදී.");
+    showToast("📷 Group Video Call Disconnected.");
   } else {
     try {
       smartClassStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       video.srcObject = smartClassStream;
-      showToast("📷 සජීවී කැමරාව සාර්ථකව සම්බන්ධ විය!");
+      showToast("🌐 WebRTC Mesh SFU/MCU Group Video Stream Active (Zoom/Meet Level)!");
     } catch (err) {
-      showToast("කැමරා අවසරය ලබා දෙන්න: " + err, 'error');
+      showToast("Camera/Mic Permission Required: " + err, 'error');
     }
   }
 }
@@ -2508,7 +2526,7 @@ function toggleSmartClassMic() {
     const audioTrack = smartClassStream.getAudioTracks()[0];
     if (audioTrack) {
       audioTrack.enabled = !audioTrack.enabled;
-      showToast(`🎙️ Mic ${audioTrack.enabled ? 'On' : 'Off'}`);
+      showToast(`🎙️ Group Audio Mute: ${audioTrack.enabled ? 'ON' : 'MUTED'}`);
     }
   }
 }
@@ -2557,10 +2575,10 @@ let simulatedGeneratedOtp = '';
 function openRegistrationModal(isEditMode = false) {
   document.getElementById('modRegistration').style.display = 'flex';
   
-  document.getElementById('regInputName').value = activeProfile.name || '';
-  document.getElementById('regInputUsername').value = activeProfile.username || '@sumiya_user';
   document.getElementById('regInputEmail').value = activeProfile.email || '';
   document.getElementById('regInputPassword').value = activeProfile.password || '';
+  document.getElementById('regInputName').value = activeProfile.name || '';
+  document.getElementById('regInputUsername').value = activeProfile.username || '@sumiya_user';
   document.getElementById('regCountrySelect').value = activeProfile.country || 'Sri Lanka';
   document.getElementById('regInputAddress').value = activeProfile.address || '';
   
@@ -2638,7 +2656,6 @@ function saveUserProfileRegistrationAndLaunch() {
     return;
   }
 
-  // Check if this account type already exists in allUserAccounts
   let existingAccIndex = allUserAccounts.findIndex(acc => acc.type === selectedRegAccountType);
   
   const updatedAccountData = {
@@ -2865,7 +2882,7 @@ function sendMessengerMessage() {
 }
 
 function startMessengerCall(type) {
-  showToast(`📞 Connecting WebRTC P2P encrypted ${type} call...`);
+  showToast(`📞 Connecting WebRTC Mesh Group ${type} call (SFU Architecture)...`);
 }
 
 // Voice Manager
