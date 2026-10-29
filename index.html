@@ -298,7 +298,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
 }
 .ai-effect-pill.active { background: #0088ff; color: #fff; border-color: #0088ff; }
 
-/* 🌟 SMART CLASS WHITEBOARD CANVAS STYLES */
+/* 🎓 SMART CLASS WHITEBOARD CANVAS STYLES */
 .board-style-white { background: #ffffff !important; }
 .board-style-dark { background: #18181b !important; }
 .board-style-chalk { background: #1e3a29 !important; }
@@ -363,8 +363,8 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       <div class="status-composer">
         <div class="composer-upper">
           <div class="user-avatar" id="myProfileAvatarContainer" onclick="openRegistrationModal(true)" title="Click to Edit Profile">👤</div>
-          <input id="postInput" placeholder="What's on your mind?" readonly onclick="checkGuestAndProceed(openPostCreator)" style="cursor: pointer;">
-          <button class="post-btn" onclick="checkGuestAndProceed(openPostCreator)" data-i18n="postBtn">Post</button>
+          <input id="postInput" placeholder="What's on your mind?" readonly onclick="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', openPostCreator)" style="cursor: pointer;">
+          <button class="post-btn" onclick="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', openPostCreator)" data-i18n="postBtn">Post</button>
         </div>
       </div>
 
@@ -392,19 +392,19 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
           ⚡ Instant Post Upload Hub (Auto-Cut to Max 10m)
         </div>
         <div style="display: flex; gap: 8px; align-items: center;">
-          <input id="instantFeedPostInput" placeholder="What's on your mind? Type and broadcast live..." style="flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--input-text); outline: none; font-size: 14px;" onfocus="checkGuestAndProceed(() => {})" oninput="broadcastLiveTyping(this.value)" onkeypress="if(event.key==='Enter') checkGuestAndProceed(submitInstantFeedPost)">
-          <button onclick="checkGuestAndProceed(submitInstantFeedPost)" style="background: linear-gradient(135deg, #0088ff, #0055ff); color: #fff; border: none; padding: 10px 18px; border-radius: 18px; font-weight: 800; font-size: 13px; cursor: pointer;">Post 🚀</button>
+          <input id="instantFeedPostInput" placeholder="What's on your mind? Type and broadcast live..." style="flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--input-text); outline: none; font-size: 14px;" onfocus="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', () => {})" oninput="broadcastLiveTyping(this.value)" onkeypress="if(event.key==='Enter') checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', submitInstantFeedPost)">
+          <button onclick="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', submitInstantFeedPost)" style="background: linear-gradient(135deg, #0088ff, #0055ff); color: #fff; border: none; padding: 10px 18px; border-radius: 18px; font-weight: 800; font-size: 13px; cursor: pointer;">Post 🚀</button>
         </div>
         <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: space-around;">
-          <span onclick="checkGuestAndProceed(openPostCreator)" style="font-size: 12px; font-weight: bold; color: #0088ff; cursor: pointer;">📷 Add Photos</span>
-          <span onclick="checkGuestAndProceed(openPostCreator)" style="font-size: 12px; font-weight: bold; color: #ff0055; cursor: pointer;">🎥 Add Video</span>
-          <span onclick="checkGuestAndProceed(openPostCreator)" style="font-size: 12px; font-weight: bold; color: #34a853; cursor: pointer;">🎙️ Voice Note</span>
+          <span onclick="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', openPostCreator)" style="font-size: 12px; font-weight: bold; color: #0088ff; cursor: pointer;">📷 Add Photos</span>
+          <span onclick="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', openPostCreator)" style="font-size: 12px; font-weight: bold; color: #ff0055; cursor: pointer;">🎥 Add Video</span>
+          <span onclick="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', openPostCreator)" style="font-size: 12px; font-weight: bold; color: #34a853; cursor: pointer;">🎙️ Voice Note</span>
         </div>
       </div>
 
       <!-- Social Chain 2: Suggested Pages for You -->
       <div class="social-chain-section">
-        <div class="social-chain-header">
+        <div class="social-header">
           <span>🚩 Suggested Pages for you</span>
           <span style="color:#0088ff;font-size:12px;cursor:pointer;">See All</span>
         </div>
@@ -419,7 +419,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       <div style="padding:16px;">
         <h2 style="color:#0088ff;margin-bottom:10px;">📌 Status & Stories Hub (24h Lifespan - Max 3m)</h2>
         <p style="font-size:13px;color:var(--status-text);margin-bottom:16px;">ඔබේ තත්ත්වය හෝ කථා පුවත මිතුරන් සමඟ බෙදා ගන්න (පැය 24 කින් පසු ස්වයංක්‍රීයව ඉවත් වේ):</p>
-        <button onclick="checkGuestAndProceed(openStoryCreator)" style="width:100%;padding:14px;background:linear-gradient(135deg, #0088ff, #ff0055);color:#fff;border:none;border-radius:14px;font-weight:bold;cursor:pointer;font-size:15px;margin-bottom:20px;" data-i18n="addStoryBtn">+ Add New Status / Story (Auto-Cut 3m)</button>
+        <button onclick="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', openStoryCreator)" style="width:100%;padding:14px;background:linear-gradient(135deg, #0088ff, #ff0055);color:#fff;border:none;border-radius:14px;font-weight:bold;cursor:pointer;font-size:15px;margin-bottom:20px;" data-i18n="addStoryBtn">+ Add New Status / Story (Auto-Cut 3m)</button>
       </div>
     </div>
 
@@ -427,7 +427,7 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     <div id="viewReels" class="app-view-panel">
       <div style="padding:10px 16px;background:var(--card-bg);border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;">
         <b style="color:#0088ff;font-size:15px;">🎥 Reels Explorer (24 Hours Lifespan)</b>
-        <button onclick="checkGuestAndProceed(() => document.getElementById('reelVideoFileInput').click())" style="background:linear-gradient(135deg, #0088ff, #ff0055);color:#fff;border:none;padding:8px 14px;border-radius:16px;font-weight:bold;font-size:13px;cursor:pointer;">+ Create Reel (Auto-Cut 60s)</button>
+        <button onclick="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', () => document.getElementById('reelVideoFileInput').click())" style="background:linear-gradient(135deg, #0088ff, #ff0055);color:#fff;border:none;padding:8px 14px;border-radius:16px;font-weight:bold;font-size:13px;cursor:pointer;">+ Create Reel (Auto-Cut 60s)</button>
       </div>
       <div class="reels-hub-container" id="reelsFeedContainer"></div>
     </div>
@@ -529,14 +529,14 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
       <label style="font-size:13px;font-weight:bold;">Default Post Audience:</label>
       <select id="selectPostAudience" style="padding:12px;border-radius:10px;background:var(--input-bg);color:var(--input-text);border:1px solid var(--border-color);outline:none;" onchange="savePrivacyPreference(this.value)">
         <option value="public">🌐 Public (සැමටම පෙනේ)</option>
-        <option value="friends">👥 Friends Only (මිතුරන්ට පමණි)</option>
+        <option value="friends">Friends Only (මිතුරන්ට පමණි)</option>
         <option value="private">🔒 Private (තාමාට පමණි)</option>
       </select>
     </div>
   </div>
 
   <!-- 🌟 INTERNATIONAL PROFILE SETUP & EMAIL/OTP REGISTRATION FORM -->
-  <div class="modular-window" id="modRegistration">
+  <div class="modular-window" id="modRegistration" style="display:none;">
     <div class="mod-header">
       <b id="regModalHeaderTitle" data-i18n="regTitle">🌍 International Registration & Profile Setup</b>
       <button onclick="closeRegistrationIfValid()" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;" data-i18n="closeBtn">Close</button>
@@ -647,8 +647,8 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     <div class="tiktok-scroll-viewport" id="tiktokScrollViewport"></div>
 
     <div class="tiktok-input-strip">
-      <input type="text" id="tiktokCommentInput" class="tiktok-comment-input" placeholder="Add comment..." onkeypress="if(event.key==='Enter') checkGuestAndProceed(submitTikTokComment)">
-      <span onclick="checkGuestAndProceed(submitTikTokComment)" style="font-size:22px;cursor:pointer;">🚀</span>
+      <input type="text" id="tiktokCommentInput" class="tiktok-comment-input" placeholder="Add comment..." onkeypress="if(event.key==='Enter') checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', submitTikTokComment)">
+      <span onclick="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', submitTikTokComment)" style="font-size:22px;cursor:pointer;">🚀</span>
     </div>
   </div>
 
@@ -660,8 +660,8 @@ html,body{width:100%;height:100%;background:var(--bg-main)!important;color:var(-
     </div>
     <div class="fb-comments-list" id="fbCommentsSheetList"></div>
     <div style="padding:10px 14px;border-top:1px solid var(--border-color);display:flex;gap:8px;">
-      <input type="text" id="fbSheetInputText" placeholder="Write a comment or reply..." style="flex:1;padding:10px 14px;border-radius:20px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);outline:none;font-size:13px;" onfocus="checkGuestAndProceed(() => {})" onkeypress="if(event.key==='Enter') checkGuestAndProceed(submitSheetComment)">
-      <button onclick="checkGuestAndProceed(submitSheetComment)" style="background:#0088ff;color:#fff;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;">Send</button>
+      <input type="text" id="fbSheetInputText" placeholder="Write a comment or reply..." style="flex:1;padding:10px 14px;border-radius:20px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--input-text);outline:none;font-size:13px;" onfocus="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', () => {})" onkeypress="if(event.key==='Enter') checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', submitSheetComment)">
+      <button onclick="checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', submitSheetComment)" style="background:#0088ff;color:#fff;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;">Send</button>
     </div>
   </div>
 
@@ -1150,7 +1150,7 @@ let wbCanvas, wbCtx, isDrawing = false, isEraser = false;
 // TikTok Modal State
 let currentTikTokMediaList = [];
 
-// 🌟 MULTI-ACCOUNT & DUPLICATE PREVENTION RULES
+// 🌟 MULTI-ACCOUNT & DUPLICATE PREVENTION RULES (3 Max: Personal, Business, Creator)
 let allUserAccounts = JSON.parse(localStorage.getItem('myfacebox_multi_accounts') || '[]');
 let activeAccountIndex = parseInt(localStorage.getItem('myfacebox_active_acc_index') || '0');
 
@@ -1182,15 +1182,20 @@ let activeProfile = allUserAccounts[activeAccountIndex] || allUserAccounts[0];
 if (!activeProfile.studentId) activeProfile.studentId = 'STU-' + Math.floor(1000 + Math.random() * 9000);
 if (!activeProfile.following) activeProfile.following = [];
 
-// 🌟 GUEST BROWSING & AUTO-REGISTRATION TRIGGER (No initial fake image/landing, clean app start)
-let isGuestUser = localStorage.getItem('myfacebox_is_guest') !== 'false';
-
-function checkGuestAndProceed(actionCallback) {
-  if (isGuestUser || !activeProfile.email) {
-    showToast('⚠️ මෙම සේවාව ලබා ගැනීමට කරුණාකර ඔබගේ ගිණුම ලියාපදිංචි කර ගන්න!', 'error');
+// 🌟 100% PERFECT GUEST / UNREGISTERED TRAP LOGIC
+// Checks if ANY valid account exists in allUserAccounts with an email. 
+// If NO accounts are registered at all, it triggers the registration trap modal.
+// If at least one account is registered, it proceeds directly without trapping.
+function checkAccountTypeRegisteredAndProceed(requiredType, actionCallback) {
+  const hasAnyRegisteredAccount = allUserAccounts.some(acc => acc.email && acc.email.trim() !== '');
+  
+  if (!hasAnyRegisteredAccount) {
+    showToast(`⚠️ කරුණාකර පළමුව ඔබගේ ගිණුම ලියාපදිංචි කර ගන්න!`, 'error');
+    selectedRegAccountType = requiredType || 'Personal';
     openRegistrationModal(true);
     return;
   }
+  
   actionCallback();
 }
 
@@ -1362,7 +1367,7 @@ function renderStoriesTray() {
   }).join('');
 
   container.innerHTML = `
-    <div class="story-card-item create-story-card-box" onclick="checkGuestAndProceed(openStoryCreator)">
+    <div class="story-card-item create-story-card-box" onclick="checkAccountTypeRegisteredAndProceed('${activeProfile.type || 'Personal'}', openStoryCreator)">
       <img src="${ownerAvatar}" class="create-story-bg-img" alt="Create Story">
       <div class="create-story-plus-circle">+</div>
       <span class="story-card-author-txt" style="color:var(--text-main);text-shadow:none;margin-top:20px;font-size:11px;" data-i18n="createStory">Create story</span>
@@ -1431,7 +1436,6 @@ function renderReelsFeed() {
   setTimeout(triggerAutoplayForContainers, 80);
 }
 
-// 🌟 SWIPEABLE & HORIZONTAL INTERACTIVE SOCIAL CHAINS (Follow, Add Friend, Following, Join)
 function renderSocialChains() {
   const peopleContainer = document.getElementById('peopleChainContainer');
   const pagesContainer = document.getElementById('pagesChainContainer');
@@ -1457,7 +1461,7 @@ function renderSocialChains() {
           <img src="${p.img}" alt="${p.name}">
           <div class="social-chain-name">${p.name}</div>
           <div class="social-chain-desc">${p.info}</div>
-          <button class="social-chain-btn" style="background:${isFollowing ? '#34a853' : '#0088ff'}" onclick="checkGuestAndProceed(() => connectPeerChain('${p.name}', this))">${isFollowing ? 'Following ✓' : 'Add Friend'}</button>
+          <button class="social-chain-btn" style="background:${isFollowing ? '#34a853' : '#0088ff'}" onclick="checkAccountTypeRegisteredAndProceed('Personal', () => connectPeerChain('${p.name}', this))">${isFollowing ? 'Following ✓' : 'Add Friend'}</button>
         </div>
       `;
     }).join('');
@@ -1471,7 +1475,7 @@ function renderSocialChains() {
           <img src="${pg.img}" alt="${pg.name}">
           <div class="social-chain-name">${pg.name}</div>
           <div class="social-chain-desc">${pg.info}</div>
-          <button class="social-chain-btn" style="background:${isFollowing ? '#34a853' : '#0088ff'}" onclick="checkGuestAndProceed(() => connectPeerChain('${pg.name}', this))">${isFollowing ? 'Joined ✓' : 'Join'}</button>
+          <button class="social-chain-btn" style="background:${isFollowing ? '#34a853' : '#0088ff'}" onclick="checkAccountTypeRegisteredAndProceed('Creator', () => connectPeerChain('${pg.name}', this))">${isFollowing ? 'Joined ✓' : 'Join'}</button>
         </div>
       `;
     }).join('');
@@ -1480,11 +1484,6 @@ function renderSocialChains() {
 
 // 🌟 REAL SOCIAL GRAPH / FRIEND NETWORK SYNC
 async function connectPeerChain(name, btn) {
-  if (isGuestUser || !activeProfile.email) {
-    openRegistrationModal(true);
-    return;
-  }
-
   if (!activeProfile.following) activeProfile.following = [];
   const isCurrentlyFollowing = activeProfile.following.includes(name);
 
@@ -1624,7 +1623,7 @@ function renderBookmarksHub() {
 const langTranslations = {
   si: { brandTitle: "MYFAECBOX", createStory: "කථාවක් එක් කරන්න", whatsOnYourMind: "ඔබගේ සිතුවිලි ලියන්න...", postBtn: "ප්‍රකාශ කරන්න", langHeader: "🌍 බහුභාෂා මාරුව", closeBtn: "වසන්න", regTitle: "🌍 ජාත්‍යන්තර ලියාපදිංචිය සහ ගිණුම් සැකසුම", accCategory: "ගිණුම් වර්ගය:", emailLabel: "ඊමේල් ලිපිනය: *", passLabel: "රහස්පදය (Password): *", fullNameLabel: "සම්පූර්ණ නම: *", usernameLabel: "යුනිමර් නම (@username): *", countryLabel: "රට තෝරන්න (Country): *", addressLabel: "ලිපිනය (Address / City): *", otpTitle: "📧 ඊමේල් OTP කේතය තහවුරු කිරීම:", sendOtpBtn: "OTP යවන්න", verifyOtpBtn: "තහවුරු කරන්න ✓", completeBtn: "ගිණුම සක්‍රීය කර ඇප් එකට පිවිසෙන්න 🚀", activeLabel: "සක්‍රීය ගිණුම:" },
   en: { brandTitle: "MYFAECBOX", createStory: "Create story", whatsOnYourMind: "What's on your mind?", postBtn: "Post", langHeader: "🌍 Multi-Language Switcher", closeBtn: "Close", regTitle: "🌍 International Registration & Profile Setup", accCategory: "Account Category:", emailLabel: "Email Address: *", passLabel: "Password: *", fullNameLabel: "Full Name: *", usernameLabel: "Username: *", countryLabel: "Country Selection: *", addressLabel: "Full Street Address / City: *", otpTitle: "📧 Email OTP Verification:", sendOtpBtn: "Send OTP", verifyOtpBtn: "Verify & OK ✓", completeBtn: "Complete Profile & Launch Hub 🚀", activeLabel: "Active:" },
-  ta: { brandTitle: "MYFAECBOX", createStory: "கதை உருவாக்கு", whatsOnYourMind: "உங்கள் மனதில் என்ன இருக்கிறது?", postBtn: "பதிவு", langHeader: "🌍 மொழி மாற்றம்", closeBtn: "மூடு", regTitle: "🌍 சர்வதேச பதிவு மற்றும் சுயவிவர அமைப்பு", accCategory: "கணக்கு வகை:", emailLabel: "மின்னஞ்சல் முகவரி: *", passLabel: "கடவுச்சொல்: *", fullNameLabel: "முழு பெயர்: *", usernameLabel: "பயனர் பெயர்: *", countryLabel: "நாட்டைத் தேர்ந்தெடு: *", addressLabel: "முகவரி / நகரம்: *", otpTitle: "📧 மின்னஞ்சல் OTP சரிபார்ப்பு:", sendOtpBtn: "OTP அனுப்பு", verifyOtpBtn: "சரிபார்க்கவும் ✓", completeBtn: "சுயவிவரத்தை முடித்து தொடங்கு 🚀", activeLabel: "செயலில்:" }
+  ta: { brandTitle: "MYFAECBOX", createStory: "கதை உருவாக்கு", whatsOnYourMind: "உங்கள் மனதில் என்ன இருக்கிறது?", postBtn: "பதிவு", langHeader: "🌍 மொழி மாற்றம்", closeBtn: "மூடு", regTitle: "🌍 சர்வதேச பதிவு மற்றும் சுயவிவர அமைப்பு", accCategory: "கணக்கு வகை:", emailLabel: "மின்னஞ்சல் முகவரி: *", passLabel: "கடவுச்சொல்: *", fullNameLabel: "முழு பெயர்: *", usernameLabel: "பயனர் பெயர்: *", நாட்டுப்பிரிவு: "நாட்டைத் தேர்ந்தெடு: *", addressLabel: "முகவரி / நகரம்: *", otpTitle: "📧 மின்னஞ்சல் OTP சரிபார்ப்பு:", sendOtpBtn: "OTP அனுப்பு", verifyOtpBtn: "சரிபார்க்கவும் ✓", completeBtn: "சுயவிவரத்தை முடித்து தொடங்கு 🚀", activeLabel: "செயலில்:" }
 };
 
 function changeAppLanguage(langCode) {
@@ -1719,9 +1718,9 @@ function buildTikTokViewportItems(selectedSrc) {
       <div class="tiktok-right-action-bar">
         <div class="tiktok-avatar-pill">
           <img src="${activeProfile.avatar || 'https://via.placeholder.com/150'}">
-          <div class="tiktok-follow-plus" onclick="checkGuestAndProceed(() => connectPeerChain('${item.author}'))">+</div>
+          <div class="tiktok-follow-plus" onclick="checkAccountTypeRegisteredAndProceed('${activeProfile.type || 'Personal'}', () => connectPeerChain('${item.author}'))">+</div>
         </div>
-        <div class="tiktok-action-btn" onclick="checkGuestAndProceed(() => { toggleTikTokSlideLike(this); addNotificationToSystem('❤️ Someone liked your reel!'); })">
+        <div class="tiktok-action-btn" onclick="checkAccountTypeRegisteredAndProceed('${activeProfile.type || 'Personal'}', () => { toggleTikTokSlideLike(this); addNotificationToSystem('❤️ Someone liked your reel!'); })">
           <span class="tiktok-action-icon">🤍</span>
           <span class="tiktok-action-label">2.4K</span>
         </div>
@@ -1729,7 +1728,7 @@ function buildTikTokViewportItems(selectedSrc) {
           <span class="tiktok-action-icon">💬</span>
           <span class="tiktok-action-label">326</span>
         </div>
-        <div class="tiktok-action-btn" onclick="toggleBookmarkPost(${item.id})">
+        <div class="tiktok-action-btn" onclick="checkAccountTypeRegisteredAndProceed('${activeProfile.type || 'Personal'}', () => toggleBookmarkPost(${item.id}))">
           <span class="tiktok-action-icon">🔖</span>
           <span class="tiktok-action-label">Save</span>
         </div>
@@ -1824,7 +1823,7 @@ function renderCommentsSheetList() {
           <b style="color:#0088ff;">${c.author}</b> <small style="color:var(--status-text);">${c.time || 'Just now'}</small>
         </div>
         <p style="margin-top:4px;font-size:13px;" class="render-safe-txt">${c.txt}</p>
-        <span onclick="checkGuestAndProceed(() => setReplyTarget(${c.id}, '${c.author}'))" style="font-size:11px;color:#0088ff;cursor:pointer;font-weight:bold;display:inline-block;margin-top:4px;">↩️ Reply</span>
+        <span onclick="checkAccountTypeRegisteredAndProceed('${activeProfile.type || 'Personal'}', () => setReplyTarget(${c.id}, '${c.author}'))" style="font-size:11px;color:#0088ff;cursor:pointer;font-weight:bold;display:inline-block;margin-top:4px;">↩️ Reply</span>
 
         ${c.replies && c.replies.length > 0 ? c.replies.map(r => `
           <div class="nested-reply-box">
@@ -1917,7 +1916,7 @@ function applyAudioTrimming() {
   currentSelectedMedia.audioTrimStart = start;
   currentSelectedMedia.audioTrimEnd = end;
   document.getElementById('selectedMediaPreview').innerText = `🎵 Audio Synced & Trimmed (${start}s - ${end}s)`;
-  showToast(`✅ Audio Trimming Applied (${start}s to ${end}s)!`);
+  showToast(`✅ Audio Trimming Applied (${start}s - ${end}s)!`);
 }
 
 function selectVideoEffect(fxClass, el) {
@@ -2244,41 +2243,41 @@ async function loadPostsFromDatabase() {
 }
 
 function reactPost(postId, type) {
-  if (isGuestUser) {
-    openRegistrationModal(true);
-    return;
-  }
-  const p = posts.find(item => item.id === postId);
-  if (p) {
-    if (type === 'like') {
+  checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', () => {
+    const p = posts.find(item => item.id === postId);
+    if (p) {
       p.likes++;
       addNotificationToSystem(`❤️ Someone liked your post!`);
+      savePostsLocallyAndCloud();
+      renderFeed();
     }
-    savePostsLocallyAndCloud();
-    renderFeed();
-  }
+  });
 }
 
 function editPost(postId) {
-  const p = posts.find(item => item.id === postId);
-  if (!p) return;
-  editingPostId = postId;
-  document.getElementById('postModalTitle').innerText = '✏️ Edit Post';
-  document.getElementById('postSubmitActionBtn').innerText = '💾 Save Changes';
-  document.getElementById('modalPostText').value = p.txt || '';
-  currentSelectedMedia = p.media || { type: null, src: [], title: '', audioSrc: null, filter: 'none' };
-  document.getElementById('fullScreenPostModal').style.display = 'flex';
+  checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', () => {
+    const p = posts.find(item => item.id === postId);
+    if (!p) return;
+    editingPostId = postId;
+    document.getElementById('postModalTitle').innerText = '✏️ Edit Post';
+    document.getElementById('postSubmitActionBtn').innerText = '💾 Save Changes';
+    document.getElementById('modalPostText').value = p.txt || '';
+    currentSelectedMedia = p.media || { type: null, src: [], title: '', audioSrc: null, filter: 'none' };
+    document.getElementById('fullScreenPostModal').style.display = 'flex';
+  });
 }
 
 function deletePost(postId) {
-  if (confirm('🗑️ මෙම පෝස්ටුව මකා දමන්න අවශ්‍යමද?')) {
-    posts = posts.filter(p => p.id !== postId);
-    savePostsLocallyAndCloud();
-    renderFeed();
-    renderReelsFeed();
-    renderStoriesTray();
-    showToast('🗑️ Post deleted successfully.');
-  }
+  checkAccountTypeRegisteredAndProceed(activeProfile.type || 'Personal', () => {
+    if (confirm('🗑️ මෙම පෝස්ටුව මකා දමන්න අවශ්‍යමද?')) {
+      posts = posts.filter(p => p.id !== postId);
+      savePostsLocallyAndCloud();
+      renderFeed();
+      renderReelsFeed();
+      renderStoriesTray();
+      showToast('🗑️ Post deleted successfully.');
+    }
+  });
 }
 
 async function masterShare(postId) {
@@ -2336,7 +2335,7 @@ function renderFeed() {
           </div>
         </div>
         <div class="post-actions-right">
-          <span class="post-menu-btn" onclick="checkGuestAndProceed(() => toggleBookmarkPost(${p.id}))" title="Bookmark Post">${isBookmarked ? '🔖' : '📑'}</span>
+          <span class="post-menu-btn" onclick="checkAccountTypeRegisteredAndProceed('${p.accountType || 'Personal'}', () => toggleBookmarkPost(${p.id}))" title="Bookmark Post">${isBookmarked ? '🔖' : '📑'}</span>
           <span class="post-menu-btn" onclick="reportOrBlockUser('${p.name}', ${p.id})" title="Report / Block">🚫</span>
           <span class="post-menu-btn" onclick="editPost(${p.id})" title="Edit Post">✏️</span>
           <span class="post-menu-btn" onclick="deletePost(${p.id})" title="Delete Post">🗑️</span>
@@ -2363,7 +2362,7 @@ function renderFeed() {
 
       <div class="action-bar">
         <div class="action-btn" onclick="reactPost(${p.id}, 'like')">👍 Like</div>
-        <div class="action-btn" onclick="checkGuestAndProceed(() => openCommentsSheet(${p.id}))">💬 Comment</div>
+        <div class="action-btn" onclick="checkAccountTypeRegisteredAndProceed('${p.accountType || 'Personal'}', () => openCommentsSheet(${p.id}))">💬 Comment</div>
         <div class="action-btn" onclick="masterShare(${p.id})">🔗 Share</div>
       </div>
     </div>
@@ -2556,8 +2555,6 @@ gunDB.get('myfacebox_live_keystroke_feed').on((data) => {
 let simulatedGeneratedOtp = '';
 
 function openRegistrationModal(isEditMode = false) {
-  isGuestUser = false;
-  localStorage.setItem('myfacebox_is_guest', 'false');
   document.getElementById('modRegistration').style.display = 'flex';
   
   document.getElementById('regInputName').value = activeProfile.name || '';
@@ -2641,22 +2638,40 @@ function saveUserProfileRegistrationAndLaunch() {
     return;
   }
 
-  activeProfile.name = name;
-  activeProfile.username = username;
-  activeProfile.email = email;
-  activeProfile.password = password;
-  activeProfile.country = country;
-  activeProfile.address = address;
-  activeProfile.type = selectedRegAccountType;
-  if (tempAvatarBase64) activeProfile.avatar = tempAvatarBase64;
-  if (tempCoverBase64) activeProfile.coverPhoto = tempCoverBase64;
-  activeProfile.ownerSignature = 'Primary Verified Owner: ' + activeProfile.name;
+  // Check if this account type already exists in allUserAccounts
+  let existingAccIndex = allUserAccounts.findIndex(acc => acc.type === selectedRegAccountType);
+  
+  const updatedAccountData = {
+    id: existingAccIndex > -1 ? allUserAccounts[existingAccIndex].id : ('ACC_' + Date.now()),
+    name: name,
+    username: username,
+    email: email,
+    password: password,
+    country: country,
+    address: address,
+    type: selectedRegAccountType,
+    avatar: tempAvatarBase64 || (existingAccIndex > -1 ? allUserAccounts[existingAccIndex].avatar : ''),
+    coverPhoto: tempCoverBase64 || (existingAccIndex > -1 ? allUserAccounts[existingAccIndex].coverPhoto : ''),
+    storyMedia: existingAccIndex > -1 ? allUserAccounts[existingAccIndex].storyMedia : '',
+    studentId: existingAccIndex > -1 ? allUserAccounts[existingAccIndex].studentId : ('STU-' + Math.floor(1000 + Math.random() * 9000)),
+    ownerSignature: 'Primary Verified Owner: ' + name,
+    following: existingAccIndex > -1 ? allUserAccounts[existingAccIndex].following : []
+  };
 
-  allUserAccounts[activeAccountIndex] = activeProfile;
+  if (existingAccIndex > -1) {
+    allUserAccounts[existingAccIndex] = updatedAccountData;
+    activeAccountIndex = existingAccIndex;
+  } else {
+    if (allUserAccounts.length >= 3) {
+      allUserAccounts[2] = updatedAccountData;
+      activeAccountIndex = 2;
+    } else {
+      allUserAccounts.push(updatedAccountData);
+      activeAccountIndex = allUserAccounts.length - 1;
+    }
+  }
+
   saveAllAccounts();
-  isGuestUser = false;
-  localStorage.setItem('myfacebox_is_guest', 'false');
-
   updateHeaderAccountUI();
   document.getElementById('modRegistration').style.display = 'none';
   
@@ -2664,14 +2679,10 @@ function saveUserProfileRegistrationAndLaunch() {
   renderReelsFeed();
   renderStoriesTray();
 
-  showToast('🎉 Profile Verified & Launched Successfully!');
+  showToast(`🎉 '${selectedRegAccountType}' Profile Verified & Saved Successfully!`);
 }
 
 function closeRegistrationIfValid() {
-  if (isGuestUser && !activeProfile.email) {
-    showToast('⚠️ කරුණාකර ගිණුම ලියාපදිංචි කර ගන්න!', 'error');
-    return;
-  }
   document.getElementById('modRegistration').style.display = 'none';
 }
 
@@ -2680,7 +2691,7 @@ function openAccountSwitchModal() {
   const container = document.getElementById('accountListContainer');
   container.innerHTML = allUserAccounts.map((acc, idx) => `
     <div style="background:var(--card-sub-bg);padding:10px;border-radius:12px;border:1px solid ${idx === activeAccountIndex ? '#0088ff' : 'var(--border-color)'};display:flex;justify-content:space-between;align-items:center;">
-      <div><b>${acc.name}</b> (${acc.type || 'Personal'})</div>
+      <div><b>${acc.name}</b> (${acc.type || 'Personal'}) - <small style="color:#aaa;">${acc.email || 'Not Registered'}</small></div>
       ${idx === activeAccountIndex ? '<span style="color:#34a853;font-weight:bold;">Active</span>' : `<button onclick="switchToAccount(${idx})" style="padding:6px 12px;background:#0088ff;color:#fff;border:none;border-radius:8px;">Switch</button>`}
     </div>
   `).join('');
@@ -2692,6 +2703,7 @@ function switchToAccount(idx) {
   updateHeaderAccountUI();
   closeModule('modAccountSwitch');
   renderFeed();
+  showToast(`Switched to account: ${activeProfile.name}`);
 }
 
 function addNewAccountOption() {
@@ -2699,21 +2711,6 @@ function addNewAccountOption() {
     showToast('උපරිම ගිණුම් 3 සීමාව කරා ළඟා වී ඇත.', 'error');
     return;
   }
-  const newAcc = { 
-    id: 'ACC_' + Date.now(), 
-    name: 'New User ' + (allUserAccounts.length + 1), 
-    username: '@user_' + Date.now().toString().slice(-4),
-    email: '', 
-    type: 'Personal', 
-    avatar: '',
-    studentId: 'STU-' + Math.floor(1000 + Math.random() * 9000),
-    following: []
-  };
-  allUserAccounts.push(newAcc);
-  saveAllAccounts();
-  activeAccountIndex = allUserAccounts.length - 1;
-  updateHeaderAccountUI();
-  closeModule('modAccountSwitch');
   openRegistrationModal(true);
 }
 
@@ -2943,7 +2940,7 @@ function loadSavedTheme() {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').then(reg => {
-      console.log('PWA Service Worker registered:', reg.scope);
+      console.log('PWA Service Worker unregistered/registered:', reg.scope);
     }).catch(err => {
       console.log('PWA Service Worker registration failed:', err);
     });
@@ -2962,7 +2959,7 @@ function openModule(id) {
 function closeModule(id) { 
   document.getElementById(id).style.display = 'none'; 
   if (id === 'modZoom' && smartClassStream) {
-    smartClassStream.getTracks().forEach(t => t.stop());
+    smartClassStream.getTracks().forEach(track => track.stop());
     smartClassStream = null;
   }
 }
@@ -2987,11 +2984,6 @@ document.addEventListener("DOMContentLoaded", () => {
   updateHeaderAccountUI();
   renderAdvancedDiaryLogs();
   renderNotificationsModal();
-
-  // 🌟 Auto-Trigger Registration Modal if user hasn't registered yet
-  if (isGuestUser || !activeProfile.email) {
-    openRegistrationModal(true);
-  }
 
   setTimeout(checkAuthenticatedGateway, 800);
 });
