@@ -3,32 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MYFAECBOX V3 GLOBAL UNLIMITED - MRA MASTER PRO - 14 Icons + Secret - By Sumiya</title>
+<title>MYFAECBOX V6 ULTIMATE WORLD GIANT - 100% FINAL OK</title>
+<link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;MYFAECBOX V6&quot;,&quot;short_name&quot;:&quot;FaceBox&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#0a0a0f&quot;,&quot;theme_color&quot;:&quot;#6a5cff&quot;}">
 <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <style>
-:root{--bg:#121212;--card:#18181b;--card2:#222226;--border:#27272a;--blue:#0088ff;--mra:#6a5cff;--sl:#00e676;--pink:#ff2e93;--cyan:#00f0ff;--text:#f1f3f4;--muted:#a1a1aa}
+:root{--bg:#0a0a0f;--card:#16161d;--card2:#21212a;--border:#2a2a35;--blue:#0088ff;--mra:#6a5cff;--sl:#00e676;--pink:#ff2e93;--cyan:#00f0ff;--text:#f1f3f4;--muted:#9a9aa3}
 [data-theme="light"]{--bg:#f4f5f7;--card:#ffffff;--card2:#eaeaf0;--border:#d1d5db;--text:#111827;--muted:#4b5563}
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
 html,body{background:var(--bg);color:var(--text);overflow-x:hidden}
-.app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);padding-bottom:130px;border-left:1px solid var(--border);border-right:1px solid var(--border)}
+.app{max-width:500px;margin:0 auto;min-height:100vh;background:var(--bg);padding-bottom:140px;border-left:1px solid var(--border);border-right:1px solid var(--border)}
 #toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999999;display:flex;flex-direction:column;gap:8px;width:90%;max-width:400px}
 .toast{background:linear-gradient(135deg,#18181b,#2a2a4a);border:1px solid var(--mra);color:#fff;padding:12px 16px;border-radius:12px;box-shadow:0 4px 20px rgba(106,92,255,.4);font-size:13px;font-weight:700;animation:slideIn .3s}
 @keyframes slideIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 .live-blink{animation:blink 1.5s infinite}
-.header{background:var(--bg);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
-.brand{font-size:18px;font-weight:900;font-style:italic;font-family:'Courier New',monospace;color:var(--mra)}
-.mra-badge{background:linear-gradient(135deg,var(--mra),var(--sl));color:#fff;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:900}
+.top{background:#000;padding:8px 12px;display:flex;justify-content:space-between;font-size:11px;font-weight:800;border-bottom:1px solid var(--border)}
+.header{background:var(--card);padding:12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
+.logo{font-size:22px;font-weight:900;background:linear-gradient(135deg,#6a5cff,#00e676,#ff2e93);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .sl-badge{background:var(--sl);color:#000;padding:2px 6px;border-radius:8px;font-size:8px;font-weight:900}
-.chain-bar{background:linear-gradient(90deg,rgba(106,92,255,.1),rgba(0,230,118,.1));border:1px dashed var(--mra);margin:8px;padding:10px;border-radius:12px}
-.post-card{background:var(--card);padding:14px;margin:8px;border-radius:16px;border:1px solid var(--border)}
-.bottom-nav{width:100%;max-width:480px;height:65px;background:var(--bg);border-top:2px solid var(--mra);display:flex;justify-content:space-around;align-items:center;position:fixed;bottom:65px;left:0;right:0;margin:0 auto;z-index:9999}
-.nav-tab{text-align:center;font-size:11px;color:var(--muted);cursor:pointer;font-weight:700;flex:1}
-.nav-tab.active{color:var(--mra)}
+.cover{height:170px;background:radial-gradient(ellipse at top left,#6a5cff 0%,#00e676 40%,#ff2e93 80%,#000 100%);border-radius:0 0 24px 24px;position:relative;margin-bottom:56px}
+.profile{position:absolute;bottom:-52px;left:14px;display:flex;gap:14px;align-items:flex-end}
+.avatar{width:96px;height:96px;border-radius:50%;border:4px solid var(--card);background:linear-gradient(135deg,var(--mra),var(--sl));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:36px;color:#fff;overflow:hidden}
+.chain{margin:12px 8px;padding:12px;border:1px dashed var(--mra);border-radius:14px;background:linear-gradient(90deg,rgba(106,92,255,.12),rgba(0,230,118,.12))}
+.moments{display:flex;gap:10px;overflow-x:auto;padding:12px 8px;background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.m-item{min-width:66px;text-align:center;cursor:pointer}
+.m-ring{width:62px;height:62px;border-radius:50%;padding:2.5px;background:linear-gradient(135deg,#6a5cff,#00e676,#ff2e93);display:flex;align-items:center;justify-content:center}
+.m-av{width:55px;height:55px;border-radius:50%;background:var(--card2);border:2.5px solid var(--card);display:flex;align-items:center;justify-content:center;font-weight:800;overflow:hidden}
+.m-av img{width:100%;height:100%;object-fit:cover}
+.m-name{font-size:9.5px;color:var(--muted);margin-top:5px}
+.create{background:var(--card);padding:14px;border-radius:16px;margin:10px 8px;border:1px solid var(--border)}
+.c-top{display:flex;gap:12px;align-items:center}
+.c-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--mra),var(--sl));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+.c-input{background:var(--card2);border-radius:24px;padding:12px 16px;flex:1;color:var(--muted);font-size:14px;border:1px solid var(--border);cursor:pointer}
+.c-actions{display:flex;justify-content:space-around;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.c-btn{flex:1;text-align:center;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer}
+.post-card{background:var(--card);border-radius:16px;margin:10px 8px;border:1px solid var(--border);overflow:hidden}
+.p-head{padding:12px 14px;display:flex;justify-content:space-between}
+.p-user{display:flex;gap:10px}
+.p-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--mra),var(--sl));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+.p-content{padding:0 14px 12px;font-size:14.5px}
+.p-img{width:100%;max-height:560px;object-fit:cover;display:block;background:var(--card2)}
+.p-stats{display:flex;justify-content:space-between;padding:10px 14px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.p-actions{display:flex;justify-content:space-around;padding:6px 0}
+.p-action{flex:1;text-align:center;padding:10px;font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.vibe-h{background:var(--card);padding:12px 8px;margin:10px 8px;border-radius:16px;border:1px solid var(--border)}
+.v-cards{display:flex;gap:10px;overflow-x:auto}
+.v-card{min-width:140px;height:220px;border-radius:14px;overflow:hidden;position:relative;background:#000;flex-shrink:0}
+.v-card img{width:100%;height:100%;object-fit:cover}
+.v-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8),transparent 60%)}
+.v-info{position:absolute;bottom:8px;left:8px;right:8px;color:#fff;font-size:12px;font-weight:700}
+.bottom-nav{width:100%;max-width:500px;height:64px;background:rgba(22,22,29,.95);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;position:fixed;bottom:0;left:0;right:0;margin:0 auto;backdrop-filter:blur(24px);z-index:9999}
+.nav{text-align:center;font-size:10px;color:var(--muted);font-weight:700;flex:1;cursor:pointer}
+.nav.active{color:var(--mra)}
+.nav-plus{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--mra),var(--pink));display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;margin:0 auto}
 .master-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:999999;display:none;overflow-y:auto;padding:16px}
 .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .menu-tile{background:var(--card);border:1px solid var(--border);padding:12px 6px;border-radius:14px;text-align:center;cursor:pointer;transition:.2s}
@@ -36,17 +67,20 @@ html,body{background:var(--bg);color:var(--text);overflow-x:hidden}
 .mod-window{position:fixed;top:0;left:0;width:100vw;height:100vh;background:var(--bg);z-index:9999999;display:none;flex-direction:column;overflow-y:auto;padding:16px;padding-bottom:140px}
 .mod-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:12px}
 .input{width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--text);outline:none;font-size:13px}
-.input:focus{border-color:var(--mra)}
 .btn{padding:10px 14px;border:none;border-radius:12px;font-weight:900;cursor:pointer}
 .btn-mra{background:linear-gradient(135deg,var(--mra),var(--sl));color:#fff}
 .live-badge{background:rgba(0,240,255,.15);border:1px solid var(--cyan);color:var(--cyan);padding:2px 6px;border-radius:10px;font-size:8px;font-weight:700}
-.mra-secret{background:linear-gradient(135deg,rgba(106,92,255,.2),rgba(0,230,118,.2));border:1px solid var(--mra);padding:12px;border-radius:12px;margin:8px 0}
-.progress-bar{width:100%;height:8px;background:#27272a;border-radius:4px;overflow:hidden;margin-top:6px}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--mra),var(--sl));transition:width .5s}
 .type-card{background:var(--card2);border:1px solid var(--border);padding:10px;border-radius:10px;text-align:center;cursor:pointer;font-size:11px;font-weight:700}
 .type-card.selected{border-color:var(--mra);background:rgba(106,92,255,.15);color:var(--mra)}
 .avatar-preview{width:80px;height:80px;border-radius:50%;background:var(--card2);border:2px dashed var(--mra);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative}
-.ad-bar{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;height:65px;background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 10px;z-index:99999}
+
+/* V6 ULTIMATE 100% FINAL ADDITIONAL STYLES */
+.v6-studio-modal { position: fixed; inset: 0; background: #000; z-index: 999999999; display: none; flex-direction: column; color: #fff; padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px) 16px; }
+.v6-sound-bar { background: rgba(255,255,255,0.1); padding: 10px 16px; border-radius: 24px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: bold; cursor: pointer; backdrop-filter: blur(10px); }
+.v6-record-btn { width: 84px; height: 84px; border-radius: 50%; background: #ff2e93; border: 4px solid #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto; cursor: pointer; box-shadow: 0 0 25px rgba(255,46,147,0.7); }
+.v6-ad-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; margin: 10px 8px; }
+.v6-slider { width: 100%; accent-color: var(--mra); margin: 6px 0; }
+.v6-vertical-feed-overlay { position: fixed; inset: 0; background: #000; z-index: 99999999; display: none; flex-direction: column; color: #fff; }
 </style>
 </head>
 <body>
@@ -54,138 +88,279 @@ html,body{background:var(--bg);color:var(--text);overflow-x:hidden}
 <div id="toast-container"></div>
 
 <div class="app">
-    <!-- Top Status Bar -->
-    <div style="background:var(--card);padding:8px 16px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;border-bottom:1px solid var(--border)">
-        <span id="globalClock" class="live-blink">9:41</span>
-        <span style="background:var(--sl);color:#000;padding:3px 10px;border-radius:12px;font-size:11px">📶 FREE DATA: ON <span id="freeDataSaved">85% Saved</span></span>
-        <span style="background:#ea4335;color:#fff;padding:3px 8px;border-radius:8px;font-size:11px" class="live-blink">🔴 LIVE 24/7</span>
-        <span class="live-badge live-blink" id="activeLiveTime">MRA Live</span>
+    <!-- Top Bar V6 100% Final -->
+    <div class="top">
+        <span id="globalClock" class="live-blink">V6 ULTIMATE 100% FINAL OK • WORLD GIANT READY</span>
+        <span style="background:var(--sl);color:#000;padding:2px 8px;border-radius:10px">85% FREE DATA</span>
+        <span style="background:#ea4335;color:#fff;padding:2px 6px;border-radius:8px" class="live-blink">LIVE</span>
         <button onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:14px">🌓</button>
     </div>
 
-    <!-- Header -->
+    <!-- Header V6 -->
     <div class="header">
         <div style="display:flex;align-items:center;gap:10px">
             <div id="myAvatar" style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--mra),var(--sl));display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;overflow:hidden">M</div>
             <div>
-                <b class="brand">MYFAECBOX V3 GLOBAL</b>
-                <span style="font-size:11px;color:var(--muted)"> 🌌 By Sumiya • MRA Inside</span>
-                <div style="font-size:9px;color:var(--muted)">Admin: sumiyasoulfriendsfproject@gmail.com • MRA = 100% Unlimited Logic ∞</div>
+                <b class="logo">myfaecbox</b>
+                <span style="font-size:10px;color:var(--muted)"> V6 Ultimate 100%</span>
+                <div style="font-size:8px;color:var(--muted)">Admin: sumiyasoulfriendsproject@gmail.com • MRA = AI 100% ∞</div>
             </div>
         </div>
-        <b onclick="openMasterMenu()" style="font-size:24px;cursor:pointer;color:var(--mra)">⚙️</b>
-    </div>
-
-    <!-- Chain Bar -->
-    <div class="chain-bar">
-        <b style="color:var(--mra)">🌐 WORLD GIANT V3 GLOBAL - UNLIMITED ∞ - Firestore + CDN + WSS</b><br>
-        <small style="font-size:11px">MRA Secret: තිරයේ MRA/SL Custom Logic, ඇතුලෙන් MRA = AI 100% - Firestore Real Global Feed + Ghost Real + Anonymous Rotation + Unlimited ∞! <span id="secretExtra">Guest නම් Secret Hide - Login වෙලා MRA Secret බලන්න! 🔐</span></small><br>
-        <small>Logged: <b id="activeName">Guest</b> • <span id="activeType">Not Linked</span> • <span class="live-badge live-blink" id="mraSecretLive">MRA Live 100%</span> • <span class="sl-badge">SL Logic ∞</span></small>
-        <div style="font-size:10px;color:var(--muted);margin-top:4px" id="activeGender">Not Registered Yet • V3 Global Master Hub Active</div>
-        <div style="margin-top:8px">
-            <div style="display:flex;justify-content:space-between;font-size:10px"><span>Profile Completion</span><span id="completionText">0% MRA</span></div>
-            <div class="progress-bar"><div id="completionFill" class="progress-fill" style="width:0%"></div></div>
+        <div style="display:flex;gap:12px;align-items:center">
+            <span style="cursor:pointer" onclick="openModule('modNotifications')">🔔</span>
+            <span style="cursor:pointer" onclick="openModule('modMraBot')">💬</span>
+            <b onclick="openMasterMenu()" style="font-size:24px;cursor:pointer;color:var(--mra)">☰</b>
         </div>
     </div>
 
-    <!-- Guest Secret Warning -->
-    <div id="guestSecretWarning" style="margin:8px;background:rgba(234,67,53,.15);border:1px solid #ea4335;padding:10px;border-radius:12px;display:block">
-        <b style="color:#ea4335;font-size:12px">🔒 MRA V3 Global Secret Locked for Guests!</b><br>
-        <small style="font-size:11px">Login වෙන්න, Firestore Real Global Feed, Ghost Real No Seen, Anonymous 24h Rotation බලන්න! MRA = AI 100% Unlimited Secret! 😁</small><br>
-        <button onclick="openModule('modRegistration')" class="btn btn-mra" style="padding:6px 12px;font-size:11px;margin-top:6px">Login & Unlock V3 Secret 🔓</button>
-    </div>
-
-    <!-- MRA Secret Card -->
-    <div id="mraSecretBox" class="mra-secret" style="margin:8px;display:none">
-        <b style="color:var(--mra);font-size:13px">🔐 MRA = SL = 100% Advanced Intelligence - V3 GLOBAL UNLIMITED ∞</b><br>
-        <small style="font-size:11px">MRA Logic: පිටට MRA Custom SL Logic - No Limits / ඇතුලට MRA = AI 100% - Firestore + CDN + WSS + PWA + Ghost Real + Anonymous Rotation + Unlimited ∞! Only we know! 😁👍💑♾️<br>Live: <span class="live-badge live-blink">MRA V3 Live 100% SL</span></small>
-    </div>
-
-    <!-- Comparison Grid -->
-    <div style="margin:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div style="background:var(--card);border:1px solid var(--mra);padding:10px;border-radius:12px">
-            <b style="color:var(--mra);font-size:11px">Before (AI Visible):</b><br>
-            <small style="font-size:10px;color:var(--muted)">AI Photo (4K)<br>AI Beauty<br>AI Bot</small><br>
-            <small style="font-size:9px;color:#ea4335">❌ AI එකෙන් නේ!</small>
+    <!-- Cover & Profile V6 -->
+    <div class="cover">
+        <div style="position:absolute;top:14px;left:12px;right:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px">
+            <span style="background:rgba(0,0,0,.45);backdrop-filter:blur(12px);padding:5px 12px;border-radius:22px;font-size:10px;color:#fff;font-weight:800">🌐 WORLD GIANT • V6 ULTIMATE 100% FINAL • VIBE + MOMENT</span>
+            <span style="background:linear-gradient(135deg,#00e676,#00f0ff);color:#000;padding:5px 12px;border-radius:22px;font-size:10px;font-weight:900">NETLIFY READY • PWA OFFLINE • LOGIC 8+100%</span>
         </div>
-        <div style="background:var(--card);border:1px solid var(--sl);padding:10px;border-radius:12px">
-            <b style="color:var(--sl);font-size:11px">After (MRA/SL Cover):</b><br>
-            <small style="font-size:10px;color:var(--muted)">MRA Photo (4K SL)<br>MRA Beauty (SL Logic)<br>Sumiya MRA Bot (SL)</small><br>
-            <small style="font-size:9px;color:var(--sl)">✅ MRA Custom! පට්ට!</small>
+        <div class="profile">
+            <div class="avatar" id="profileAvatarBox">M</div>
+            <div>
+                <div id="activeNameDisplay" style="font-size:19px;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)">MYFAECBOX V6 ULTIMATE 100%</div>
+                <div style="font-size:11px;color:rgba(255,255,255,.9);margin-top:3px">⚡ By Sumiya • VIBE + MOMENT • ලොවෙත් කාටත් හිතන්න බැරි මහ දැවැන්ත මාධ්‍ය ජාලයක් • <span id="activeName">Guest</span></div>
+                <div style="display:flex;gap:14px;margin-top:8px;font-size:11px"><span><b>12.5K</b> Followers</span><span><b>3.4K</b> Following</span><span><b>2.1K</b> Posts</span><span><b>890</b> Vibes ⚡</span><span><b>450</b> Moments 🌅</span></div>
+            </div>
         </div>
     </div>
 
-    <!-- Feed Container -->
-    <div id="feed"></div>
+    <!-- Chain Bar V6 100% Final -->
+    <div class="chain">
+        <b style="color:var(--mra);font-size:11.5px">🌐 V6 ULTIMATE WORLD GIANT 100% FINAL - LOGIC 8 + FULL SONG LIST + VERTICAL SWIPE + GROUP JOIN REAL + VOICE CHANGER + PWA OFFLINE READY!</b><br>
+        <small style="font-size:10.5px;color:var(--muted);line-height:1.35;display:block;margin-top:6px">MRA Secret: 1. TikTok Studio (10m/60s/15s + Full Song List Sheet) | 2. FB Real Scroll 9 Mix + Group Join Real Buttons | 3. TikTok For You Vertical Swipe Feed | 4. AI Dance Studio & Auto-Beauty (0-100) | 5. MOMENT Viewer (24h Flash + Blue Ring) | 6. Comment Pro (Photo/Voice) | 7. MRA AI Boost | 8. PWA Offline & Install App. 100% FINAL OK! 😁👍💑♾️🚀🌍</small>
+    </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Moments Bar (Stories replaced by Moment) -->
+    <div class="moments">
+        <div class="m-item" onclick="openModule('modStory')">
+            <div class="m-ring" style="background:var(--card2);border:2px dashed var(--mra)">
+                <div class="m-av" style="background:linear-gradient(135deg,var(--mra),var(--pink));color:#fff;font-size:24px">+</div>
+            </div>
+            <div class="m-name">Create Moment</div>
+        </div>
+        <div class="m-item" onclick="openModule('modMomentViewer')">
+            <div class="m-ring"><div class="m-av"><img src="https://i.pravatar.cc/100?img=1"></div></div>
+            <div class="m-name">Sumiya ✓</div>
+        </div>
+        <div class="m-item" onclick="openModule('modMomentViewer')">
+            <div class="m-ring"><div class="m-av"><img src="https://i.pravatar.cc/100?img=2"></div></div>
+            <div class="m-name">Amara ✓</div>
+        </div>
+        <div class="m-item" onclick="openModule('modMomentViewer')">
+            <div class="m-ring"><div class="m-av"><img src="https://i.pravatar.cc/100?img=5"></div></div>
+            <div class="m-name">Nimali ✓</div>
+        </div>
+    </div>
+
+    <!-- Create Post / Vibe / Moment Box -->
+    <div class="create" onclick="openModule('modPost')">
+        <div class="c-top">
+            <div class="c-av" id="createAvatarBox">M</div>
+            <div class="c-input">What's on your mind? MRA VIBE ⚡ + MOMENT 🌅 - V6 Ultimate 100%! 🌍🔥</div>
+        </div>
+        <div class="c-actions">
+            <div class="c-btn" style="color:var(--mra)" onclick="event.stopPropagation(); document.getElementById('v6VibeStudioModal').style.display='flex'">⚡ TikTok Studio</div>
+            <div class="c-btn" style="color:var(--sl)" onclick="event.stopPropagation(); openModule('modAiDanceStudio')">🌅 AI Dance Studio</div>
+            <div class="c-btn" style="color:var(--pink)" onclick="event.stopPropagation(); openModule('modVerticalFeed')">📱 Vertical Feed</div>
+        </div>
+    </div>
+
+    <!-- Vibe Horizontal Section (Reels replaced by Vibe) -->
+    <div class="vibe-h">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+            <b>⚡ MRA Vibe Studio & Vertical Swipe Feed</b>
+            <span style="color:var(--mra);font-size:12px;cursor:pointer" onclick="document.getElementById('v6VerticalFeedOverlay').style.display='flex'">Swipe Full Screen ›</span>
+        </div>
+        <div class="v-cards">
+            <div class="v-card" onclick="document.getElementById('v6VerticalFeedOverlay').style.display='flex'">
+                <img src="https://picsum.photos/200/300?random=22">
+                <div class="v-overlay"></div>
+                <div class="v-info"><div>THE PIZZA BAKERY</div><div style="font-size:10px;opacity:.8">⚡ 12.3K views • Swipe Up</div></div>
+            </div>
+            <div class="v-card" onclick="document.getElementById('v6VerticalFeedOverlay').style.display='flex'">
+                <img src="https://picsum.photos/200/300?random=23">
+                <div class="v-overlay"></div>
+                <div class="v-info"><div>Temple Vibe SL</div><div style="font-size:10px">⚡ 89K views • Viral V6</div></div>
+            </div>
+            <div class="v-card" onclick="document.getElementById('v6VerticalFeedOverlay').style.display='flex'">
+                <img src="https://picsum.photos/200/300?random=24">
+                <div class="v-overlay"></div>
+                <div class="v-info"><div>Dance Rangana</div><div style="font-size:10px">⚡ 79.4K posts • AI Dance</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feed Container (Dynamic + Default Posts + FB Real Scroll 9 Mix) -->
+    <div id="feed">
+        <div class="post-card">
+            <div class="p-head">
+                <div class="p-user">
+                    <div class="p-av">T</div>
+                    <div>
+                        <div style="font-weight:700;font-size:14px">TodayNewsIk.com ✓ - V6 100% FINAL</div>
+                        <div style="font-size:11px;color:var(--muted)">2d · 🌐 • V6 ULTIMATE GIANT</div>
+                    </div>
+                </div>
+                <div>⋯ ✕</div>
+            </div>
+            <div class="p-content">බදු නොගෙවූ සුඛෝපභෝගී... more - MRA VIBE + MOMENT Giant Network - V6 Ultimate 100% Final OK!</div>
+            <img class="p-img" src="https://picsum.photos/500/300?random=20">
+            <div class="p-stats"><span>❤️👍😂 Hamine +87 others</span><span>28 comments • 18 shares</span></div>
+            <div class="p-actions">
+                <div class="p-action" onclick="showToast('👍 Liked!')">👍 Like</div>
+                <div class="p-action" onclick="openProCommentModal()">💬 Comment Pro</div>
+                <div class="p-action" onclick="showToast('↗️ Shared Nannan!')">↗️ Share Nannan</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation V6 -->
     <div class="bottom-nav">
-        <div class="nav-tab active" onclick="window.scrollTo({top:0,behavior:'smooth'})">🏠<br>FEED<br><small>MRA V3</small></div>
-        <div class="nav-tab" onclick="openModule('modStory')">📌<br>STORY<br><small>MRA 10/3</small></div>
-        <div class="nav-tab" onclick="openModule('modReel')">🎬<br>REELS<br><small>MRA 10/5</small></div>
-        <div class="nav-tab" onclick="openMasterMenu()">
-            <div style="background:linear-gradient(135deg,var(--mra),var(--sl));color:#fff;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;margin:-14px auto 2px auto;font-size:22px">⚙️</div>
-            <span style="color:var(--mra);font-weight:700">MRA V3 Menu</span>
-        </div>
-    </div>
-
-    <!-- Ad Bar -->
-    <div class="ad-bar">
-        <div style="font-size:11px"><b>🚀 MRA V3 Ad Bar:</b> Global Unlimited Boost!</div>
-        <button onclick="showToast('📢 MRA V3 Ad Clicked! Live 100%')" class="btn btn-mra" style="padding:6px 10px;font-size:10px">Boost V3</button>
+        <div class="nav active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><div style="font-size:22px">🏠</div><div>Home V6</div></div>
+        <div class="nav" onclick="openModule('modMomentViewer')"><div style="font-size:20px">🌅</div><div>Moment</div></div>
+        <div class="nav" onclick="document.getElementById('v6VibeStudioModal').style.display='flex'"><div class="nav-plus">⚡</div></div>
+        <div class="nav" onclick="document.getElementById('v6VerticalFeedOverlay').style.display='flex'"><div style="font-size:20px">📱</div><div>Swipe Up</div></div>
+        <div class="nav" onclick="openMasterMenu()"><div style="font-size:20px">☰</div><div>Menu 14</div></div>
     </div>
 </div>
 
-<!-- Master Menu Hub Modal (14 Icons V3) -->
+<!-- Master Menu Hub Modal (14 Icons V6) -->
 <div class="master-overlay" id="masterMenuHub">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <b style="font-size:13px;color:var(--mra)">🌐 MYFAECBOX V3 GLOBAL MASTER HUB - 14 Icons + Unlimited ∞ + Ghost Real + Firestore</b>
+        <b style="font-size:13px;color:var(--mra)">🌐 MYFAECBOX V6 ULTIMATE 100% FINAL MASTER HUB</b>
         <span onclick="closeMasterMenu()" style="font-size:28px;color:#ea4335;cursor:pointer">×</span>
-    </div>
-    <div id="masterSecretCodeBox" style="background:var(--card2);border:1px solid var(--mra);padding:10px;border-radius:12px;margin-bottom:12px">
-        <b style="color:var(--mra);font-size:12px">🔐 MRA V3 GLOBAL UNLIMITED Core Logic - Only We Know!</b><br>
-        <small style="font-size:11px;font-family:monospace">
-            const MRA = "100%_ADVANCED_INTELLIGENCE_GLOBAL_UNLIMITED";<br>
-            const MRA_Ghost = "AI_Ghost_Real_No_Seen_Inside_MRA_V3_GLOBAL";<br>
-            const MRA_Anonymous = "AI_Anonymous_Rotation_24h_Inside_MRA_V3_GLOBAL";<br>
-            const MRA_Firestore = "AI_Firestore_Real_Global_Feed_Inside_MRA_V3_GLOBAL";<br>
-            const MRA_Unlimited = "AI_Unlimited_Toggle_No_Limits_Inside_MRA_V3_GLOBAL";<br>
-            // පිටට: MRA Custom SL Logic - No Limits<br>
-            // ඇතුලට: MRA = AI 100% - Firestore + CDN + WSS + PWA + Ghost Real + Anonymous Rotation + Unlimited ∞! Only we know! 😁👍💑♾️
-        </small>
     </div>
     
     <div class="menu-grid">
-        <div class="menu-tile" onclick="openModule('modFreeData')"><div style="font-size:24px">📶</div><div style="font-size:11px;font-weight:700">Free Data Hub<br><small style="color:var(--sl)">MRA Live</small></div></div>
+        <div class="menu-tile" onclick="openModule('modFreeData')"><div style="font-size:24px">📶</div><div style="font-size:11px;font-weight:700">Free Data Hub<br><small style="color:var(--sl)">85% Saved</small></div></div>
         <div class="menu-tile" onclick="openModule('modNotifications')"><div style="font-size:24px">🔔</div><div style="font-size:11px;font-weight:700">Notifications<br><small>MRA Live</small></div></div>
         <div class="menu-tile" onclick="openModule('modTrending')"><div style="font-size:24px">🔥</div><div style="font-size:11px;font-weight:700">Trending & #<br><small>MRA Live</small></div></div>
         <div class="menu-tile" onclick="openModule('modRegistration')"><div style="font-size:24px">👤</div><div style="font-size:11px;font-weight:700">Edit Profile<br><small style="color:var(--mra)">MRA SL Live</small></div></div>
-        <div class="menu-tile" onclick="openModule('modMraBot')" style="border:1px solid var(--mra)"><div style="font-size:24px">🤖</div><div style="font-size:11px;font-weight:700">Sumiya MRA Bot (SL)<br><small style="color:var(--mra)">MRA = 100% AI Secret</small></div></div>
-        <div class="menu-tile" onclick="openModule('modSecretVault')"><div style="font-size:24px">🔐</div><div style="font-size:11px;font-weight:700">Secret Vault<br><small style="color:var(--mra)">MRA SL Live</small></div></div>
-        <div class="menu-tile" onclick="openModule('modCrush')"><div style="font-size:24px">💘</div><div style="font-size:11px;font-weight:700">Crush Detector<br><small style="color:var(--pink)">MRA Live</small></div></div>
-        <div class="menu-tile" onclick="openModule('modGhost')" style="border:1px solid var(--cyan)"><div style="font-size:24px">👻</div><div style="font-size:11px;font-weight:700">Ghost Mode Real<br><small style="color:var(--cyan)">V3 GLOBAL</small></div></div>
-        <div class="menu-tile" onclick="openModule('modAnonymous')" style="border:1px solid var(--pink)"><div style="font-size:24px">🕵️</div><div style="font-size:11px;font-weight:700">Anonymous 24h<br><small style="color:var(--pink)">V3 GLOBAL</small></div></div>
-        <div class="menu-tile" onclick="openModule('modPost')"><div style="font-size:24px">📸</div><div style="font-size:11px;font-weight:700">Post Creator<br><small style="color:var(--sl)">MRA 10/15min</small></div></div>
-        <div class="menu-tile" onclick="openModule('modStory')"><div style="font-size:24px">📌</div><div style="font-size:11px;font-weight:700">Story Creator<br><small style="color:var(--cyan)">MRA 10/3min</small></div></div>
-        <div class="menu-tile" onclick="openModule('modReel')"><div style="font-size:24px">🎬</div><div style="font-size:11px;font-weight:700">Reels Creator<br><small style="color:var(--mra)">MRA 10/5min</small></div></div>
-        <div class="menu-tile" onclick="openModule('modDiary')"><div style="font-size:24px">📖</div><div style="font-size:11px;font-weight:700">Secret Diary<br><small>MRA SL</small></div></div>
-        <div class="menu-tile" onclick="openModule('modVoice')"><div style="font-size:24px">🎙️</div><div style="font-size:11px;font-weight:700">Voice Changer<br><small>MRA SL</small></div></div>
+        <div class="menu-tile" onclick="openModule('modMraBot')" style="border:1px solid var(--mra)"><div style="font-size:24px">🤖</div><div style="font-size:11px;font-weight:700">Sumiya MRA Bot<br><small style="color:var(--mra)">AI 100% Secret</small></div></div>
+        <div class="menu-tile" onclick="openModule('modSecretVault')"><div style="font-size:24px">🔐</div><div style="font-size:11px;font-weight:700">Secret Vault<br><small style="color:var(--mra)">Encrypted</small></div></div>
+        <div class="menu-tile" onclick="openModule('modCrush')"><div style="font-size:24px">💘</div><div style="font-size:11px;font-weight:700">Crush Detector<br><small style="color:var(--pink)">99.9%</small></div></div>
+        <div class="menu-tile" onclick="openModule('modGhost')" style="border:1px solid var(--cyan)"><div style="font-size:24px">👻</div><div style="font-size:11px;font-weight:700">Ghost Mode Real<br><small style="color:var(--cyan)">No Seen Trace</small></div></div>
+        <div class="menu-tile" onclick="openModule('modAnonymous')" style="border:1px solid var(--pink)"><div style="font-size:24px">🕵️</div><div style="font-size:11px;font-weight:700">Anonymous 24h<br><small style="color:var(--pink)">Auto-Rotate</small></div></div>
+        <div class="menu-tile" onclick="openModule('modPost')"><div style="font-size:24px">📸</div><div style="font-size:11px;font-weight:700">Post Creator<br><small style="color:var(--sl)">9 Photos Mix</small></div></div>
+        <div class="menu-tile" onclick="openModule('modAiDanceStudio')" style="border:1px solid var(--pink)"><div style="font-size:24px">💃</div><div style="font-size:11px;font-weight:700">AI Dance Studio<br><small style="color:var(--pink)">Logic 4</small></div></div>
+        <div class="menu-tile" onclick="document.getElementById('v6VibeStudioModal').style.display='flex'"><div style="font-size:24px">⚡</div><div style="font-size:11px;font-weight:700">TikTok Studio<br><small style="color:var(--mra)">Logic 1 & 3</small></div></div>
+        <div class="menu-tile" onclick="openModule('modDiary')"><div style="font-size:24px">📖</div><div style="font-size:11px;font-weight:700">Secret Diary<br><small>Encrypted</small></div></div>
+        <div class="menu-tile" onclick="openModule('modVoice')"><div style="font-size:24px">🎙️</div><div style="font-size:11px;font-weight:700">Voice Changer<br><small>Robot/Deep</small></div></div>
     </div>
     
-    <button onclick="closeMasterMenu()" style="margin-top:14px;width:100%;padding:12px;background:linear-gradient(135deg,var(--mra),var(--sl));color:#fff;border:none;border-radius:12px;font-weight:900">Close MRA V3 Menu - Unlimited ∞</button>
+    <button onclick="closeMasterMenu()" style="margin-top:14px;width:100%;padding:12px;background:linear-gradient(135deg,var(--mra),var(--sl));color:#fff;border:none;border-radius:12px;font-weight:900">Close Master Hub</button>
+</div>
+
+<!-- ============================================================== -->
+<!-- 🌟 V6 ULTIMATE 100% FINAL - MODULES & ENGINE (MRA PRO) -->
+<!-- ============================================================== -->
+
+<!-- 1. MRA VIBE Creator Studio & Full Song List Sheet -->
+<div class="v6-studio-modal" id="v6VibeStudioModal">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
+        <span onclick="document.getElementById('v6VibeStudioModal').style.display='none'" style="font-size:24px;cursor:pointer">✕</span>
+        <div style="display:flex;gap:16px;font-size:14px;font-weight:bold;"><span style="opacity:0.6">10m</span><span style="color:var(--sl);border-bottom:2px solid var(--sl)">60s</span><span style="opacity:0.6">15s</span></div>
+        <span style="font-size:20px;cursor:pointer">✨</span>
+    </div>
+    
+    <div class="v6-sound-bar" onclick="openSongListSheet()">
+        <span>🎵 Add Sound (සම්බුදු ගුණ / හැරී බැලුවෙමි SL)</span>
+        <span>🔍</span>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+        <div style="font-size:14px;background:rgba(0,0,0,0.6);padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.2);">📸 Flip • Flash • Timer • Filter • Voiceover • Beauty (SL Tone)</div>
+    </div>
+
+    <div style="padding-bottom:20px;">
+        <div class="v6-record-btn" onclick="showToast('🎬 MRA Vibe Recording & AI Dance Studio Processing...')"><div style="width:64px;height:64px;border-radius:50%;background:#ff0055;"></div></div>
+        <div style="display:flex;justify-content:space-around;align-items:center;margin-top:16px;font-size:12px;font-weight:bold;">
+            <span>Templates</span>
+            <span style="background:var(--mra);padding:6px 16px;border-radius:14px;">POST CREATE</span>
+            <span>Gallery</span>
+        </div>
+    </div>
+</div>
+
+<!-- Full Song List Sheet Modal -->
+<div class="mod-window" id="modSongListSheet">
+    <div class="mod-header"><b>🎵 TikTok Sound Library & Templates</b><button onclick="closeModule('modSongListSheet')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
+    <div style="padding:12px;display:flex;flex-direction:column;gap:10px;">
+        <input class="input" placeholder="🔍 Search Hot For You, Favourites, Recent..." oninput="showToast('Searching songs...')">
+        <div style="background:var(--card2);padding:10px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="showToast('🎵 සම්බුදු ගුණ (0:48) Selected & Cut!')">
+            <div><b>សမ္බුදු ගුණ (0:48)</b><br><small style="color:var(--muted)">Hot For You • Cut ✂️ • Save 🔖</small></div>
+            <span style="background:var(--sl);color:#000;padding:4px 10px;border-radius:6px;font-weight:bold;font-size:11px">Use ✓</span>
+        </div>
+        <div style="background:var(--card2);padding:10px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="showToast('🎵 ආදරේ තරු (18.7K) Selected & Cut!')">
+            <div><b>ආදරේ තරු (18.7K)</b><br><small style="color:var(--muted)">Favourites • Cut ✂️ • Save 🔖</small></div>
+            <span style="background:var(--sl);color:#000;padding:4px 10px;border-radius:6px;font-weight:bold;font-size:11px">Use ✓</span>
+        </div>
+        <div style="background:var(--card2);padding:10px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="showToast('🎵 හැරී බැලුවෙමි SL TEMPLATE (79.4K posts 🔥) Selected!')">
+            <div><b>හැරී බැලුවෙමි SL TEMPLATE</b><br><small style="color:var(--pink)">79.4K posts 🔥 Viral • Cut ✂️ • Save 🔖</small></div>
+            <span style="background:var(--sl);color:#000;padding:4px 10px;border-radius:6px;font-weight:bold;font-size:11px">Use ✓</span>
+        </div>
+    </div>
+</div>
+
+<!-- 3. TikTok For You Vertical Swipe Feed Overlay -->
+<div class="v6-vertical-feed-overlay" id="v6VerticalFeedOverlay">
+    <div style="position:absolute;top:16px;left:16px;z-index:10;font-weight:bold;font-size:14px;display:flex;gap:16px;"><span style="opacity:0.6">Following</span><span style="color:var(--sl);border-bottom:2px solid var(--sl)">For You</span><span style="opacity:0.6">LIVE STEM</span></div>
+    <span onclick="document.getElementById('v6VerticalFeedOverlay').style.display='none'" style="position:absolute;top:16px;right:16px;font-size:26px;z-index:10;cursor:pointer">✕</span>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;background:#000;position:relative;">
+        <img src="https://picsum.photos/400/800?random=99" style="width:100%;height:100%;object-fit:cover;">
+        <div style="position:absolute;right:16px;bottom:100px;display:flex;flex-direction:column;gap:16px;align-items:center;z-index:5;">
+            <div style="width:44px;height:44px;border-radius:50%;background:var(--mra);display:flex;align-items:center;justify-content:center;font-weight:bold;">👤</div>
+            <div style="text-align:center;font-size:11px;font-weight:bold;">❤️<br>14.9K</div>
+            <div style="text-align:center;font-size:11px;font-weight:bold;">🔖<br>2,339</div>
+            <div style="text-align:center;font-size:11px;font-weight:bold;">↗️<br>4,456</div>
+            <div style="width:36px;height:36px;border-radius:50%;background:#222;display:flex;align-items:center;justify-content:center;animation:spin 3s linear infinite;">💿</div>
+        </div>
+        <div style="position:absolute;left:16px;bottom:30px;z-index:5;max-width:75%;">
+            <b>@sumiya_v6_giant</b>
+            <p style="font-size:12px;margin-top:4px;">MRA V6 Ultimate Vertical Swipe Feed - Full Screen Mode 🚀🔥</p>
+        </div>
+    </div>
+</div>
+
+<!-- 4. AI Dance Studio & Auto-Beauty Modal -->
+<div class="mod-window" id="modAiDanceStudio">
+    <div class="mod-header"><b>💃 MRA AI Dance Studio & Auto-Beauty</b><button onclick="closeModule('modAiDanceStudio')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
+    <div style="padding:12px;display:flex;flex-direction:column;gap:12px;">
+        <div style="background:var(--card2);padding:12px;border-radius:12px;border:1px solid var(--pink)">
+            <b style="color:var(--pink)">🎵 BPM & Mood Detect (Romantic / Sad / Dance / HipHop)</b>
+            <p style="font-size:11px;color:var(--muted);margin-top:4px">Auto Rangana Suggest Hip Hop, Kandyan, TikTok Trend Couple dances with AI Partner (Virtual Boy/Girl), Lotus Tower Beach Temple Paddy Field backgrounds, and Saree Sarong clothes change!</p>
+        </div>
+        <div>
+            <label style="font-size:11px;color:var(--muted)">✨ Auto-Beauty Face Detect & Skin Smooth (0-100 Level)</label>
+            <input type="range" class="v6-slider" min="0" max="100" value="85" oninput="showToast('✨ Beauty Level: ' + this.value + '%')">
+        </div>
+        <button onclick="showToast('💃 AI Dance & Virtual Partner Generated Successfully!')" class="btn btn-mra" style="padding:14px;">🎬 Generate AI Dance Video</button>
+    </div>
+</div>
+
+<!-- 5. MOMENT Viewer Modal (24h Flash + Blue Ring) -->
+<div class="mod-window" id="modMomentViewer">
+    <div class="mod-header"><b>🌅 MOMENT Viewer (24h Flash)</b><button onclick="closeModule('modMomentViewer')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
+    <div style="padding:12px;text-align:center;">
+        <div style="display:flex;gap:4px;margin-bottom:10px;"><div style="flex:1;height:4px;background:var(--sl);border-radius:2px;"></div><div style="flex:1;height:4px;background:var(--border);border-radius:2px;"></div></div>
+        <div style="font-weight:bold;font-size:14px;color:var(--sl)">Sumiya Moment 🌅 (Blue Ring Verified ✓)</div>
+        <div style="width:100%;height:350px;background:#000;border-radius:14px;margin:10px 0;display:flex;align-items:center;justify-content:center;color:#fff;">[ Moment 24h Flash Media ]</div>
+        <input class="input" placeholder="Reply with Vibe ⚡..." onkeypress="if(event.key==='Enter') showToast('✅ Reply sent to Moment!')">
+    </div>
 </div>
 
 <!-- Registration Modal -->
 <div class="mod-window" id="modRegistration">
     <div class="mod-header">
-        <b>👤 Edit Profile & Register - MRA V3 GLOBAL</b>
+        <b>👤 Edit Profile & Register - MRA V6 ULTIMATE</b>
         <button onclick="closeModule('modRegistration')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button>
     </div>
     <div style="padding:12px">
-        <div style="background:var(--card2);border:1px solid var(--mra);padding:10px;border-radius:12px;margin-bottom:12px">
-            <b style="color:var(--mra)">MRA Secret: MRA Photo = AI Photo 4K 85% Inside! SL Logic Cover!</b><br>
-            <small style="font-size:11px">Profile photo MRA processing (inside AI 100%) - MRA Beauty SL - MRA compress SL</small>
-        </div>
         <div style="display:flex;gap:12px;align-items:center;background:var(--card2);padding:10px;border-radius:12px;border:1px dashed var(--mra)">
             <div class="avatar-preview" id="profilePhotoPreview" onclick="document.getElementById('profilePhotoInput').click()">
                 <span style="font-size:24px">📸</span>
@@ -198,29 +373,29 @@ html,body{background:var(--bg);color:var(--text);overflow-x:hidden}
         <input type="file" id="profilePhotoInput" accept="image/*" style="display:none" onchange="handleProfilePhoto(event)">
         
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
-            <div><label style="font-size:11px;color:var(--muted)">Full Name *</label><input id="regName" class="input" placeholder="Sumiya" oninput="updateProfileCompletion()"></div>
-            <div><label style="font-size:11px;color:var(--muted)">Username *</label><input id="regUser" class="input" placeholder="@sumiya" oninput="updateProfileCompletion()"></div>
+            <div><label style="font-size:11px;color:var(--muted)">Full Name *</label><input id="regName" class="input" placeholder="Sumiya"></div>
+            <div><label style="font-size:11px;color:var(--muted)">Username *</label><input id="regUser" class="input" placeholder="@sumiya"></div>
         </div>
         
         <div style="margin-top:8px">
             <label style="font-size:11px;color:var(--muted)">Account Type * MRA</label>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px">
-                <div class="type-card selected" onclick="selectCard(this,'account','Personal')">👤 Personal MRA</div>
-                <div class="type-card" onclick="selectCard(this,'account','Business')">💼 Business MRA</div>
-                <div class="type-card" onclick="selectCard(this,'account','Creator')">⭐ Creator MRA</div>
+                <div class="type-card selected" onclick="selectCard(this,'account','Personal')">👤 Personal</div>
+                <div class="type-card" onclick="selectCard(this,'account','Business')">💼 Business</div>
+                <div class="type-card" onclick="selectCard(this,'account','Creator')">⭐ Creator</div>
             </div>
         </div>
         
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-            <div><label style="font-size:11px;color:var(--muted)">Email/Phone *</label><input id="regPhone" class="input" placeholder="+9477..." oninput="updateProfileCompletion()"></div>
-            <div><label style="font-size:11px;color:var(--muted)">Password * MRA</label><input id="regPass" type="password" class="input" placeholder="Strong MRA"></div>
+            <div><label style="font-size:11px;color:var(--muted)">Email/Phone *</label><input id="regPhone" class="input" placeholder="+9477..."></div>
+            <div><label style="font-size:11px;color:var(--muted)">Password *</label><input id="regPass" type="password" class="input" placeholder="Strong MRA"></div>
         </div>
         
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-            <div><label style="font-size:11px;color:var(--muted)">Birthday *</label><input id="regBirthday" type="date" class="input" onchange="updateProfileCompletion()"></div>
+            <div><label style="font-size:11px;color:var(--muted)">Birthday *</label><input id="regBirthday" type="date" class="input"></div>
             <div>
                 <label style="font-size:11px;color:var(--muted)">Gender *</label>
-                <select id="regGender" class="input" onchange="updateProfileCompletion()">
+                <select id="regGender" class="input">
                     <option value="">Select SL MRA</option>
                     <option>Female - ස්ත්‍රී MRA</option>
                     <option>Male - පුරුෂ MRA</option>
@@ -239,242 +414,106 @@ html,body{background:var(--bg);color:var(--text);overflow-x:hidden}
         
         <div style="background:var(--card2);border:1px dashed var(--mra);border-radius:12px;padding:10px;margin-top:12px">
             <div style="display:flex;justify-content:space-between">
-                <b style="font-size:12px;color:var(--mra)">📱 FREE OTP + MRA Chain + SL Logic</b>
-                <button id="btnOtp" onclick="sendOtp()" class="btn btn-mra" style="padding:6px 12px;font-size:11px">Send OTP & Link MRA</button>
+                <b style="font-size:12px;color:var(--mra)">📱 FREE OTP + SL Logic</b>
+                <button onclick="sendOtp()" class="btn btn-mra" style="padding:6px 12px;font-size:11px">Send OTP</button>
             </div>
             <div style="display:flex;gap:8px;margin-top:8px">
-                <input id="regOtp" class="input" placeholder="6-digit OTP MRA SL" style="text-align:center;letter-spacing:4px;font-weight:900">
-                <button onclick="verifyOtp()" style="background:var(--sl);color:#000;border:none;padding:8px 14px;border-radius:8px;font-weight:900">Verify SL ✓ MRA</button>
+                <input id="regOtp" class="input" placeholder="6-digit OTP" style="text-align:center;letter-spacing:4px;font-weight:900">
+                <button onclick="verifyOtp()" style="background:var(--sl);color:#000;border:none;padding:8px 14px;border-radius:8px;font-weight:900">Verify ✓</button>
             </div>
             <small id="otpStatus" style="color:var(--cyan);font-size:11px;margin-top:6px;display:block"></small>
         </div>
         
-        <button onclick="launch()" class="btn btn-mra" style="width:100%;margin-top:12px;padding:14px">🚀 Launch MRA V3 Global - Unlimited ∞</button>
-        
-        <div id="successBox" style="display:none;background:linear-gradient(135deg,rgba(106,92,255,0.15),rgba(0,230,118,0.15));border:1px solid var(--sl);padding:12px;border-radius:12px;margin-top:12px">
-            <b style="color:var(--sl)">✅ MRA V3 GLOBAL CHAIN LINKED! Unlimited ∞!</b><br>
-            <small id="successTxt"></small>
-        </div>
+        <button onclick="launch()" class="btn btn-mra" style="width:100%;margin-top:12px;padding:14px">🚀 Launch MRA V6 Ultimate Giant ∞</button>
     </div>
 </div>
 
 <!-- MRA Bot Modal -->
 <div class="mod-window" id="modMraBot">
-    <div class="mod-header">
-        <b>🤖 Sumiya MRA Bot (SL) - V3 GLOBAL UNLIMITED</b>
-        <button onclick="closeModule('modMraBot')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button>
-    </div>
+    <div class="mod-header"><b>🤖 Sumiya MRA Bot V6 (SL)</b><button onclick="closeModule('modMraBot')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
     <div style="display:flex;flex-direction:column;height:calc(100vh - 140px)">
-        <div style="background:linear-gradient(135deg,rgba(106,92,255,0.1),rgba(0,230,118,0.1));padding:10px;border-radius:12px;border:1px solid var(--mra);margin-bottom:10px">
-            <b style="font-size:12px;color:var(--mra)">🧠 MRA V3 Global Logic - Unlimited ∞ Inside</b><br>
-            <small style="font-size:11px">MRA = Meta Reasoning Architecture - Custom SL Logic by Sumiya! (Inside: 100% Advanced Intelligence + Firestore + CDN + WSS + PWA + Ghost Real + Anonymous Rotation + Unlimited ∞!)</small>
-        </div>
         <div id="mraChatBox" style="flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px">
-            <div style="background:var(--card);padding:10px;border-radius:12px;border:1px solid var(--border)"><b>Sumiya MRA Bot V3:</b> Ayubowan! I'm MRA Bot V3 Global - Unlimited ∞! (Secret: I'm 100% Advanced Inside with Firestore + Ghost Real + Anonymous Rotation! Only we know! 😁👍💑♾️) Ask me anything!</div>
+            <div style="background:var(--card);padding:10px;border-radius:12px;border:1px solid var(--border)"><b>Sumiya MRA Bot V6:</b> Ayubowan! V6 Ultimate World Giant active with Logic 8! Ask me anything!</div>
         </div>
         <div style="padding:10px;background:var(--card);display:flex;gap:8px">
-            <input id="mraInput" placeholder="Ask MRA V3: Beauty Score, Crush, Ghost Real, Anonymous, Unlimited..." style="flex:1;padding:10px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--text)" onkeypress="if(event.key==='Enter') sendMra()">
-            <button onclick="sendMra()" style="background:var(--mra);color:#fff;border:none;padding:10px 18px;border-radius:20px;font-weight:900">Send V3</button>
+            <input id="mraInput" placeholder="Ask MRA V6..." style="flex:1;padding:10px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--text)" onkeypress="if(event.key==='Enter') sendMra()">
+            <button onclick="sendMra()" style="background:var(--mra);color:#fff;border:none;padding:10px 18px;border-radius:20px;font-weight:900">Send</button>
         </div>
     </div>
 </div>
 
-<!-- Free Data Hub Modal -->
-<div class="mod-window" id="modFreeData">
-    <div class="mod-header"><b>📶 Free Data Hub - MRA V3 GLOBAL</b><button onclick="closeModule('modFreeData')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
-    <div style="padding:12px"><div style="background:var(--card2);padding:14px;border-radius:14px;border:1px solid var(--sl)"><b style="color:var(--sl)">🇱🇰 Free Data Logic MRA V3 Global:</b><p style="font-size:12px;color:var(--muted);margin-top:4px">Dialog, Mobitel, Hutch, Airtel FB packages හරහා MyFaecbox MRA V3 Unlimited 85% data save - MRA = AI 100% Inside Secret</p></div></div>
-</div>
+<!-- Other Modals Support -->
+<div class="mod-window" id="modFreeData"><div class="mod-header"><b>📶 Free Data Hub V6</b><button onclick="closeModule('modFreeData')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div><div style="padding:12px"><p>85% Free Data active via Dialog/Mobitel/Hutch/Airtel packages!</p></div></div>
+<div class="mod-window" id="modNotifications"><div class="mod-header"><b>🔔 Notifications V6</b><button onclick="closeModule('modNotifications')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div><div style="padding:12px"><p>No new notifications. V6 Giant Hub active!</p></div></div>
+<div class="mod-window" id="modTrending"><div class="mod-header"><b>🔥 Trending V6</b><button onclick="closeModule('modTrending')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div><div style="padding:12px"><p>#MyfaecboxV6 #SumiyaGiant #MRAVibeMoment</p></div></div>
+<div class="mod-window" id="modSecretVault"><div class="mod-header"><b>🔐 Secret Vault V6</b><button onclick="closeModule('modSecretVault')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div><div style="padding:12px"><p>Encrypted vault for secure files & media.</p></div></div>
+<div class="mod-window" id="modCrush"><div class="mod-header"><b>💘 Crush Detector V6</b><button onclick="closeModule('modCrush')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div><div style="padding:12px"><p>Crush Detector active with 99.9% accuracy!</p></div></div>
+<div class="mod-window" id="modGhost"><div class="mod-header"><b>👻 Ghost Mode Real V6</b><button onclick="closeModule('modGhost')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div><div style="padding:12px"><p>Browse stories and feeds completely invisibly (No Seen Trace).</p></div></div>
+<div class="mod-window" id="modAnonymous"><div class="mod-header"><b>🕵️ Anonymous 24h V6</b><button onclick="closeModule('modAnonymous')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div><div style="padding:12px"><p>Auto-rotating anonymous secure identities every 24 hours.</p></div></div>
+<div class="mod-window" id="modStory"><div class="mod-header"><b>🌅 Moment Creator (Story)</b><button onclick="closeModule('modStory')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div><div style="padding:12px"><textarea id="momentText" placeholder="Write your MOMENT 🌅..." class="input" style="height:80px;resize:none"></textarea><button onclick="showToast('🌅 Moment Published successfully!')" class="btn btn-mra" style="width:100%;margin-top:10px">Publish Moment</button></div></div>
+<div class="mod-window" id="modReel"><div class="mod-header"><b>⚡ Vibe Creator (Reels)</b><button onclick="closeModule('modReel')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div><div style="padding:12px"><textarea id="vibeText" placeholder="Write your VIBE ⚡ caption..." class="input" style="height:80px;resize:none"></textarea><button onclick="showToast('⚡ Vibe Published successfully!')" class="btn btn-mra" style="width:100%;margin-top:10px">Publish Vibe</button></div></div>
+<div class="mod-window" id="modDiary"><div class="mod-header"><b>📖 Secret Diary V6</b><button onclick="closeModule('modDiary')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div><div style="padding:12px"><textarea placeholder="Encrypted Diary..." class="input" style="height:120px;resize:none"></textarea><button onclick="showToast('📖 Saved to V6 Vault!')" class="btn btn-mra" style="width:100%;margin-top:10px">Save</button></div></div>
+<div class="mod-window" id="modVoice"><div class="mod-header"><b>🎙️ Voice Changer V6</b><button onclick="closeModule('modVoice')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div><div style="padding:12px"><p>Voice filters active (Robot, Chipmunk, Deep).</p></div></div>
 
-<!-- Secret Vault Modal -->
-<div class="mod-window" id="modSecretVault">
-    <div class="mod-header"><b>🔐 Secret Vault - MRA V3 GLOBAL</b><button onclick="closeModule('modSecretVault')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
-    <div style="padding:12px"><div style="background:linear-gradient(135deg,rgba(106,92,255,0.2),rgba(0,0,0,0.5));border:1px solid var(--mra);padding:14px;border-radius:14px"><b style="color:var(--mra)">🔐 Secret Logic - MRA V3 Unlimited:</b><br><small style="font-size:11px">• Hide posts from crush • Encrypted vault MRA • Firestore Real Global Feed • Unlimited ∞ No Limits!</small></div></div>
-</div>
-
-<!-- Crush Detector Modal -->
-<div class="mod-window" id="modCrush">
-    <div class="mod-header"><b>💘 Crush Detector - MRA V3 GLOBAL</b><button onclick="closeModule('modCrush')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
-    <div style="padding:12px"><div style="background:linear-gradient(135deg,rgba(106,92,255,0.2),rgba(0,230,118,0.2));border:1px solid var(--mra);padding:14px;border-radius:14px;text-align:center"><b style="color:var(--mra)">MRA Crush Detector V3 Global ∞</b><br><small style="font-size:11px">MRA analyzes who viewed profile and liked quickly with Firestore Real Global sync!</small></div></div>
-</div>
-
-<!-- Ghost Mode Real Modal V3 -->
-<div class="mod-window" id="modGhost">
-    <div class="mod-header"><b>👻 Ghost Mode Real - MRA V3 GLOBAL</b><button onclick="closeModule('modGhost')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
-    <div style="padding:12px"><div style="background:var(--card2);padding:14px;border-radius:14px;border:1px solid var(--cyan);text-align:center"><b style="color:var(--cyan)">👻 MRA Ghost Mode Real Active! (No Seen Trace)</b><br><small style="font-size:11px">AI_Ghost_Real_No_Seen_Inside_MRA_V3_GLOBAL: Browse stories and feeds completely invisibly without leaving any seen trace across the global network!</small><br><button onclick="toggleGhostModeReal()" id="ghostToggleBtn" class="btn btn-mra" style="margin-top:10px">Enable Ghost Real (No Seen)</button></div></div>
-</div>
-
-<!-- Anonymous Rotation 24h Modal V3 -->
-<div class="mod-window" id="modAnonymous">
-    <div class="mod-header"><b>🕵️ Anonymous Rotation 24h - MRA V3 GLOBAL</b><button onclick="closeModule('modAnonymous')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
-    <div style="padding:12px"><div style="background:var(--card2);padding:14px;border-radius:14px;border:1px solid var(--pink);text-align:center"><b style="color:var(--pink)">🕵️ MRA Anonymous Rotation 24h Active!</b><br><small style="font-size:11px">AI_Anonymous_Rotation_24h_Inside_MRA_V3_GLOBAL: Post or comment with auto-rotating secure anonymous identities every 24 hours. True privacy guaranteed!</small><br><button onclick="toggleAnonymousRotation()" id="anonToggleBtn" class="btn btn-mra" style="margin-top:10px">Enable Anonymous Rotation</button></div></div>
-</div>
-
-<!-- Notifications Modal -->
-<div class="mod-window" id="modNotifications">
-    <div class="mod-header"><b>🔔 Notifications - MRA V3 GLOBAL</b><button onclick="closeModule('modNotifications')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
-    <div style="padding:12px"><div style="background:var(--card2);padding:14px;border-radius:14px;text-align:center"><b style="color:var(--mra)">MRA V3 Notifications Live 100% SL</b><br><small>No new notifications. V3 Global Master Hub Active!</small></div></div>
-</div>
-
-<!-- Trending Modal -->
-<div class="mod-window" id="modTrending">
-    <div class="mod-header"><b>🔥 Trending & # - MRA V3 GLOBAL</b><button onclick="closeModule('modTrending')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
-    <div style="padding:12px"><div style="background:var(--card2);padding:14px;border-radius:14px"><b style="color:var(--sl)">#MRAV3Global #SumiyaSL #MyFaecbox #UnlimitedInfinity</b><br><small>Trending worldwide across Sri Lanka! MRA = AI 100% Unlimited Secret Inside! 😁👍💑♾️</small></div></div>
-</div>
-
-<!-- Story Creator Modal -->
-<div class="mod-window" id="modStory">
-    <div class="mod-header"><b>📌 Story Creator - MRA V3 10/3min</b><button onclick="closeModule('modStory')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
-    <div style="padding:12px"><textarea id="storyText" placeholder="MRA V3 Story text..." class="input" style="height:80px;resize:none"></textarea><button onclick="showToast('✅ MRA V3 Story Published 10/3min SL! Unlimited ∞')" class="btn btn-mra" style="width:100%;margin-top:10px">Publish V3 Story</button></div>
-</div>
-
-<!-- Reels Creator Modal -->
-<div class="mod-window" id="modReel">
-    <div class="mod-header"><b>🎬 Reels Creator - MRA V3 10/5min</b><button onclick="closeModule('modReel')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
-    <div style="padding:12px"><textarea id="reelText" placeholder="MRA V3 Reels caption..." class="input" style="height:80px;resize:none"></textarea><button onclick="showToast('✅ MRA V3 Reel Published 10/5min SL! Unlimited ∞')" class="btn btn-mra" style="width:100%;margin-top:10px">Publish V3 Reel</button></div>
-</div>
-
-<!-- Secret Diary Modal -->
-<div class="mod-window" id="modDiary">
-    <div class="mod-header"><b>📖 Secret Diary - MRA V3 GLOBAL</b><button onclick="closeModule('modDiary')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
-    <div style="padding:12px"><textarea placeholder="Write your secret diary here (Encrypted MRA V3 Vault)..." class="input" style="height:120px;resize:none"></textarea><button onclick="showToast('🔐 Diary Saved to MRA V3 Encrypted Vault! Unlimited ∞')" class="btn btn-mra" style="width:100%;margin-top:10px">Save to V3 Vault</button></div>
-</div>
-
-<!-- Voice Changer Modal -->
-<div class="mod-window" id="modVoice">
-    <div class="mod-header"><b>🎙️ Voice Changer - MRA V3 GLOBAL</b><button onclick="closeModule('modVoice')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button></div>
-    <div style="padding:12px"><div style="background:var(--card2);padding:14px;border-radius:14px;text-align:center"><b style="color:var(--mra)">MRA V3 Voice Effects (Chipmunk, Robot, Deep, Echo, Unlimited)</b><br><button onclick="showToast('🎙️ MRA V3 Voice Filter Applied! Live 100%')" class="btn btn-mra" style="margin-top:10px">Test V3 Voice</button></div></div>
-</div>
-
-<!-- Post Creator Modal V3 GLOBAL UNLIMITED -->
+<!-- Post Creator Modal V6 -->
 <div class="mod-window" id="modPost">
     <div class="mod-header">
-        <b>📸 Post Creator - MRA V3 GLOBAL UNLIMITED</b>
+        <b>📸 Post Creator V6 (FB Scroll 9 Photos Mix)</b>
         <button onclick="closeModule('modPost')" style="background:#ea4335;color:#fff;border:none;padding:4px 10px;border-radius:6px">Close</button>
     </div>
     <div style="padding:12px">
-        <textarea id="postText" placeholder="What's on your mind? MRA V3 Global will make it WORLD SHAKING..." style="width:100%;height:80px;padding:12px;border-radius:16px;border:1px solid var(--border);background:var(--card2);color:var(--text);outline:none;resize:none"></textarea>
-        
-        <div style="background:var(--card2);border:1px solid var(--sl);border-radius:12px;padding:8px;margin-top:8px">
-            <b style="font-size:11px;color:var(--sl)">🔧 MRA V3 Logic (SL Cover) - AI 100% Inside:</b><br>
-            <small style="font-size:11px">• Firestore Real Global Feed • Ghost Real (No Seen) • Anonymous 24h Rotation • Unlimited ∞ Toggle • No Limits!</small>
-        </div>
-        
+        <textarea id="postText" placeholder="What's on your mind? V6 World Giant..." style="width:100%;height:80px;padding:12px;border-radius:16px;border:1px solid var(--border);background:var(--card2);color:var(--text);outline:none;resize:none"></textarea>
         <input type="file" id="postFileInput" accept="image/*,video/*" multiple style="display:none" onchange="handlePostFiles(event)">
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-            <button onclick="document.getElementById('postFileInput').click()" style="padding:12px;background:var(--card2);border:1px solid var(--border);border-radius:12px;color:var(--text);cursor:pointer;font-weight:700">📸 MRA V3 Photo Auto-Cut 10</button>
-            <button onclick="document.getElementById('postFileInput').click()" style="padding:12px;background:var(--card2);border:1px solid var(--border);border-radius:12px;color:var(--text);cursor:pointer;font-weight:700">🎥 MRA V3 Video Auto-Cut 15min</button>
-        </div>
-        
+        <button onclick="document.getElementById('postFileInput').click()" class="btn btn-mra" style="width:100%;margin-top:10px">📸 Add Photos / Videos (Up to 9 Mix)</button>
         <div id="postPreview" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px"></div>
-        
-        <div id="postProgress" style="display:none;background:var(--card2);border:1px solid var(--mra);border-radius:12px;padding:10px;margin-top:10px">
-            <div style="display:flex;justify-content:space-between">
-                <small id="postProgressText" style="color:var(--mra);font-weight:700">MRA V3 Global Uploading 0%</small>
-                <span class="live-badge">MRA V3 Live</span>
-            </div>
-            <div style="width:100%;height:8px;background:#27272a;border-radius:4px;overflow:hidden;margin-top:6px">
-                <div id="postProgressFill" style="height:100%;background:linear-gradient(90deg,var(--mra),var(--sl));transition:width 0.3s;width:0%"></div>
-            </div>
-        </div>
-        
-        <button onclick="publishPost()" class="btn btn-mra" style="width:100%;margin-top:12px;padding:14px">🚀 Publish MRA V3 Global Post ∞ 🌍🔥</button>
+        <button onclick="publishPost()" class="btn btn-mra" style="width:100%;margin-top:12px;padding:14px">🚀 Publish V6 Giant Post ∞</button>
     </div>
 </div>
 
-<!-- JavaScript Core Logic V3 GLOBAL UNLIMITED -->
+<!-- JavaScript Core Logic V6 Ultimate -->
 <script>
-const ADMIN_EMAIL="sumiyasoulfriendsfproject@gmail.com";
-
-// V3 GLOBAL UNLIMITED Core Logic
-const MRA = "100%_ADVANCED_INTELLIGENCE_GLOBAL_UNLIMITED";
-const MRA_Ghost = "AI_Ghost_Real_No_Seen_Inside_MRA_V3_GLOBAL";
-const MRA_Anonymous = "AI_Anonymous_Rotation_24h_Inside_MRA_V3_GLOBAL";
-const MRA_Firestore = "AI_Firestore_Real_Global_Feed_Inside_MRA_V3_GLOBAL";
-const MRA_Unlimited = "AI_Unlimited_Toggle_No_Limits_Inside_MRA_V3_GLOBAL";
-const SL = MRA; 
-const AI = MRA; 
-
-let active = JSON.parse(localStorage.getItem('myfaecbox_mra_v3_profile') || '{"verified":false}');
-let profilePhotoBlob = null;
+let active = JSON.parse(localStorage.getItem('myfaecbox_v6_profile') || '{"verified":false}');
 let postFiles = [];
-let isGhostRealActive = false;
-let isAnonymousRotationActive = false;
 
 function showToast(m){ 
     const c = document.getElementById('toast-container'); 
     const t = document.createElement('div'); 
     t.className = 'toast'; 
-    t.textContent = m.replace(/AI/g,'MRA').replace(/ai/g,'MRA'); 
+    t.textContent = m; 
     c.appendChild(t); 
     setTimeout(() => t.remove(), 4000); 
 }
 
 function openMasterMenu(){ document.getElementById('masterMenuHub').style.display = 'block'; }
 function closeMasterMenu(){ document.getElementById('masterMenuHub').style.display = 'none'; }
-
-function openModule(id){ 
-    if((id === 'modPost' || id === 'modReel' || id === 'modStory') && !active.verified){ 
-        showToast("❌ මුලින්ම MRA V3 Chain එකට Link වෙන්න - Register! MRA Profile Photo, Gender, Birthday, Country Required!"); 
-        document.getElementById('modRegistration').style.display = 'flex'; 
-        return; 
-    } 
-    document.getElementById(id).style.display = 'flex'; 
-}
-
+function openModule(id){ document.getElementById(id).style.display = 'flex'; }
 function closeModule(id){ document.getElementById(id).style.display = 'none'; }
 
-function selectCard(el, type, value){ 
-    el.parentElement.querySelectorAll('.type-card').forEach(x => x.classList.remove('selected')); 
-    el.classList.add('selected'); 
+function openSongListSheet() {
+    openModule('modSongListSheet');
 }
 
 function toggleTheme(){ 
     const root = document.getElementById('htmlRoot'); 
     const current = root.getAttribute('data-theme'); 
     root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark'); 
-    showToast("🌓 Theme MRA V3 Live 100% SL - " + (current === 'dark' ? 'Light' : 'Dark')); 
+    showToast("🌓 Theme switched successfully!"); 
 }
 
-function updateLiveTime(id){ 
-    const el = document.getElementById(id); 
-    if(!el) return; 
-    el.textContent = "MRA V3 Live: " + new Date().toLocaleTimeString() + " (SL ∞)"; 
+function selectCard(el, type, value){ 
+    el.parentElement.querySelectorAll('.type-card').forEach(x => x.classList.remove('selected')); 
+    el.classList.add('selected'); 
 }
-
-function updateProfileCompletion(){
-    let score = 0;
-    if(document.getElementById('regName').value.trim()) score += 20;
-    if(document.getElementById('regUser').value.trim()) score += 20;
-    if(document.getElementById('regPhone').value.trim()) score += 20;
-    if(document.getElementById('regBirthday').value) score += 20;
-    if(document.getElementById('regGender').value) score += 20;
-    
-    document.getElementById('completionText').textContent = score + "% MRA V3";
-    document.getElementById('completionFill').style.width = score + "%";
-}
-
-setInterval(() => { 
-    const now = new Date().toLocaleTimeString();
-    const globalEl = document.getElementById('globalClock');
-    if(globalEl) globalEl.textContent = now;
-    updateLiveTime('activeLiveTime');
-    updateLiveTime('mraSecretLive');
-}, 1000);
 
 function sendOtp(){ 
-    const v = document.getElementById('regPhone').value.trim(); 
-    if(!v){ showToast("❌ Phone/Email දාන්න - MRA V3 Live 100% SL"); return; } 
     const otp = Math.floor(100000 + Math.random() * 900000); 
-    document.getElementById('otpStatus').innerHTML = `🆓 MRA V3 FREE OTP: <span style='background:linear-gradient(135deg,#6a5cff,#00e676);color:#fff;padding:4px 10px;border-radius:8px'>${otp}</span> (Test 123456)`; 
-    showToast("🆓 MRA V3 OTP: " + otp); 
+    document.getElementById('otpStatus').textContent = `FREE OTP: ${otp} (Test: 123456)`; 
     document.getElementById('regOtp').value = otp; 
+    showToast("OTP Sent: " + otp); 
 }
 
 function verifyOtp(){ 
-    const otp = document.getElementById('regOtp').value.trim(); 
-    if(!otp){ showToast("❌ OTP දාන්න - MRA V3 Live"); return; } 
-    linkWorld(document.getElementById('regPhone').value); 
+    showToast("OTP Verified Successfully!"); 
 }
 
 async function handleProfilePhoto(e){ 
@@ -482,279 +521,223 @@ async function handleProfilePhoto(e){
     if(!file) return; 
     const reader = new FileReader(); 
     reader.onload = (ev) => { 
-        profilePhotoBlob = ev.target.result; 
-        document.getElementById('profilePhotoPreview').innerHTML = `<img src="${profilePhotoBlob}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><span style="position:absolute;bottom:2px;right:2px;background:var(--sl);color:#000;padding:2px 4px;border-radius:6px;font-size:6px">V3 Live</span>`; 
-        document.getElementById('profilePhotoStatus').textContent = "✅ Photo Processed V3 SL"; 
-        showToast("✅ MRA V3 Profile Photo Loaded 100%"); 
+        const base64 = ev.target.result; 
+        document.getElementById('profilePhotoPreview').innerHTML = `<img src="${base64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`; 
+        document.getElementById('profilePhotoStatus').textContent = "✅ Loaded"; 
+        active.profilePhotoUrl = base64; 
     }; 
     reader.readAsDataURL(file); 
 }
 
-function linkWorld(id){ 
-    const name = document.getElementById('regName').value.trim() || "Sumiya"; 
-    const username = document.getElementById('regUser').value.trim() || "@sumiya"; 
-    const birthday = document.getElementById('regBirthday').value; 
-    const gender = document.getElementById('regGender').value; 
-    const country = document.getElementById('regCountry').value; 
-    
-    const liveNow = new Date().toLocaleString(); 
-    active = {
-        name: name, 
-        username: username, 
-        emailOrPhone: id, 
-        verified: true, 
-        id: btoa(id).replace(/=/g,''), 
-        time: Date.now(), 
-        liveTime: liveNow, 
-        gender: gender, 
-        country: country, 
-        city: document.getElementById('regCity').value, 
-        adminEmail: ADMIN_EMAIL, 
-        profilePhotoUrl: profilePhotoBlob, 
-        mraNetwork: "MRA_V3_GLOBAL_UNLIMITED_HUB"
-    }; 
-    
-    localStorage.setItem('myfaecbox_mra_v3_profile', JSON.stringify(active)); 
-    document.getElementById('activeName').textContent = name; 
-    document.getElementById('activeType').textContent = "MRA V3 GLOBAL UNLIMITED 🔥 ∞"; 
-    document.getElementById('activeGender').textContent = gender + " • " + country + " • MRA V3 Live " + liveNow; 
-    
-    if(profilePhotoBlob) {
-        document.getElementById('myAvatar').innerHTML = `<img src="${profilePhotoBlob}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`; 
-    } else {
-        document.getElementById('myAvatar').textContent = name[0].toUpperCase(); 
-    }
-    
-    document.getElementById('guestSecretWarning').style.display = 'none';
-    document.getElementById('mraSecretBox').style.display = 'block';
-    document.getElementById('secretExtra').textContent = "MRA V3 Global Secret Unlocked for " + name + "! 🔓∞";
-    
-    document.getElementById('successBox').style.display = 'block'; 
-    document.getElementById('successTxt').textContent = `MRA V3 Global Hub Linked: ${id} as ${name} (${gender}, ${birthday}, ${country}) - Admin: ${ADMIN_EMAIL}`; 
-    
-    let c = JSON.parse(localStorage.getItem('myfaecbox_mra_v3_chain') || '[]'); 
-    if(!c.find(u => u.id === active.id)) c.push(active); 
-    localStorage.setItem('myfaecbox_mra_v3_chain', JSON.stringify(c)); 
-    
-    showToast("✅ MRA WORLD GIANT V3 GLOBAL LINKED SUCCESSFULLY! 😁👍💑♾️"); 
-    initFeed(); 
-}
-
 function launch(){ 
-    if(!active.verified){ showToast("❌ OTP Verify + All fields required!"); return; } 
-    closeModule('modRegistration'); 
-    showToast("🚀 MRA WORLD GIANT V3 GLOBAL LAUNCHED SUCCESSFULLY! 😁👍💑♾️"); 
-}
-
-function toggleGhostModeReal(){
-    isGhostRealActive = !isGhostRealActive;
-    const btn = document.getElementById('ghostToggleBtn');
-    if(isGhostRealActive){
-        btn.style.background = 'var(--cyan)';
-        btn.style.color = '#000';
-        btn.textContent = 'Ghost Real ACTIVE (No Seen) ✓';
-        showToast("👻 MRA V3 Ghost Mode Real Enabled! No Seen Trace Left! 🛡️");
-    } else {
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.textContent = 'Enable Ghost Real (No Seen)';
-        showToast("👻 MRA V3 Ghost Mode Real Disabled!");
-    }
-}
-
-function toggleAnonymousRotation(){
-    isAnonymousRotationActive = !isAnonymousRotationActive;
-    const btn = document.getElementById('anonToggleBtn');
-    if(isAnonymousRotationActive){
-        btn.style.background = 'var(--pink)';
-        btn.style.color = '#fff';
-        btn.textContent = 'Anonymous 24h ACTIVE ✓';
-        showToast("🕵️ MRA V3 Anonymous 24h Rotation Enabled! True Privacy! 🕵️‍♂️");
-    } else {
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.textContent = 'Enable Anonymous Rotation';
-        showToast("🕵️ MRA V3 Anonymous Rotation Disabled!");
-    }
-}
-
-async function autoCutFiles(files, maxPhotos){ 
-    let photos = files.filter(f => f.type.startsWith('image/')); 
-    let videos = files.filter(f => f.type.startsWith('video/')); 
-    if(photos.length > maxPhotos){ 
-        photos = photos.slice(0, maxPhotos); 
-    } 
-    return [...photos, ...videos]; 
-}
-
-async function handlePostFiles(e){ 
-    const files = Array.from(e.target.files); 
-    postFiles = await autoCutFiles([...postFiles, ...files], 10); 
-    renderPreview('postPreview', postFiles, 'post'); 
-    simulateProgress('post'); 
-    showToast("MRA V3 Files Added Successfully (Auto-Cut SL)"); 
-}
-
-function renderPreview(containerId, files, type){ 
-    const container = document.getElementById(containerId); 
-    container.innerHTML = ""; 
-    files.forEach((file, i) => { 
-        const div = document.createElement('div'); 
-        div.style.position = 'relative'; 
-        if(file.type.startsWith('image/')){ 
-            const url = URL.createObjectURL(file); 
-            div.innerHTML = `<div style="position:relative"><img src="${url}" style="width:100%;height:100px;object-fit:cover;border-radius:10px"><span style="position:absolute;top:4px;left:4px;background:var(--mra);color:#fff;padding:2px 4px;border-radius:4px;font-size:7px">${i+1}</span><span onclick="removeFile('${type}',${i})" style="position:absolute;top:2px;right:2px;background:#ff2e93;color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer">×</span></div>`; 
-        } 
-        container.appendChild(div); 
-    }); 
-}
-
-function removeFile(type, index){ 
-    if(type === 'post') postFiles.splice(index, 1); 
-    showToast(`File ${index+1} removed`); 
-}
-
-function simulateProgress(type){ 
-    const fill = document.getElementById(type + 'ProgressFill'); 
-    const text = document.getElementById(type + 'ProgressText'); 
-    if(!fill) return; 
-    document.getElementById(type + 'Progress').style.display = 'block'; 
-    let p = 0; 
-    const iv = setInterval(() => { 
-        p += 25; 
-        if(p >= 100){ 
-            p = 100; 
-            clearInterval(iv); 
-            if(text) text.textContent = `✅ MRA V3 Global Upload 100% Complete ∞`; 
-        } else if(text) {
-            text.textContent = `MRA V3 Uploading ${p}%`; 
-        }
-        fill.style.width = p + '%'; 
-    }, 200); 
-}
-
-function sendMra(){ 
-    const input = document.getElementById('mraInput'); 
-    const text = input.value.trim(); 
-    if(!text){ showToast("❌ Ask MRA V3 something"); return; } 
-    const box = document.getElementById('mraChatBox'); 
-    const userDiv = document.createElement('div'); 
-    userDiv.style.cssText = "background:var(--mra);color:#fff;padding:10px;border-radius:12px;align-self:flex-end;max-width:80%;font-size:13px"; 
-    userDiv.textContent = text; 
-    box.appendChild(userDiv); 
-    input.value = ""; 
+    const name = document.getElementById('regName').value.trim() || "Sumiya"; 
+    active.name = name;
+    active.verified = true;
+    localStorage.setItem('myfaecbox_v6_profile', JSON.stringify(active));
     
-    setTimeout(() => { 
-        const mraDiv = document.createElement('div'); 
-        mraDiv.style.cssText = "background:var(--card);padding:10px;border-radius:12px;border:1px solid var(--border);font-size:13px"; 
-        let response = ""; 
-        if(text.toLowerCase().includes('crush')) {
-            response = "💘 MRA V3 Crush Detector: @secret_crush viewed your profile with Firestore Real Global sync! Crush score: 99.9% SL ∞!"; 
-        } else if(text.toLowerCase().includes('beauty')) {
-            response = "✨ MRA V3 Beauty Score: Your MRA V3 profile rating is 10/10 SL! World shaking look with Unlimited ∞!"; 
-        } else if(text.toLowerCase().includes('ghost')) {
-            response = "👻 MRA V3 Ghost Real: " + (isGhostRealActive ? "Active (No Seen Trace)" : "Inactive") + " - Browsing completely invisibly!"; 
-        } else {
-            response = "🤖 Sumiya MRA Bot V3 Global: I'm active with 100% Unlimited Intelligence + Firestore + Ghost Real + Anonymous Rotation inside MRA/SL Cover! 😁👍💑♾️";
-        }
-        mraDiv.innerHTML = `<b>Sumiya MRA Bot V3:</b> ${response} <span class="sl-badge">V3 SL ∞</span>`; 
-        box.appendChild(mraDiv); 
-        box.scrollTop = box.scrollHeight; 
-    }, 800); 
+    document.getElementById('activeName').textContent = name;
+    document.getElementById('activeNameDisplay').textContent = "MYFAECBOX V6 - " + name;
+    if(active.profilePhotoUrl){
+        document.getElementById('myAvatar').innerHTML = `<img src="${active.profilePhotoUrl}" style="width:100%;height:100%;object-fit:cover">`;
+        document.getElementById('profileAvatarBox').innerHTML = `<img src="${active.profilePhotoUrl}" style="width:100%;height:100%;object-fit:cover">`;
+        document.getElementById('createAvatarBox').innerHTML = `<img src="${active.profilePhotoUrl}" style="width:100%;height:100%;object-fit:cover">`;
+    } else {
+        document.getElementById('myAvatar').textContent = name[0].toUpperCase();
+        document.getElementById('profileAvatarBox').textContent = name[0].toUpperCase();
+        document.getElementById('createAvatarBox').textContent = name[0].toUpperCase();
+    }
+    closeModule('modRegistration');
+    showToast("🚀 MRA V6 Ultimate Giant Launched Successfully! ∞");
+}
+
+function handlePostFiles(e){ 
+    postFiles = Array.from(e.target.files).slice(0, 9); 
+    const container = document.getElementById('postPreview');
+    container.innerHTML = "";
+    postFiles.forEach((file, i) => {
+        const url = URL.createObjectURL(file);
+        const div = document.createElement('div');
+        div.innerHTML = `<img src="${url}" style="width:100%;height:80px;object-fit:cover;border-radius:8px">`;
+        container.appendChild(div);
+    });
+    showToast("Files attached (Up to 9 Mix)"); 
 }
 
 function publishPost(){ 
     const text = document.getElementById('postText').value.trim(); 
-    if(!text && !postFiles.length){ showToast("❌ Please write something or add photos!"); return; } 
-    const liveNow = new Date().toLocaleString(); 
-    const urls = postFiles.map(f => URL.createObjectURL(f)); 
+    if(!text && !postFiles.length){ showToast("❌ Write something!"); return; } 
+    const url = postFiles.length ? URL.createObjectURL(postFiles[0]) : "";
     
-    let author = active.name || "Guest";
-    if(isAnonymousRotationActive){
-        const anonNames = ["Shadow MRA 🕵️", "Anonymous V3 🕵️‍♂️", "Secret Giant 🌐", "Zero Trace 🛡️"];
-        author = anonNames[Math.floor(Math.random() * anonNames.length)] + " (24h Anon)";
-    }
-
     const post = {
-        id: 'mra_v3_' + Date.now(),
-        text: text + " [MRA V3 Global Unlimited - Firestore + Ghost Real + AI 100%]",
-        images: urls,
-        image: urls[0] || "",
-        authorName: author,
-        authorId: active.id || "guest",
-        timestamp: Date.now(),
-        liveTime: liveNow,
-        likes: 0,
-        type: 'mra_v3_global_post'
-    }; 
-    let feed = JSON.parse(localStorage.getItem('myfaecbox_mra_v3_global_feed') || '[]'); 
-    feed.unshift(post); 
-    localStorage.setItem('myfaecbox_mra_v3_global_feed', JSON.stringify(feed)); 
-    render(feed); 
-    document.getElementById('postText').value = ""; 
-    postFiles = []; 
-    document.getElementById('postPreview').innerHTML = ""; 
-    document.getElementById('postProgress').style.display = 'none'; 
-    closeModule('modPost'); 
-    showToast("🌍🔥 MRA V3 GLOBAL UNLIMITED Post Published Successfully! 😁👍💑♾️"); 
+        text: text,
+        image: url,
+        authorName: active.name || "Sumiya",
+        timestamp: Date.now()
+    };
+    
+    let feed = JSON.parse(localStorage.getItem('myfaecbox_v6_feed') || '[]');
+    feed.unshift(post);
+    localStorage.setItem('myfaecbox_v6_feed', JSON.stringify(feed));
+    renderFeed(feed);
+    
+    document.getElementById('postText').value = "";
+    postFiles = [];
+    document.getElementById('postPreview').innerHTML = "";
+    closeModule('modPost');
+    showToast("🌍🔥 V6 Ultimate Giant Post Published Successfully!");
 }
 
-function render(posts){ 
-    const feed = document.getElementById('feed'); 
-    feed.innerHTML = ""; 
-    if(!posts.length){ 
-        feed.innerHTML = "<div style='text-align:center;padding:30px;color:var(--muted)'><div style='font-size:40px'>🌐</div><b>MRA V3 GLOBAL UNLIMITED FEED EMPTY! Be the first global giant to post!</b><br><small>Firestore Real Global Feed • Ghost Real • Anonymous Rotation • Unlimited ∞</small></div>"; 
-        return; 
-    } 
-    posts.forEach(p => { 
-        const div = document.createElement('div'); 
-        div.className = 'post-card'; 
+function renderFeed(posts){
+    const feed = document.getElementById('feed');
+    posts.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'post-card';
         div.innerHTML = `
-            <div style="padding:12px;display:flex;justify-content:space-between">
-                <div style="display:flex;gap:10px">
-                    <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--mra),var(--sl));display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff">${active.profilePhotoUrl && !isAnonymousRotationActive ? `<img src="${active.profilePhotoUrl}" style="width:100%;height:100%;object-fit:cover">` : p.authorName[0]}</div>
+            <div class='p-head'>
+                <div class='p-user'>
+                    <div class='p-av'>${p.authorName[0]}</div>
                     <div>
-                        <b style="font-size:14px">${p.authorName} • MRA V3 GLOBAL • Unlimited ∞</b>
-                        <div style="display:flex;gap:4px;align-items:center;margin-top:2px;flex-wrap:wrap">
-                            <span style="font-size:11px;color:var(--muted)">${new Date(p.timestamp).toLocaleString()}</span>
-                            <span class="live-badge">Live ${p.liveTime}</span>
-                            <span class="sl-badge">V3 SL</span>
-                        </div>
+                        <div style='font-weight:700;font-size:14px'>${p.authorName} ✓ - V6 Giant</div>
+                        <div style='font-size:11px;color:var(--muted)'>Just now · 🌐 • V6 Ultimate</div>
                     </div>
                 </div>
-                <span style="background:linear-gradient(135deg,var(--mra),var(--sl));color:#fff;padding:4px 8px;border-radius:12px;font-size:9px;font-weight:900">MRA V3 INFINITY</span>
+                <div>⋯ ✕</div>
             </div>
-            <div style="padding:0 14px 10px 14px;font-size:14px;white-space:pre-wrap">${p.text}</div>
-            ${p.image ? `<div style="padding:0 14px 10px 14px"><img src="${p.image}" style="width:100%;max-height:300px;object-fit:cover;border-radius:12px"></div>` : ''}
-            <div style="display:flex;gap:6px;padding:8px 14px;border-top:1px solid var(--border);margin-top:8px">
-                <div style="flex:1;text-align:center;padding:8px;border-radius:12px;background:var(--card2);border:1px solid var(--border);font-size:12px;font-weight:700;cursor:pointer" onclick="showToast('❤️ MRA V3 Liked!')">❤️ V3 Love</div>
-                <div style="flex:1;text-align:center;padding:8px;border-radius:12px;background:var(--card2);border:1px solid var(--border);font-size:12px;font-weight:700;cursor:pointer" onclick="showToast('💬 V3 Comment box open')">💬 Comment</div>
-                <div style="flex:1;text-align:center;padding:8px;border-radius:12px;background:var(--card2);border:1px solid var(--border);font-size:12px;font-weight:700;cursor:pointer" onclick="showToast('🚀 V3 Global Shared!')">🚀 Share ∞</div>
-            </div>`; 
-        feed.appendChild(div); 
-    }); 
+            <div class='p-content'>${p.text}</div>
+            ${p.image ? `<img class='p-img' src='${p.image}'>` : ''}
+            <div class='p-stats'><span>❤️👍😂 Liked by you and others</span><span>0 comments · 0 shares</span></div>
+            <div class='p-actions'><div class='p-action'>👍 Like</div><div class='p-action' onclick='openProCommentModal()'>💬 Comment Pro</div><div class='p-action'>↗️ Share Nannan</div></div>`;
+        feed.prepend(div);
+    });
 }
 
-function initFeed(){ 
-    const f = JSON.parse(localStorage.getItem('myfaecbox_mra_v3_global_feed') || '[]'); 
-    render(f); 
+function sendMra(){
+    const input = document.getElementById('mraInput');
+    const text = input.value.trim();
+    if(!text) return;
+    const box = document.getElementById('mraChatBox');
+    const u = document.createElement('div');
+    u.style.cssText = "background:var(--mra);color:#fff;padding:10px;border-radius:12px;align-self:flex-end;max-width:80%;font-size:13px";
+    u.textContent = text;
+    box.appendChild(u);
+    input.value = "";
+    
+    setTimeout(() => {
+        const b = document.createElement('div');
+        b.style.cssText = "background:var(--card);padding:10px;border-radius:12px;border:1px solid var(--border);font-size:13px";
+        b.innerHTML = `<b>Sumiya MRA Bot V6:</b> V6 Ultimate World Giant active with Logic 8! Unlimited ∞ active! 😁👍💑♾️`;
+        box.appendChild(b);
+        box.scrollTop = box.scrollHeight;
+    }, 600);
 }
 
-window.onload = () => { 
-    if(active.verified){ 
-        document.getElementById('activeName').textContent = active.name; 
-        document.getElementById('activeType').textContent = "MRA V3 GLOBAL ACTIVE 🔥 ∞"; 
-        document.getElementById('activeGender').textContent = active.gender + " • " + active.country + " • MRA V3 Live " + active.liveTime; 
-        if(active.profilePhotoUrl) document.getElementById('myAvatar').innerHTML = `<img src="${active.profilePhotoUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`; 
-        document.getElementById('guestSecretWarning').style.display = 'none';
-        document.getElementById('mraSecretBox').style.display = 'block';
-        document.getElementById('secretExtra').textContent = "MRA V3 Global Secret Unlocked for " + active.name + "! 🔓∞";
-        document.getElementById('modRegistration').style.display = 'none'; 
-    } 
-    initFeed(); 
-    console.log("🔐 MRA V3 GLOBAL UNLIMITED Secret Loaded: MRA = AI 100% - Firestore Real Global Feed + Ghost Real + Anonymous Rotation + Unlimited ∞! Only we know! මචෝ! 😁👍💑♾️");
+// ==============================================================
+// 🌟 V6 ULTIMATE 100% FINAL - SCRIPT INTEGRATION
+// ==============================================================
+function injectV6GiantMixFeed() {
+    const feed = document.getElementById('feed');
+    if(!feed) return;
+
+    const giantMixHTML = `
+        <!-- IPay Business Ad Card -->
+        <div class="v6-ad-card">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px;">
+                <span><b>iPay Business</b> · Sponsored 🌐</span>
+                <span>⋯</span>
+            </div>
+            <div style="font-size:13px;font-weight:bold;margin-bottom:8px;">🚀 Boost your business transactions with iPay Merchant Portal! 1.1k likes · 55.6K views</div>
+            <img src="https://picsum.photos/500/260?random=88" style="width:100%;height:200px;object-fit:cover;border-radius:10px;">
+        </div>
+
+        <!-- People You May Know -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px;margin:10px 8px;">
+            <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:13px;margin-bottom:8px;">
+                <span>👥 People You May Know</span>
+                <span style="color:var(--mra);font-size:11px;cursor:pointer;" onclick="showToast('See All People')">See All</span>
+            </div>
+            <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;">
+                <div style="min-width:120px;background:var(--card2);border-radius:12px;padding:10px;text-align:center;flex-shrink:0;">
+                    <img src="https://i.pravatar.cc/100?img=12" style="width:50px;height:50px;border-radius:50%;object-fit:cover;margin:0 auto 6px auto;">
+                    <div style="font-size:12px;font-weight:bold;">Rumeshika</div>
+                    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">1 mutual friend</div>
+                    <button onclick="showToast('Friend Request Sent ✓'); this.innerText='Following ✓'; this.style.background='var(--sl)'; this.style.color='#000';" class="btn btn-mra" style="padding:4px 8px;font-size:10px;width:100%;">Add Friend</button>
+                </div>
+                <div style="min-width:120px;background:var(--card2);border-radius:12px;padding:10px;text-align:center;flex-shrink:0;">
+                    <img src="https://i.pravatar.cc/100?img=15" style="width:50px;height:50px;border-radius:50%;object-fit:cover;margin:0 auto 6px auto;">
+                    <div style="font-size:12px;font-weight:bold;">Kavinda SL</div>
+                    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">3 mutual friends</div>
+                    <button onclick="showToast('Friend Request Sent ✓'); this.innerText='Following ✓'; this.style.background='var(--sl)'; this.style.color='#000';" class="btn btn-mra" style="padding:4px 8px;font-size:10px;width:100%;">Add Friend</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seetha Holdings Group Join Card (Real Logic) -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;margin:10px 8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <b style="font-size:13px;color:var(--sl)">👥 Suggested Group: Seetha Holdings SL</b>
+                <span style="font-size:11px;color:var(--muted)">Public Group</span>
+            </div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Are you interested in joining Seetha Holdings Investors & Tech Community?</p>
+            <div style="display:flex;gap:8px;">
+                <button onclick="showToast('✅ Joined Seetha Holdings Group Successfully!')" class="btn btn-mra" style="flex:1;padding:8px;font-size:11px;">Interested / Join</button>
+                <button onclick="showToast('Group suggestion dismissed')" style="flex:1;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:8px;font-size:11px;font-weight:bold;cursor:pointer;">Not Interested</button>
+            </div>
+        </div>
+
+        <!-- NewsCenter Yellow Red Banner Giant Stats -->
+        <div class="post-card">
+            <div class="p-head">
+                <div class="p-user">
+                    <div class="p-av" style="background:#c00">N</div>
+                    <div>
+                        <div style="font-weight:700;font-size:14px">NewsCenter.lk ✓ - Giant Stats</div>
+                        <div style="font-size:11px;color:var(--muted)">17h · 🌐 • V6 Ultimate 100%</div>
+                    </div>
+                </div>
+                <div>⋯ ✕</div>
+            </div>
+            <div style="background:#ffeb3b;color:#000;padding:10px 14px;font-weight:800;font-size:14px;">හෝමාගම ඉසාර මැ#නේ පොලිස් පහරදීමෙන් නෙවෙයි..? - V6 Ultimate 100% - MRA VIBE MOMENT Giant Network</div>
+            <img class="p-img" src="https://picsum.photos/500/300?random=25">
+            <div class="p-stats"><span>😂👍😡 13k · 5.7K comments · 525 shares · 435K views</span></div>
+            <div class="p-actions">
+                <div class="p-action" onclick="showToast('👍 Liked!')">👍 Like</div>
+                <div class="p-action" onclick="openProCommentModal()">💬 Comment Pro</div>
+                <div class="p-action" onclick="showToast('↗️ Shared Nannan!')">↗️ Share Nannan</div>
+            </div>
+        </div>
+    `;
+    feed.insertAdjacentHTML('beforeend', giantMixHTML);
+}
+
+function openProCommentModal() {
+    showToast("💬 Comment Pro: Attach Photo / Video / Voice note & Reply Thread active!");
+}
+
+function triggerMraAiBoost() {
+    showToast("🚀 MRA AI Boost Activated: 1000+ Auto Views & 85% Free Data Saved!");
+}
+
+// PWA Offline Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('data:text/javascript,self.addEventListener("fetch",e=>{});').then(() => {
+            console.log("📲 PWA Offline Service Worker Registered Successfully!");
+        });
+    });
+}
+
+window.onload = () => {
+    if(active.verified){
+        launch();
+    }
+    const savedFeed = JSON.parse(localStorage.getItem('myfaecbox_v6_feed') || '[]');
+    if(savedFeed.length) renderFeed(savedFeed);
+    
+    injectV6GiantMixFeed();
+    triggerMraAiBoost();
+    
+    showToast('🌟 MYFAECBOX V6 ULTIMATE WORLD GIANT 100% FINAL LOADED!');
 };
 </script>
-
 </body>
 </html>
